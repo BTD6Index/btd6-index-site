@@ -1,4 +1,17 @@
+import { useEffect, useState } from "react"
+
 export default function TwoTC() {
+    const [completions, setCompletions] = useState([]);
+
+    useEffect(() => {
+        fetch("/fetch-2tc")
+        .then(response => response.json())
+        .then(data => {
+            setCompletions(data);
+        })
+        .catch(err => console.log(err));
+    }, []);
+
     return <>
         <h1>Two Towers CHIMPS</h1>
         <input type="text" name="search" id="searchbar" placeholder="Search" />
@@ -10,12 +23,16 @@ export default function TwoTC() {
                 <th>Player</th>
                 <th>Completion Link</th>
             </tr>
-            <tr>
-                <td>Energizer</td>
-                <td>The Anti-Bloon</td>
-                <td>KyrosQF</td>
-                <td><a href="https://youtu.be/dlvYT_VZBOI">YouTube</a></td>
-            </tr>
+            {
+                completions.map(
+                    completion => <tr>
+                        <td>{completion.tower1}</td>
+                        <td>{completion.tower2}</td>
+                        <td>{completion.person}</td>
+                        <td><a href={completion.link}>Link</a></td>
+                    </tr>
+                )
+            }
         </table>
     </>
 };
