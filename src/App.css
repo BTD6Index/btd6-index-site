@@ -1,38 +1,71 @@
-.App {
+header {
+  font-size: 2em;
+  padding: 0.2em;
+}
+
+.glueRat {
+  width: 1em;
+  height: 1em;
+}
+
+nav {
+  display: inline-block;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+}
+
+nav li {
+  display: inline-block;
+  margin: 0 0.7em;
+  padding-bottom: 0.2em;
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  border: 1px solid white;
+  border-radius: 0.15em;
+  padding: 0.2em;
+  font-size: 75%;
+}
+
+li:hover .dropdown, .dropdown:hover {
+  display: block;
+}
+
+main {
   text-align: center;
+  font-size: 2em;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+a.nolinkstyle {
+  text-decoration: none;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+input {
+  font-size: 2.5rem;
+  font-family: Dosis, sans-serif;
+  background: white;
+  border: none;
+  border-radius: 0.2em;
+  padding: 0.1em;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#searchbar {
+  margin-right: 0.5em;
+}
+
+table {
+  margin: 0 auto;
+}
+table th, table td {
+  padding: 0.2em 0.5em;
 }
