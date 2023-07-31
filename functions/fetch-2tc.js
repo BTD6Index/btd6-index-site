@@ -1,6 +1,6 @@
 export function onRequest(context) {
     let query_result = context.env.BTD6_INDEX_DB
-    .prepare("SELECT tower1,tower2,person,link FROM '2tccompletions' WHERE person=?")
-    .bind('KaptainKO').all();
+    .prepare("SELECT tower1,tower2,person,link FROM '2tccompletions' WHERE person=?1")
+    .bind('RB').all();
     return Response.json(query_result); // TODO update this to be real shit
 }
