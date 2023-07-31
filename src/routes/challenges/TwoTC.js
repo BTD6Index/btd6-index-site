@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react"
 
 export default function TwoTC() {
+    const [query, setQuery] = useState('');
     const [completions, setCompletions] = useState([]);
 
     useEffect(() => {
-        fetch("/fetch-2tc")
+        fetch("/fetch-2tc?" + new URLSearchParams({
+            query: query
+        }))
         .then(response => response.json())
         .then(data => {
             setCompletions(data);
         })
         .catch(err => console.log(err));
-    }, []);
+    }, [query]);
 
     return <>
         <h1>Two Towers CHIMPS</h1>
-        <input type="text" name="search" id="searchbar" placeholder="Search" />
+        <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={e => setQuery(e.target.value)} />
         <input type="submit" name="submit" value="Search" />
         <table>
             <tr>
