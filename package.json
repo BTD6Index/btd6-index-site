@@ -17,7 +17,7 @@
   "scripts": {
     "start": "concurrently -k true 'npm:start-react' 'npm:start-wrangler'",
     "start-react": "cross-env BROWSER=none react-scripts start",
-    "start-wrangler": "wrangler pages dev --proxy 3000",
+    "start-wrangler": "wrangler pages dev --proxy 3000 --d1=BTD6_INDEX_DB",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
