@@ -1,15 +1,14 @@
 header {
   font-size: 2em;
   padding: 0.2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .glueRat {
   width: 1em;
   height: 1em;
-}
-
-nav {
-  display: inline-block;
 }
 
 nav ul {
@@ -25,24 +24,52 @@ nav li {
   cursor: pointer;
 }
 
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  border: 1px solid white;
-  border-radius: 0.15em;
-  padding: 0.2em;
-  font-size: 75%;
+@media only screen and (max-width: 768px) {
+  nav::before {
+    content: url("hamburger_menu.svg");
+  }
+
+  nav {
+    position: relative;
+  }
+
+  nav > ul {
+    display: none;
+    position: absolute;
+    background-color: black;
+    border-radius: 0.2em;
+    border: 1px solid white;
+    top: 100%;
+    right: 0;
+    padding: 0;
+  }
+
+  nav > ul:hover, nav:hover > ul {
+    display: initial;
+  }
 }
 
-li:hover .dropdown, .dropdown:hover {
-  display: block;
+@media print, screen and (min-width: 769px) {
+  .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    border: 1px solid white;
+    border-radius: 0.15em;
+    padding: 0.2em;
+    font-size: 75%;
+  }
+
+  li:hover .dropdown, .dropdown:hover {
+    display: block;
+  }
 }
 
 main {
   text-align: center;
   font-size: 2em;
+  padding: 0 1rem;
 }
 
 a.nolinkstyle {
@@ -70,7 +97,18 @@ button {
 
 table {
   margin: 0 auto;
+  border-collapse: collapse;
 }
 table th, table td {
   padding: 0.2em 0.5em;
+}
+thead tr:last-child th, thead tr:last-child {
+  border-bottom: 2px solid white;
+}
+#latestvid {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  max-width: 60rem;
+  height: auto;
+  border: none;
 }
