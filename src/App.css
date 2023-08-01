@@ -50,13 +50,18 @@ a.nolinkstyle {
   color: white;
 }
 
-input {
+input, button {
   font-size: 2.5rem;
   font-family: Dosis, sans-serif;
   background: white;
+  color: black;
   border: none;
   border-radius: 0.2em;
   padding: 0.1em;
+}
+
+button {
+  cursor: pointer;
 }
 
 #searchbar {
