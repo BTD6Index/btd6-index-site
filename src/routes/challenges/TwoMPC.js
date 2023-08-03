@@ -1,19 +1,18 @@
 import useIndexSearch from "../../util/useIndexSearch";
 
-export default function TwoTC() {
-    const {query, completions, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2tc");
+export default function TwoMPC() {
+    const {query, completions, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2mp");
 
     return <>
-        <h1>Two Towers CHIMPS</h1>
-        <p>In this challenge, win a game of CHIMPS with buying exactly two towers (including heroes).</p>
+        <h1>2 Million Pops CHIMPS</h1>
+        <p>In this challenge, win CHIMPS with a given tower so that pops on other towers are less than 42,693 (the total pops in a CHIMPS game, excluding regrows, minus 2 million).</p>
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
         <button type="button" onClick={onPrev}>Previous</button>
         <button type="button" onClick={onNext}>Next</button>
         <table>
             <thead>
                 <tr>
-                    <th>Tower #1</th>
-                    <th>Tower #2</th>
+                    <th>Tower</th>
                     <th>Map</th>
                     <th>Player</th>
                     <th>Completion Link</th>
@@ -24,8 +23,7 @@ export default function TwoTC() {
                 {
                     completions.map(
                         completion => <tr>
-                            <td>{completion.tower1}</td>
-                            <td>{completion.tower2}</td>
+                            <td>{completion.entity}</td>
                             <td>{completion.map}</td>
                             <td>{completion.person}</td>
                             <td><a href={completion.link}>Link</a></td>

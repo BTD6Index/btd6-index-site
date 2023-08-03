@@ -16,14 +16,6 @@ nav ul {
   margin: 0;
 }
 
-nav li {
-  display: inline-block;
-  margin: 0 0.7em;
-  padding-bottom: 0.2em;
-  position: relative;
-  cursor: pointer;
-}
-
 @media only screen and (max-width: 768px) {
   nav::before {
     content: url("hamburger_menu.svg");
@@ -41,15 +33,28 @@ nav li {
     border: 1px solid white;
     top: 100%;
     right: 0;
-    padding: 0;
+    padding: 0.1em;
   }
 
   nav > ul:hover, nav:hover > ul {
     display: initial;
   }
+
+  .dropdown {
+    font-size: 75%;
+    padding-left: 1em;
+  }
 }
 
 @media print, screen and (min-width: 769px) {
+  nav > ul > li {
+    display: inline-block;
+    margin: 0 0.7em;
+    padding-bottom: 0.2em;
+    position: relative;
+    cursor: pointer;
+  }
+
   .dropdown {
     display: none;
     position: absolute;

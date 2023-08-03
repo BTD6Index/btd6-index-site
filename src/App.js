@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import TwoTC from './routes/challenges/TwoTC';
+import TwoMPC from './routes/challenges/TwoMPC';
 
 
 const router = createBrowserRouter([
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: "/2tc",
     element: <TwoTC />,
+  },
+  {
+    path: "/2mpc",
+    element: <TwoMPC />
   }
 ]);
 
@@ -30,7 +35,7 @@ function App() {
               Challenges
               <ul className='dropdown'>
                 <li><a className='nolinkstyle' href='/2tc'>2TC</a></li>
-                <li>2MPC</li>
+                <li><a className='nolinkstyle' href='/2mpc'>2MPC</a></li>
               </ul>
             </li>
             <li>Guides</li>
