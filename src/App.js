@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import TwoTC from './routes/challenges/TwoTC';
 import TwoMPC from './routes/challenges/TwoMPC';
+import AddTwoTC from './routes/admin/AddTwoTC';
 
 
 const router = createBrowserRouter([
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/2mpc",
     element: <TwoMPC />
+  },
+  {
+    path: "/admin/add-2tc-form",
+    element: <AddTwoTC />
   }
 ]);
 

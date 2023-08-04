@@ -82,8 +82,8 @@ a.nolinkstyle {
   color: white;
 }
 
-input, button {
-  font-size: 2.5rem;
+input, button, select {
+  font-size: 2rem;
   font-family: Dosis, sans-serif;
   background: white;
   color: black;
@@ -116,4 +116,8 @@ thead tr:last-child th, thead tr:last-child {
   max-width: 60rem;
   height: auto;
   border: none;
+}
+
+label {
+  margin-right: 1em;
 }
