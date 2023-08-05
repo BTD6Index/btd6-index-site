@@ -6,6 +6,7 @@ export default function TwoTC() {
     return <>
         <h1>Two Towers CHIMPS</h1>
         <p>In this challenge, win a game of CHIMPS with buying exactly two towers (including heroes).</p>
+        <p><a href="/admin/add-2tc-form">Add 2TC (Index Helpers)</a></p>
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
         <button type="button" onClick={onPrev}>Previous</button>
         <button type="button" onClick={onNext}>Next</button>

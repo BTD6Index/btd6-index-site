@@ -13,7 +13,8 @@
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.4",
     "web-vitals": "^2.1.4",
-    "wrangler": "^3.4.0"
+    "wrangler": "^3.4.0",
+    "@babel/plugin-proposal-private-property-in-object": "*"
   },
   "scripts": {
     "start": "concurrently -k true 'npm:start-react' 'npm:start-wrangler'",
@@ -42,7 +43,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "*",
     "concurrently": "^8.2.0",
     "cross-env": "^7.0.3"
   }

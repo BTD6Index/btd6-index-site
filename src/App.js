@@ -8,6 +8,7 @@ import {
 import TwoTC from './routes/challenges/TwoTC';
 import TwoMPC from './routes/challenges/TwoMPC';
 import AddTwoTC from './routes/admin/AddTwoTC';
+import AddTwoTCResult from './routes/admin/AddTwoTCResult';
 
 
 const router = createBrowserRouter([
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/add-2tc-form",
     element: <AddTwoTC />
+  },
+  {
+    path: "/admin/add-2tc-result",
+    element: <AddTwoTCResult />
   }
 ]);
 

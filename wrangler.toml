@@ -2,3 +2,8 @@
 binding = "BTD6_INDEX_DB"
 database_name = "btd6index"
 database_id = "dedaa678-21d1-4d64-8f1c-a98d4936734c"
+
+[[r2_buckets]]
+binding = 'BTD6_INDEX_MEDIA'
+bucket_name = 'btd6index'
+preview_bucket_name = 'btd6indexpreview'
