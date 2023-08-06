@@ -1,10 +1,11 @@
 import useIndexSearch from "../../util/useIndexSearch";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
+import useToggleList from "../../util/useToggleList";
 
 export default function TwoTC() {
     const {query, completions, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2tc");
 
-    const [selectedCompletions, setSelectedCompletions] = useState([]);
+    const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
 
     const deleteForm = useRef(null);
 
@@ -55,12 +56,8 @@ export default function TwoTC() {
                                         type="checkbox"
                                         style={{verticalAlign: "middle"}}
                                         checked={selectedCompletions.includes(key)}
-                                        onChange={event => {
-                                            if (event.target.checked) {
-                                                setSelectedCompletions(state => [...state, key]);
-                                            } else {
-                                                setSelectedCompletions(state => state.filter(item => item !== key));
-                                            }
+                                        onChange={() => {
+                                            toggleSelectedCompletions(key);
                                         }}
                                     />
                                 </td>

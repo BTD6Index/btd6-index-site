@@ -11,6 +11,7 @@ import AddTwoTC from './routes/admin/AddTwoTC';
 import AddTwoTCResult from './routes/admin/AddTwoTCResult';
 import DeleteTwoTCResult from './routes/admin/DeleteTwoTCResult';
 import NotFound from './routes/NotFound';
+import DeleteTwoMPResult from './routes/admin/DeleteTwoMPResult';
 
 
 const router = createBrowserRouter([
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
     element: <TwoTC />,
   },
   {
-    path: "/2mpc",
+    path: "/2mp",
     element: <TwoMPC />
   },
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/delete-2tc-result",
     element: <DeleteTwoTCResult />
+  },
+  {
+    path: "/admin/delete-2mp-result",
+    element: <DeleteTwoMPResult />
   },
   {
     path: "*",
@@ -55,7 +60,7 @@ function App() {
               Challenges
               <ul className='dropdown'>
                 <li><a className='nolinkstyle' href='/2tc'>2TC</a></li>
-                <li><a className='nolinkstyle' href='/2mpc'>2MPC</a></li>
+                <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
               </ul>
             </li>
             <li>Guides</li>

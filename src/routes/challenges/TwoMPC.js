@@ -1,7 +1,19 @@
 import useIndexSearch from "../../util/useIndexSearch";
+import useToggleList from "../../util/useToggleList";
+import { useRef, useCallback } from "react";
 
 export default function TwoMPC() {
     const {query, completions, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2mp");
+
+    const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
+
+    const deleteForm = useRef(null);
+
+    const onDelete = useCallback(() => {
+        if (window.confirm(`Are you sure you want to delete ${selectedCompletions.length} completion(s)?`)) {
+            deleteForm.current.submit();
+        }
+    }, [selectedCompletions, deleteForm]);
 
     return <>
         <h1>2 Million Pops CHIMPS</h1>
@@ -9,6 +21,9 @@ export default function TwoMPC() {
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
         <button type="button" onClick={onPrev}>Previous</button>
         <button type="button" onClick={onNext}>Next</button>
+        <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
+            Delete Selected
+        </button>
         <div className="tableContainer">
         <table>
             <thead>
@@ -18,22 +33,41 @@ export default function TwoMPC() {
                     <th>Player</th>
                     <th>Completion Link</th>
                     <th>OG?</th>
+                    <th>Select</th>
                 </tr>
             </thead>
             <tbody>
                 {
                     completions.map(
-                        completion => <tr>
-                            <td>{completion.entity}</td>
-                            <td>{completion.map}</td>
-                            <td>{completion.person}</td>
-                            <td><a href={completion.link}>Link</a></td>
-                            <td>{completion.og ? 'Yes' : 'No'}</td>
-                        </tr>
+                        completion => {
+                            const key = JSON.stringify([completion.entity, completion.map]);
+                            return <tr key={key}>
+                                <td>{completion.entity}</td>
+                                <td>{completion.map}</td>
+                                <td>{completion.person}</td>
+                                <td><a href={completion.link}>Link</a></td>
+                                <td>{completion.og ? 'Yes' : 'No'}</td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        style={{verticalAlign: "middle"}}
+                                        checked={selectedCompletions.includes(key)}
+                                        onChange={() => {
+                                            toggleSelectedCompletions(key);
+                                        }}
+                                    />
+                                </td>
+                            </tr>;
+                        }
                     )
                 }
             </tbody>
         </table>
         </div>
+        <form ref={deleteForm} style={{display: 'none'}} action="/admin/delete-2mp-submit" method="post">
+            <input type="hidden" name="entries" value={
+                JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
+                } />
+        </form>
     </>
 };
