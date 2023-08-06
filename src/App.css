@@ -114,7 +114,7 @@ button {
   margin-right: 0.5em;
 }
 .tableContainer {
-  overflow-x: scroll;
+  overflow-x: auto;
   width: 100%;
 }
 table {

@@ -12,6 +12,8 @@ import AddTwoTCResult from './routes/admin/AddTwoTCResult';
 import DeleteTwoTCResult from './routes/admin/DeleteTwoTCResult';
 import NotFound from './routes/NotFound';
 import DeleteTwoMPResult from './routes/admin/DeleteTwoMPResult';
+import AddTwoMP from './routes/admin/AddTwoMP';
+import AddTwoMPResult from './routes/admin/AddTwoMPResult';
 
 
 const router = createBrowserRouter([
@@ -32,8 +34,16 @@ const router = createBrowserRouter([
     element: <AddTwoTC />
   },
   {
+    path: "/admin/add-2mp-form",
+    element: <AddTwoMP />
+  },
+  {
     path: "/admin/add-2tc-result",
     element: <AddTwoTCResult />
+  },
+  {
+    path: "/admin/add-2mp-result",
+    element: <AddTwoMPResult />
   },
   {
     path: "/admin/delete-2tc-result",

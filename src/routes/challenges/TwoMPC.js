@@ -18,6 +18,7 @@ export default function TwoMPC() {
     return <>
         <h1>2 Million Pops CHIMPS</h1>
         <p>In this challenge, win CHIMPS with a given tower so that pops on other towers are less than 42,693 (the total pops in a CHIMPS game, excluding regrows, minus 2 million).</p>
+        <p><a href="/admin/add-2mp-form">Add 2MP (Index Helpers)</a></p>
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
         <button type="button" onClick={onPrev}>Previous</button>
         <button type="button" onClick={onNext}>Next</button>
