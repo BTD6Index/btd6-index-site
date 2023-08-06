@@ -4,6 +4,7 @@ export default function useIndexSearch(endpoint) {
     const [query, setQuery] = useState('');
     const [offset, setOffset] = useState(0);
     const [completions, setCompletions] = useState([]);
+    const [hasNext, setHasNext] = useState(false);
 
     useEffect(() => {
         fetch(endpoint + "?" + new URLSearchParams({
@@ -20,11 +21,12 @@ export default function useIndexSearch(endpoint) {
         })
         .then(data => {
             if (data !== null) {
-                if (data.length === 0 && offset > 0) {
+                if (data.results.length === 0 && offset > 0) {
                     setOffset(Math.max(offset - 10, 0));
                 } else {
-                    setCompletions(data);
+                    setCompletions(data.results);
                 }
+                setHasNext(data.more);
             }
         })
         .catch(err => console.log(err));
@@ -46,6 +48,8 @@ export default function useIndexSearch(endpoint) {
     return {
         query,
         completions,
+        offset,
+        hasNext,
         onSearch,
         onPrev,
         onNext

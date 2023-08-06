@@ -3,7 +3,7 @@ import useToggleList from "../../util/useToggleList";
 import { useRef, useCallback } from "react";
 
 export default function TwoMPC() {
-    const {query, completions, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2mp");
+    const {query, completions, offset, hasNext, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2mp");
 
     const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
 
@@ -20,8 +20,8 @@ export default function TwoMPC() {
         <p>In this challenge, win CHIMPS with a given tower so that pops on other towers are less than 42,693 (the total pops in a CHIMPS game, excluding regrows, minus 2 million).</p>
         <p><a href="/admin/add-2mp-form">Add 2MP (Index Helpers)</a></p>
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
-        <button type="button" onClick={onPrev}>Previous</button>
-        <button type="button" onClick={onNext}>Next</button>
+        <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
+        <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>
         <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
             Delete Selected
         </button>
