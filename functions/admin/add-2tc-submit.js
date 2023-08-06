@@ -23,7 +23,9 @@ export async function onRequest(context) {
     let link;
     let key;
 
-    if (form_data.has('image')) {
+    const hasImage = form_data.has('image') && form_data.get('image') instanceof File;
+
+    if (hasImage) {
         key = crypto.randomUUID();
         link = `https://media.btd6index.win/${key}`;
     } else {
@@ -36,7 +38,7 @@ export async function onRequest(context) {
     .bind(form_data.get('tower1'), form_data.get('tower2'), form_data.get('map'), form_data.get('person'), link, form_data.has('og') ? '1' : '0')
     .run();
 
-    if (form_data.has('image')) {
+    if (hasImage) {
         // upload only when uuid doesn't exist
         let r2Obj = await context.env.BTD6_INDEX_MEDIA.put(
             key, form_data.get('image').stream(), {onlyIf: {etagDoesNotMatch: '*'}}

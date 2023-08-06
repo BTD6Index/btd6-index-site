@@ -16,6 +16,11 @@ nav ul {
   margin: 0;
 }
 
+button:disabled {
+  background-color: #777;
+  cursor: initial;
+}
+
 @media only screen and (max-width: 768px) {
   nav::before {
     content: url("hamburger_menu.svg");
@@ -43,6 +48,10 @@ nav ul {
   .dropdown {
     font-size: 75%;
     padding-left: 1em;
+  }
+
+  table {
+    font-size: 50%;
   }
 }
 
@@ -133,4 +142,8 @@ input[type="checkbox"] {
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.dangerButton:not(:disabled) {
+  background-color: #d00;
 }

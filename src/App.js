@@ -9,6 +9,8 @@ import TwoTC from './routes/challenges/TwoTC';
 import TwoMPC from './routes/challenges/TwoMPC';
 import AddTwoTC from './routes/admin/AddTwoTC';
 import AddTwoTCResult from './routes/admin/AddTwoTCResult';
+import DeleteTwoTCResult from './routes/admin/DeleteTwoTCResult';
+import NotFound from './routes/NotFound';
 
 
 const router = createBrowserRouter([
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
   {
     path: "/admin/add-2tc-result",
     element: <AddTwoTCResult />
+  },
+  {
+    path: "/admin/delete-2tc-result",
+    element: <DeleteTwoTCResult />
+  },
+  {
+    path: "*",
+    element: <NotFound />
   }
 ]);
 

@@ -1,7 +1,18 @@
 import useIndexSearch from "../../util/useIndexSearch";
+import { useCallback, useRef, useState } from "react";
 
 export default function TwoTC() {
     const {query, completions, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2tc");
+
+    const [selectedCompletions, setSelectedCompletions] = useState([]);
+
+    const deleteForm = useRef(null);
+
+    const onDelete = useCallback(() => {
+        if (window.confirm(`Are you sure you want to delete ${selectedCompletions.length} completion(s)?`)) {
+            deleteForm.current.submit();
+        }
+    }, [selectedCompletions, deleteForm]);
 
     return <>
         <h1>Two Towers CHIMPS</h1>
@@ -10,6 +21,9 @@ export default function TwoTC() {
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
         <button type="button" onClick={onPrev}>Previous</button>
         <button type="button" onClick={onNext}>Next</button>
+        <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
+            Delete Selected
+        </button>
         <table>
             <thead>
                 <tr>
@@ -19,22 +33,46 @@ export default function TwoTC() {
                     <th>Player</th>
                     <th>Completion Link</th>
                     <th>OG?</th>
+                    <th>Select</th>
                 </tr>
             </thead>
             <tbody>
                 {
                     completions.map(
-                        completion => <tr>
-                            <td>{completion.tower1}</td>
-                            <td>{completion.tower2}</td>
-                            <td>{completion.map}</td>
-                            <td>{completion.person}</td>
-                            <td><a href={completion.link}>Link</a></td>
-                            <td>{completion.og ? 'Yes' : 'No'}</td>
-                        </tr>
+                        completion => {
+                            const rawKey = [completion.tower1, completion.tower2, completion.map];
+                            const key = JSON.stringify(rawKey);
+                            return <tr key={key}>
+                                <td>{completion.tower1}</td>
+                                <td>{completion.tower2}</td>
+                                <td>{completion.map}</td>
+                                <td>{completion.person}</td>
+                                <td><a href={completion.link}>Link</a></td>
+                                <td>{completion.og ? 'Yes' : 'No'}</td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        style={{verticalAlign: "middle"}}
+                                        checked={selectedCompletions.includes(key)}
+                                        onChange={event => {
+                                            if (event.target.checked) {
+                                                setSelectedCompletions(state => [...state, key]);
+                                            } else {
+                                                setSelectedCompletions(state => state.filter(item => item !== key));
+                                            }
+                                        }}
+                                    />
+                                </td>
+                            </tr>;
+                        }
                     )
                 }
             </tbody>
         </table>
+        <form ref={deleteForm} style={{display: 'none'}} action="/admin/delete-2tc-submit" method="post">
+            <input type="hidden" name="entries" value={
+                JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
+                } />
+        </form>
     </>
 };

@@ -2,14 +2,9 @@ import Select from "react-select";
 import towerNames from "../../util/tower-names.json";
 import heroNames from "../../util/heroes.json";
 import maps from "../../util/maps.json";
+import selectStyle from "../../util/selectStyle";
 
 export default function AddTwoTC() {
-    const selectStyle = {
-        control: styles => ({...styles, color: 'black'}),
-        container: styles => ({...styles, display: 'inline-block', width: '15ch', textAlign: 'left'}),
-        option: (styles, { data, isDisabled, isFocused, isSelected }) => ({...styles, color: 'black'})
-    };
-
     const towerOptions = Object.values(towerNames)
         .flatMap(entries => Object.values(entries)).concat(Object.keys(heroNames))
         .map(entry => ({value: entry, label: entry}));
