@@ -21,6 +21,14 @@ button:disabled {
   cursor: initial;
 }
 
+button.dangerButton:disabled {
+  background-color: #500;
+}
+
+button.dangerButton:not(:disabled) {
+  background-color: #d11;
+}
+
 @media only screen and (max-width: 768px) {
   nav::before {
     content: url("hamburger_menu.svg");
@@ -43,15 +51,12 @@ button:disabled {
 
   nav > ul:hover, nav:hover > ul {
     display: initial;
+    z-index: 2;
   }
 
   .dropdown {
     font-size: 75%;
     padding-left: 1em;
-  }
-
-  table {
-    font-size: 50%;
   }
 }
 
@@ -82,7 +87,7 @@ button:disabled {
 
 main {
   text-align: center;
-  font-size: 2em;
+  font-size: calc(1vw + 1.5vh);
   padding: 0 1rem;
 }
 
@@ -92,7 +97,7 @@ a.nolinkstyle {
 }
 
 input, button, select {
-  font-size: 2rem;
+  font-size: calc(1vw + 1.5vh);
   font-family: Dosis, sans-serif;
   background: white;
   color: black;
@@ -132,8 +137,8 @@ label {
 }
 
 input[type="checkbox"] {
-  width: 2rem;
-  height: 2rem;
+  width: calc(1vw + 1.5vh);
+  height: calc(1vw + 1.5vh);
 }
 
 .formLine {
@@ -142,8 +147,4 @@ input[type="checkbox"] {
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
-}
-
-.dangerButton:not(:disabled) {
-  background-color: #d00;
 }
