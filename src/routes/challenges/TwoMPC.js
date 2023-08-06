@@ -9,6 +9,7 @@ export default function TwoMPC() {
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
         <button type="button" onClick={onPrev}>Previous</button>
         <button type="button" onClick={onNext}>Next</button>
+        <div className="tableContainer">
         <table>
             <thead>
                 <tr>
@@ -33,5 +34,6 @@ export default function TwoMPC() {
                 }
             </tbody>
         </table>
+        </div>
     </>
 };

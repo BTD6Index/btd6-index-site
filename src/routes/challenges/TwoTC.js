@@ -24,6 +24,7 @@ export default function TwoTC() {
         <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
             Delete Selected
         </button>
+        <div className="tableContainer">
         <table>
             <thead>
                 <tr>
@@ -69,6 +70,7 @@ export default function TwoTC() {
                 }
             </tbody>
         </table>
+        </div>
         <form ref={deleteForm} style={{display: 'none'}} action="/admin/delete-2tc-submit" method="post">
             <input type="hidden" name="entries" value={
                 JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
