@@ -8,7 +8,7 @@ export default function AddTwoMPResult() {
             <p>{queryParams.error}</p>
             <p><a href='/admin/add-2mp-form'>Try again</a> | <a href='/2mp'>View 2MPs</a></p>
         </>
-    } else if (!queryParams.get('inserted')) {
+    } else if (!queryParams.get('inserted') || ['0', 'false'].includes(queryParams.get('inserted'))) {
         return <>
             <h1>2MP already exists</h1>
             <p><a href='/admin/add-2mp-form'>Add another</a> | <a href='/2mp'>View 2MPs</a></p>

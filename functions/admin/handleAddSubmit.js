@@ -32,11 +32,11 @@ async function handleAddSubmit({context, challenge, fields}) {
         link = form_data.get('link');
     }
 
-    await context.env.BTD6_INDEX_DB
+    let result = await context.env.BTD6_INDEX_DB
     .prepare(`INSERT OR IGNORE INTO "${challenge}_completions" (${fields.join(',')},person,link,og) SELECT ${Array.from({length: fields.length + 3}, (_dummy, idx) => `?${idx+1}`).join(',')} `
-    + `WHERE NOT EXISTS (SELECT * FROM "${challenge}_completions" WHERE ${fields.map((field, idx) => `${field} = ?${idx+1}`).join(' AND ')})`)
+    + `WHERE NOT EXISTS (SELECT * FROM "${challenge}_completions" WHERE ${fields.map((field, idx) => `${field} = ?${idx+1}`).join(' AND ')}) RETURNING *`)
     .bind(...fields.map(field => form_data.get(field)), form_data.get('person'), link, form_data.has('og') ? '1' : '0')
-    .run();
+    .first();
 
     if (hasImage) {
         // upload only when uuid doesn't exist
@@ -48,7 +48,7 @@ async function handleAddSubmit({context, challenge, fields}) {
         }
     }
 
-    return Response.redirect(new URL(`/admin/add-${challenge}-result?inserted=true`, context.request.url), 302);
+    return Response.redirect(new URL(`/admin/add-${challenge}-result?inserted=${!!result}`, context.request.url), 302);
 }
 
 export { handleAddSubmit };

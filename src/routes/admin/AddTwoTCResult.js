@@ -8,7 +8,7 @@ export default function AddTwoTCResult() {
             <p>{queryParams.get('error')}</p>
             <p><a href='/admin/add-2tc-form'>Try again</a> | <a href='/2tc'>View 2TCs</a></p>
         </>
-    } else if (!queryParams.get('inserted')) {
+    } else if (!queryParams.get('inserted') || ['0', 'false'].includes(queryParams.get('inserted'))) {
         return <>
             <h1>2TC already exists</h1>
             <p><a href='/admin/add-2tc-form'>Add another</a> | <a href='/2tc'>View 2TCs</a></p>
