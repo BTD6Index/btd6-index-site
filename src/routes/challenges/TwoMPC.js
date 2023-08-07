@@ -47,7 +47,9 @@ export default function TwoMPC() {
                                 <td>{completion.map}</td>
                                 <td>{completion.person}</td>
                                 <td><a href={completion.link}>Link</a></td>
-                                <td>{completion.og ? 'Yes' : 'No'}</td>
+                                <td>{completion.og ? <a href={'/2mp/extra-info?' + new URLSearchParams([
+                                    ['entity', completion.entity]
+                                    ])}>Yes</a> : 'No'}</td>
                                 <td>
                                     <input
                                         type="checkbox"
