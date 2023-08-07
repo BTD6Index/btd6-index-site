@@ -14,6 +14,7 @@ import NotFound from './routes/NotFound';
 import DeleteTwoMPResult from './routes/admin/DeleteTwoMPResult';
 import AddTwoMP from './routes/admin/AddTwoMP';
 import AddTwoMPResult from './routes/admin/AddTwoMPResult';
+import TwoTCExtraInfo from './routes/challenges/info/TwoTCExtraInfo';
 
 
 const router = createBrowserRouter([
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/delete-2mp-result",
     element: <DeleteTwoMPResult />
+  },
+  {
+    path: "/2tc/extra-info",
+    element: <TwoTCExtraInfo />
   },
   {
     path: "*",

@@ -50,7 +50,9 @@ export default function TwoTC() {
                                 <td>{completion.map}</td>
                                 <td>{completion.person}</td>
                                 <td><a href={completion.link}>Link</a></td>
-                                <td>{completion.og ? 'Yes' : 'No'}</td>
+                                <td>{completion.og ? <a href={"/2tc/extra-info?" + new URLSearchParams([
+                                    ['tower1', completion.tower1], ['tower2', completion.tower2]]
+                                    )}>Yes</a> : 'No'}</td>
                                 <td>
                                     <input
                                         type="checkbox"
