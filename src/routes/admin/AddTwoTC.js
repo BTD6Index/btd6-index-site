@@ -57,22 +57,22 @@ export default function AddTwoTC() {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade1">Tower 1 Upgrade</label>
-                        <input name="upgrade1" type="text" placeholder="Upgrade 1" style={{width: '14ch'}} />
+                        <input name="upgrade1" type="text" placeholder="Upgrade 1" style={{width: '14ch'}} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="upgrade2">Tower 2 Upgrade</label>
-                        <input name="upgrade2" type="text" placeholder="Upgrade 2" style={{width: '14ch'}} />
+                        <input name="upgrade2" type="text" placeholder="Upgrade 2" style={{width: '14ch'}} required />
                     </span>
                     <br />
                     <span className="formLine">
-                        <label htmlFor="update">Update</label>
-                        <input name="update" type="text" placeholder="Update" style={{width: '14ch'}} />
+                        <label htmlFor="version">Update</label>
+                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} />
+                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} required />
                     </span>
                     <br />
                 </>

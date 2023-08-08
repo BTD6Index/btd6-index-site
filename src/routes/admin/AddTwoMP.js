@@ -52,17 +52,17 @@ export default function AddTwoMP() {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade">Upgrade</label>
-                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} />
+                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} required />
                     </span>
                     <br />
                     <span className="formLine">
-                        <label htmlFor="update">Update</label>
-                        <input name="update" type="text" placeholder="Update" style={{width: '14ch'}} />
+                        <label htmlFor="version">Update</label>
+                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} />
+                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} required />
                     </span>
                     <br />
                 </>
