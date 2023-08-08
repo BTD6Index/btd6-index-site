@@ -21,5 +21,5 @@ export async function onRequest(context) {
         .bind(offset, count+1);
     }
     let query_result = await query_stmt.all();
-    return Response.json({results: query_result['results'].slice(0, -1), more: query_result['results'].length > count});
+    return Response.json({results: query_result['results'].slice(0, count-1), more: query_result['results'].length > count});
 }

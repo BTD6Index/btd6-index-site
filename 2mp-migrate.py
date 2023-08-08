@@ -2,9 +2,9 @@ import json
 import re
 import argparse
 
-parser = argparse.ArgumentParser(description='Migrate 2tcs from a Cyber Quincy dump to SQL for the index website.')
-parser.add_argument('input_file')
-parser.add_argument('output_file')
+parser = argparse.ArgumentParser(description='Migrate 2mps from a Cyber Quincy dump to SQL for the index website.')
+parser.add_argument('--input_file', default='../cyberquincy/cache/index/2mp.json')
+parser.add_argument('--output_file', default='2mp-migrate.sql')
 args = parser.parse_args()
 
 def sql_escape(s: str):

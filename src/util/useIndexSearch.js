@@ -21,12 +21,10 @@ export default function useIndexSearch(endpoint) {
         })
         .then(data => {
             if (data !== null) {
-                if (data.results.length === 0 && offset > 0) {
-                    setOffset(Math.max(offset - 10, 0));
-                } else {
-                    setCompletions(data.results);
-                }
+                setCompletions(data.results);
                 setHasNext(data.more);
+            } else {
+                setHasNext(false);
             }
         })
         .catch(err => console.log(err));
