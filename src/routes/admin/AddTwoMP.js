@@ -3,8 +3,11 @@ import towerNames from "../../util/tower-names.json";
 import heroNames from "../../util/heroes.json";
 import maps from "../../util/maps.json";
 import selectStyle from "../../util/selectStyle";
+import { useState } from "react";
 
 export default function AddTwoMP() {
+    const [isOG, setOG] = useState(false);
+
     const towerOptions = Object.values(towerNames)
         .flatMap(entries => Object.values(entries)).concat(Object.keys(heroNames))
         .map(entry => ({value: entry, label: entry}));
@@ -42,9 +45,28 @@ export default function AddTwoMP() {
             <br />
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
-                <input type="checkbox" name="og" />
+                <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} />
             </span>
             <br />
+            {
+                isOG && <>
+                    <span className="formLine">
+                        <label htmlFor="upgrade">Upgrade</label>
+                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} />
+                    </span>
+                    <br />
+                    <span className="formLine">
+                        <label htmlFor="update">Update</label>
+                        <input name="update" type="text" placeholder="Update" style={{width: '14ch'}} />
+                    </span>
+                    <br />
+                    <span className="formLine">
+                        <label htmlFor="date">Completion Date</label>
+                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} />
+                    </span>
+                    <br />
+                </>
+            }
             <input type="submit" name="submit" value="Add 2MP" />
         </form>
     </>
