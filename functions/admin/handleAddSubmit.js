@@ -38,12 +38,17 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
         link = form_data.get('link');
     }
 
+    // ?1, ..., ?[number of fields, plus 3 for person/link/og]
     const all_fields_placeholder = Array.from({length: fields.length + 3}, (_dummy, idx) => `?${idx+1}`).join(',');
+    // ?1, ..., ?[number of fields]
     const info_fields_placeholder = Array.from({length: extraInfoFields.length}, (_dummy, idx) => `?${idx+1}`).join(',');
+    // field1 = ?1 AND field2 = ?2 AND ...
     const fields_condition = fields.map((field, idx) => `${field} = ?${idx+1}`).join(' AND ');
+    // Adds the completion to the table if there is no duplicate completion.
     const add_completion_stmt = `INSERT OR IGNORE INTO "${challenge}_completions" (${fields.join(',')},person,link,og) SELECT ${all_fields_placeholder} `
     + `WHERE NOT EXISTS (SELECT * FROM "${challenge}_completions" WHERE ${fields_condition}) RETURNING *`;
-    const add_info_stmt = `INSERT OR ROLLBACK INTO "${challenge}_extra_info" VALUES (${info_fields_placeholder})`;
+    // Adds OG completion info, rolling back if there is a duplicate.
+    const add_info_stmt = `INSERT OR ROLLBACK INTO "${challenge}_extra_info" VALUES (${info_fields_placeholder}) RETURNING *`;
 
     let batch = [
         db.prepare(add_completion_stmt)
