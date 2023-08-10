@@ -1,3 +1,7 @@
+function fieldsCondition(fields, startIdx) {
+    return fields.map((field, idx) => `${field} = ?${idx + startIdx}`).join(' AND ');
+}
+
 async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
     const db = context.env.BTD6_INDEX_DB;
 
@@ -11,6 +15,8 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
     }
 
     let form_data = await context.request.formData();
+
+    const edit_mode = ['true', '1'].includes(form_data.get('edit'));
 
     for (let key of fields.concat(form_data.has('og') ? extraInfoFields : [])) {
         if (!form_data.has(key)) {
@@ -38,28 +44,53 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
         link = form_data.get('link');
     }
 
+    const shared_fields = fields.filter(field => extraInfoFields.includes(field));
+
     // ?1, ..., ?[number of fields, plus 3 for person/link/og]
     const all_fields_placeholder = Array.from({length: fields.length + 3}, (_dummy, idx) => `?${idx+1}`).join(',');
     // ?1, ..., ?[number of fields]
     const info_fields_placeholder = Array.from({length: extraInfoFields.length}, (_dummy, idx) => `?${idx+1}`).join(',');
-    // field1 = ?1 AND field2 = ?2 AND ...
-    const fields_condition = fields.map((field, idx) => `${field} = ?${idx+1}`).join(' AND ');
-    // Adds the completion to the table if there is no duplicate completion.
-    const add_completion_stmt = `INSERT OR IGNORE INTO "${challenge}_completions" (${fields.join(',')},person,link,og) SELECT ${all_fields_placeholder} `
-    + `WHERE NOT EXISTS (SELECT * FROM "${challenge}_completions" WHERE ${fields_condition}) RETURNING *`;
-    // Adds OG completion info, rolling back if there is a duplicate.
-    const add_info_stmt = `INSERT OR ROLLBACK INTO "${challenge}_extra_info" VALUES (${info_fields_placeholder}) RETURNING *`;
 
+    const completion_already_exists = `SELECT * FROM "${challenge}_completions" WHERE ${fieldsCondition(fields, 1)}`;
+
+    let add_completion_stmt;
+    let add_info_stmt;
+    if (edit_mode) {
+        add_completion_stmt = `UPDATE "${challenge}_completions" SET (${fields.join(',')},person,link,og) = (${all_fields_placeholder}) WHERE ${fieldsCondition(fields, fields.length + 4)} AND NOT EXISTS (${completion_already_exists})`;
+        add_info_stmt = `UPDATE "${challenge}_extra_info" SET (${extraInfoFields.join(',')}) = (${info_fields_placeholder}) WHERE ${fieldsCondition(shared_fields, extraInfoFields.length + 1)}`;
+    } else {
+        add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og) SELECT ${all_fields_placeholder} `
+        + `WHERE NOT EXISTS (${completion_already_exists}) RETURNING *`;
+        add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${info_fields_placeholder}) RETURNING *`;
+    }
+    
     let batch = [
+        db.prepare(completion_already_exists).bind(...fields.map(field => form_data.get(field))),
         db.prepare(add_completion_stmt)
-        .bind(...fields.map(field => form_data.get(field)), form_data.get('person'), link, form_data.has('og') ? 1 : 0)
+        .bind(
+            ...fields.map(field => form_data.get(field)),
+            form_data.get('person'),
+            link,
+            form_data.has('og') ? 1 : 0,
+            ...fields.map(field => form_data.get(`edited-${field}`)))
     ];
     if (form_data.has('og')) {
-        batch.push(db.prepare(add_info_stmt).bind(...extraInfoFields.map(field => form_data.get(field))));
+        batch.push(
+            db.prepare(add_info_stmt)
+            .bind(
+                ...extraInfoFields.map(field => form_data.get(field)),
+                ...shared_fields.map(field => form_data.get(`edited-${field}`)))
+        );
     }
 
-    let batch_result = await db.batch(batch);
-    let inserted = batch_result[0].results.length > 0;
+    let batch_result;
+    try {
+        batch_result = await db.batch(batch);
+    } catch (e) {
+        return redirectError(e.message);
+    }
+    
+    let inserted = batch_result[0].results.length == 0;
 
     if (inserted && hasImage) {
         // upload only when uuid doesn't exist
@@ -71,7 +102,7 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
         }
     }
 
-    return Response.redirect(new URL(`/admin/add-${challenge}-result?inserted=${inserted}`, context.request.url), 302);
+    return Response.redirect(new URL(`/admin/add-${challenge}-result?edit=${edit_mode}&inserted=${inserted}`, context.request.url), 302);
 }
 
 export { handleAddSubmit };

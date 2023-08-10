@@ -4,9 +4,12 @@ import heroNames from "../../util/heroes.json";
 import maps from "../../util/maps.json";
 import selectStyle from "../../util/selectStyle";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-export default function AddTwoMP() {
+function ManipTwoMP({editedEntity = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
+
+    const doEdit = editedEntity !== null && editedMap !== null;
 
     const towerOptions = Object.values(towerNames)
         .flatMap(entries => Object.values(entries)).concat(Object.keys(heroNames))
@@ -16,7 +19,7 @@ export default function AddTwoMP() {
         .map(entry => ({value: entry[1], label: entry[0]}));
 
     return <>
-        <h1>Add a 2MP Completion</h1>
+        <h1>{doEdit ? `Edit ${editedEntity} 2MP on ${editedMap}` : "Add a 2MP Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/admin/add-2mp-submit">
             <span className="formLine">
                 <label htmlFor="entity">Tower</label>
@@ -67,7 +70,24 @@ export default function AddTwoMP() {
                     <br />
                 </>
             }
-            <input type="submit" name="submit" value="Add 2MP" />
+            <input type="hidden" name="edited-entity" value={editedEntity} />
+            <input type="hidden" name="edited-map" value={editedMap} />
+            <input type="hidden" name="edit" value={doEdit} />
+            <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} />
         </form>
     </>
 };
+
+function AddTwoMP() {
+    return <ManipTwoMP />;
+}
+
+function EditTwoMP() {
+    const [params,] = useSearchParams();
+    if (!params.has('entity') || !params.has('map')) {
+        return <h1>Need to specify entity and map</h1>;
+    }
+    return <ManipTwoMP editedEntity={params.get('entity')} editedMap={params.get('map')} />
+};
+
+export {AddTwoMP, EditTwoMP};

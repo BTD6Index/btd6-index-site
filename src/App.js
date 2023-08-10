@@ -12,7 +12,7 @@ import AddTwoTCResult from './routes/admin/AddTwoTCResult';
 import DeleteTwoTCResult from './routes/admin/DeleteTwoTCResult';
 import NotFound from './routes/NotFound';
 import DeleteTwoMPResult from './routes/admin/DeleteTwoMPResult';
-import AddTwoMP from './routes/admin/AddTwoMP';
+import { AddTwoMP, EditTwoMP } from './routes/admin/ManipTwoMP';
 import AddTwoMPResult from './routes/admin/AddTwoMPResult';
 import TwoTCExtraInfo from './routes/challenges/info/TwoTCExtraInfo';
 import TwoMPExtraInfo from './routes/challenges/info/TwoMPExtraInfo';
@@ -38,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/add-2mp-form",
     element: <AddTwoMP />
+  },
+  {
+    path: "/admin/edit-2mp-form",
+    element: <EditTwoMP />
   },
   {
     path: "/admin/add-2tc-result",

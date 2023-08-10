@@ -35,6 +35,7 @@ export default function TwoMPC() {
                     <th>Completion Link</th>
                     <th>OG?</th>
                     <th>Select</th>
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,6 +61,9 @@ export default function TwoMPC() {
                                         }}
                                     />
                                 </td>
+                                <td><a href={"/admin/edit-2mp-form?" + new URLSearchParams([
+                                    ["entity", completion.entity], ["map", completion.map]
+                                ])}>Edit</a></td>
                             </tr>;
                         }
                     )
