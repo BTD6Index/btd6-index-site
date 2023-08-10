@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import TwoTC from './routes/challenges/TwoTC';
 import TwoMPC from './routes/challenges/TwoMPC';
-import AddTwoTC from './routes/admin/AddTwoTC';
+import { AddTwoTC, EditTwoTC } from './routes/admin/ManipTwoTC';
 import AddTwoTCResult from './routes/admin/AddTwoTCResult';
 import DeleteTwoTCResult from './routes/admin/DeleteTwoTCResult';
 import NotFound from './routes/NotFound';
@@ -42,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/admin/edit-2mp-form",
     element: <EditTwoMP />
+  },
+  {
+    path: "/admin/edit-2tc-form",
+    element: <EditTwoTC />
   },
   {
     path: "/admin/add-2tc-result",

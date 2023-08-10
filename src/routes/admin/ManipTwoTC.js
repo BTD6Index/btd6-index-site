@@ -4,8 +4,9 @@ import heroNames from "../../util/heroes.json";
 import maps from "../../util/maps.json";
 import selectStyle from "../../util/selectStyle";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-export default function AddTwoTC() {
+function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
 
     const towerOptions = Object.values(towerNames)
@@ -15,8 +16,10 @@ export default function AddTwoTC() {
     const mapOptions = Object.entries(maps)
         .map(entry => ({value: entry[1], label: entry[0]}));
 
+    const doEdit = editedTower1 !== null && editedTower2 !== null && editedMap !== null;
+
     return <>
-        <h1>Add a 2TC Completion</h1>
+        <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC` : "Add a 2TC Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/admin/add-2tc-submit">
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1</label>
@@ -77,7 +80,24 @@ export default function AddTwoTC() {
                     <br />
                 </>
             }
-            <input type="submit" name="submit" value="Add 2TC" />
+            <input type="hidden" name="edited-tower1" value={editedTower1} />
+            <input type="hidden" name="edited-tower2" value={editedTower2} />
+            <input type="hidden" name="edited-map" value={editedMap} />
+            <input type="hidden" name="edit" value={doEdit} />
+            <input type="submit" name="submit" value={doEdit ? "Update 2TC" : "Add 2TC"} />
         </form>
     </>
 };
+
+function AddTwoTC() {
+    return <ManipTwoTC />;
+}
+function EditTwoTC() {
+    const [params,] = useSearchParams();
+    if (['tower1', 'tower2', 'map'].some(key => !params.has(key))) {
+        return <h1>Need to specify tower1, tower2, and map</h1>;
+    }
+    return <ManipTwoTC editedTower1={params.get('tower1')} editedTower2={params.get('tower2')} editedMap={params.get('map')} />
+};
+
+export {AddTwoTC, EditTwoTC};

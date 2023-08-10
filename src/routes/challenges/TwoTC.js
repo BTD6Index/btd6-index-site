@@ -36,6 +36,7 @@ export default function TwoTC() {
                     <th>Completion Link</th>
                     <th>OG?</th>
                     <th>Select</th>
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,6 +64,11 @@ export default function TwoTC() {
                                         }}
                                     />
                                 </td>
+                                <td><a href={"/admin/edit-2tc-form?" + new URLSearchParams([
+                                    ["tower1", completion.tower1],
+                                    ["tower2", completion.tower2],
+                                    ["map", completion.map]
+                                ])}>Edit</a></td>
                             </tr>;
                         }
                     )
