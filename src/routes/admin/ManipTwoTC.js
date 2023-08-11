@@ -26,7 +26,7 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
                 } else {
                     setExistingInfo(json.results);
                     let og = json.results?.[0]?.og;
-                    setOG(og);
+                    setOG(!!og);
                     if (og) {
                         let ogRes = await fetch('/fetch-2tc-og-info?' + new URLSearchParams([
                             ['tower1', editedTower1],
