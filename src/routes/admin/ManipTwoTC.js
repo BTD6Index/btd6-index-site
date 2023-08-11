@@ -47,25 +47,25 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
 
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>
-        <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC` : "Add a 2TC Completion"}</h1>
+        <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC on ${editedMap}` : "Add a 2TC Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/admin/add-2tc-submit">
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1</label>
-                <Select name="tower1" options={towerToOptions.values()} styles={selectStyle} value={
+                <Select name="tower1" options={[...towerToOptions.values()]} styles={selectStyle} value={
                     towerToOptions.get(existingInfo?.[0]?.tower1)
                     } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="tower2">Tower 2</label>
-                <Select name="tower2" options={towerToOptions.values()} styles={selectStyle} value={
+                <Select name="tower2" options={[...towerToOptions.values()]} styles={selectStyle} value={
                     towerToOptions.get(existingInfo?.[0]?.tower2)
                     } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={mapToOptions.values()} styles={selectStyle} value={
+                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} value={
                     mapToOptions.get(existingInfo?.[0]?.map)
                     } required />
             </span>

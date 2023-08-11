@@ -8,12 +8,40 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
+    const [ogInfo, setOGInfo] = useState(null);
 
     const doEdit = editedEntity !== null && editedMap !== null;
 
     useEffect(() => {
-
-    }, []);
+        if (doEdit) {
+            fetch('/fetch-2mp?' + new URLSearchParams([
+                ['entity', editedEntity],
+                ['map', editedMap]
+            ])).then(async (res) => {
+                let json = await res.json();
+                if ('error' in json) {
+                    console.log(json.error);
+                    setExistingInfo(null);
+                } else {
+                    setExistingInfo(json.results);
+                    let og = json.results?.[0]?.og;
+                    setOG(!!og);
+                    if (og) {
+                        let ogRes = await fetch('/fetch-2mp-og-info?' + new URLSearchParams([
+                            ['entity', editedEntity]
+                        ]));
+                        let ogJson = await ogRes.json();
+                        if ('error' in ogJson) {
+                            console.log(ogJson.error);
+                            setOGInfo(null);
+                        } else {
+                            setOGInfo(ogJson.result);
+                        }
+                    }
+                }
+            });
+        };
+    }, [doEdit, editedEntity, editedMap]);
 
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>
@@ -21,22 +49,26 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
         <form method="post" encType="multipart/form-data" action="/admin/add-2mp-submit">
             <span className="formLine">
                 <label htmlFor="entity">Tower</label>
-                <Select name="entity" options={towerToOptions.values()} styles={selectStyle} required />
+                <Select name="entity" options={[...towerToOptions.values()]} styles={selectStyle} value={
+                    towerToOptions.get(existingInfo?.[0]?.entity)
+                    } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={mapToOptions.values()} styles={selectStyle} required />
+                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} value={
+                    mapToOptions.get(existingInfo?.[0]?.map)
+                } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="person">Person</label>
-                <input name="person" type="text" placeholder="Person" style={{width: '14ch'}} required />
+                <input name="person" type="text" placeholder="Person" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="link">Link</label>
-                <input name="link" type="text" placeholder="Link" style={{width: '14ch'}} />
+                <input name="link" type="text" placeholder="Link" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.link} />
             </span>
             <br />
             <span className="formLine">
@@ -46,24 +78,24 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
             <br />
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
-                <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} />
+                <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
             </span>
             <br />
             {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade">Upgrade</label>
-                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} required />
+                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} value={ogInfo?.upgrade} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="version">Update</label>
-                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} required />
+                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} value={ogInfo?.version} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} required />
+                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} value={ogInfo?.date} required />
                     </span>
                     <br />
                 </>
