@@ -3,7 +3,7 @@ import { useCallback, useRef } from "react";
 import useToggleList from "../../util/useToggleList";
 
 export default function TwoTC() {
-    const {query, completions, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2tc");
+    const {query, completions, offset, hasNext, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2tc");
 
     const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
 
@@ -20,8 +20,8 @@ export default function TwoTC() {
         <p>In this challenge, win a game of CHIMPS with buying exactly two towers (including heroes).</p>
         <p><a href="/admin/add-2tc-form">Add 2TC (Index Helpers)</a></p>
         <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
-        <button type="button" onClick={onPrev}>Previous</button>
-        <button type="button" onClick={onNext}>Next</button>
+        <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
+        <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>
         <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
             Delete Selected
         </button>

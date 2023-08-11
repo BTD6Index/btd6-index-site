@@ -13,12 +13,12 @@ export async function onRequest(context) {
     if (query) {
         let tokenized_query = query.split(/\s+/);
         query_stmt = context.env.BTD6_INDEX_DB
-        .prepare(`SELECT * FROM "2mp_completions" (?1) ORDER BY entity, map LIMIT ?3 OFFSET ?2`)
-        .bind(tokenized_query.map(token => `"${token.replace('"', '\\"')}"`).join(" "), offset, count+1);
+        .prepare(`SELECT * FROM "2mp_completions" (?1) ORDER BY entity, map LIMIT ?2 OFFSET ?3`)
+        .bind(tokenized_query.map(token => `"${token.replace('"', '\\"')}"`).join(" "), count+1, offset);
     } else {
         query_stmt = context.env.BTD6_INDEX_DB
-        .prepare(`SELECT * FROM "2mp_completions" ORDER BY entity, map LIMIT ?2 OFFSET ?1`)
-        .bind(offset, count+1);
+        .prepare(`SELECT * FROM "2mp_completions" ORDER BY entity, map LIMIT ?1 OFFSET ?2`)
+        .bind(count+1, offset);
     }
     let query_result = await query_stmt.all();
     return Response.json({results: query_result['results'].slice(0, count-1), more: query_result['results'].length > count});

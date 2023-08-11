@@ -1,34 +1,32 @@
 import Select from "react-select";
-import towerNames from "../../util/tower-names.json";
-import heroNames from "../../util/heroes.json";
-import maps from "../../util/maps.json";
 import selectStyle from "../../util/selectStyle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { mapToOptions, towerToOptions } from "../../util/selectOptions";
 
 function ManipTwoMP({editedEntity = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
 
+    const [existingInfo, setExistingInfo] = useState(null);
+
     const doEdit = editedEntity !== null && editedMap !== null;
 
-    const towerOptions = Object.values(towerNames)
-        .flatMap(entries => Object.values(entries)).concat(Object.keys(heroNames))
-        .map(entry => ({value: entry, label: entry}));
+    useEffect(() => {
 
-    const mapOptions = Object.entries(maps)
-        .map(entry => ({value: entry[1], label: entry[0]}));
+    }, []);
 
     return <>
+        <p><a href="/2mp">Back to 2MPs</a></p>
         <h1>{doEdit ? `Edit ${editedEntity} 2MP on ${editedMap}` : "Add a 2MP Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/admin/add-2mp-submit">
             <span className="formLine">
                 <label htmlFor="entity">Tower</label>
-                <Select name="entity" options={towerOptions} styles={selectStyle} required />
+                <Select name="entity" options={towerToOptions.values()} styles={selectStyle} required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={mapOptions} styles={selectStyle} required />
+                <Select name="map" options={mapToOptions.values()} styles={selectStyle} required />
             </span>
             <br />
             <span className="formLine">
