@@ -71,14 +71,15 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
             form_data.get('person'),
             link,
             form_data.has('og') ? 1 : 0,
-            ...fields.map(field => form_data.get(`edited-${field}`)))
+            ...(edit_mode ? fields.map(field => form_data.get(`edited-${field}`))) : [])
     ];
     if (form_data.has('og')) {
         batch.push(
             db.prepare(add_info_stmt)
             .bind(
                 ...extraInfoFields.map(field => form_data.get(field)),
-                ...shared_fields.map(field => form_data.get(`edited-${field}`)))
+                ...(edit_mode ? shared_fields.map(field => form_data.get(`edited-${field}`)) : [])
+            )
         );
     }
 
