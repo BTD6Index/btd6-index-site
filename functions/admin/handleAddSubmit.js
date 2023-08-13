@@ -71,7 +71,8 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
             form_data.get('person'),
             link,
             form_data.has('og') ? 1 : 0,
-            ...(edit_mode ? fields.map(field => form_data.get(`edited-${field}`))) : [])
+            ...(edit_mode ? fields.map(field => form_data.get(`edited-${field}`)) : [])
+        )
     ];
     if (form_data.has('og')) {
         batch.push(
