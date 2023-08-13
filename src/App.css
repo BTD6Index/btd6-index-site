@@ -4,11 +4,18 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  border-bottom: 1px solid white;
+  align-items: center;
 }
 
 .glueRat {
-  width: 1em;
-  height: 1em;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: middle;
+}
+
+.websiteTopLeftTitle {
+  vertical-align: middle;
 }
 
 nav ul {
@@ -29,9 +36,15 @@ button.dangerButton:not(:disabled) {
   background-color: #d11;
 }
 
+nav > ul, .dropdown {
+  background-color: #222;
+  z-index: 2;
+}
+
 @media only screen and (max-width: 768px) {
   nav::before {
     content: url("hamburger_menu.svg");
+    vertical-align: middle;
   }
 
   nav {
@@ -41,7 +54,6 @@ button.dangerButton:not(:disabled) {
   nav > ul {
     display: none;
     position: absolute;
-    background-color: black;
     border-radius: 0.2em;
     border: 1px solid white;
     top: 100%;
@@ -51,7 +63,6 @@ button.dangerButton:not(:disabled) {
 
   nav > ul:hover, nav:hover > ul {
     display: initial;
-    z-index: 2;
   }
 
   .dropdown {

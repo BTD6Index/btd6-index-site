@@ -1,18 +1,17 @@
 async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const db = context.env.BTD6_INDEX_DB;
 
-    const redirectError = (error) => {
-        return Response.redirect(
-            new URL(`/admin/delete-${challenge}-result?` + new URLSearchParams([['error', error]]), context.request.url), 302);
+    const respondError = (error) => {
+        return Response.json({error}, {status: 400});
     };
 
     if (context.request.method !== "POST") {
-        return redirectError(`Request method should be POST, got ${context.request.method}`);
+        return respondError(`Request method should be POST, got ${context.request.method}`);
     }
 
     let form_data = await context.request.formData();
     if (!form_data.has('entries')) {
-        return redirectError(`Need ${challenge} entries to delete passed in`);
+        return respondError(`Need ${challenge} entries to delete passed in`);
     }
 
     const delete_completion_condition = fields.map((field, idx) => `cmp.${field} = json_extract(value, '$[${idx}]')`).join(' AND ');
@@ -26,7 +25,7 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
         db.prepare(delete_completion_stmt).bind(form_data.get('entries'))
     ]);
 
-    return Response.redirect(new URL(`/admin/delete-${challenge}-result`, context.request.url), 302);
+    return Response.json({});
 }
 
 export { handleDeleteSubmit };

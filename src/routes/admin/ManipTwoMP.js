@@ -1,14 +1,20 @@
 import Select from "react-select";
 import selectStyle from "../../util/selectStyle";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../util/selectOptions";
+import adminsOnly from "../../util/adminsOnly";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function ManipTwoMP({editedEntity = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
     const [ogInfo, setOGInfo] = useState(null);
+
+    const theForm = useRef();
+
+    const { getAccessTokenWithPopup } = useAuth0();
 
     const doEdit = editedEntity !== null && editedMap !== null;
 
@@ -43,10 +49,36 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
         };
     }, [doEdit, editedEntity, editedMap]);
 
+    const submitCallback = useCallback((e) => {
+        e.preventDefault();
+        const formData = new FormData(theForm.current);
+        getAccessTokenWithPopup({
+            authorizationParams: {
+                audience: 'https://btd6index.win/'
+            }
+        }).then(async (token) => {
+            let result = await fetch(theForm.current.action, {
+                method: 'post',
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            result = await result.json();
+            if ('error' in result) {
+                throw new Error(result.error);
+            } else {
+                window.alert(result.inserted ? 'Successfully registered 2MP' : '2MP already exists');
+            }
+        }).catch(error => {
+            window.alert(`Error adding 2MP: ${error.message}`);
+        });
+    }, [getAccessTokenWithPopup]);
+
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>
         <h1>{doEdit ? `Edit ${editedEntity} 2MP on ${editedMap}` : "Add a 2MP Completion"}</h1>
-        <form method="post" encType="multipart/form-data" action="/admin/add-2mp-submit">
+        <form method="post" encType="multipart/form-data" action="/admin/add-2mp-submit" onSubmit={submitCallback} ref={theForm}>
             <span className="formLine">
                 <label htmlFor="entity">Tower</label>
                 <Select name="entity" options={[...towerToOptions.values()]} styles={selectStyle} value={
@@ -85,39 +117,39 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade">Upgrade</label>
-                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} value={ogInfo?.upgrade} required />
+                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} defaultValue={ogInfo?.upgrade} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="version">Update</label>
-                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} value={ogInfo?.version} required />
+                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} defaultValue={ogInfo?.version} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} value={ogInfo?.date} required />
+                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} defaultValue={ogInfo?.date} required />
                     </span>
                     <br />
                 </>
             }
-            <input type="hidden" name="edited-entity" value={editedEntity} />
-            <input type="hidden" name="edited-map" value={editedMap} />
+            {editedEntity && <input type="hidden" name="edited-entity" value={editedEntity} />}
+            {editedMap && <input type="hidden" name="edited-map" value={editedMap} />}
             <input type="hidden" name="edit" value={doEdit} />
             <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} />
         </form>
     </>
 };
 
-function AddTwoMP() {
+const AddTwoMP = adminsOnly(() => {
     return <ManipTwoMP />;
-}
+});
 
-function EditTwoMP() {
+const EditTwoMP = adminsOnly(() => {
     const [params,] = useSearchParams();
     if (!params.has('entity') || !params.has('map')) {
         return <h1>Need to specify entity and map</h1>;
     }
     return <ManipTwoMP editedEntity={params.get('entity')} editedMap={params.get('map')} />
-};
+});
 
 export {AddTwoMP, EditTwoMP};

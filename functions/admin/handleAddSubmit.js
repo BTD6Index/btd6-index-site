@@ -5,13 +5,12 @@ function fieldsCondition(fields, startIdx) {
 async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
     const db = context.env.BTD6_INDEX_DB;
 
-    const redirectError = (error) => {
-        return Response.redirect(
-            new URL(`/admin/add-${challenge}-result?` + new URLSearchParams([['error', error]]), context.request.url), 302);
+    const respondError = (error) => {
+        return Response.json({error}, {status: 400});
     };
 
     if (context.request.method !== "POST") {
-        return redirectError(`Request method should be POST, got ${context.request.method}`);
+        return respondError(`Request method should be POST, got ${context.request.method}`);
     }
 
     let form_data = await context.request.formData();
@@ -20,16 +19,16 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
 
     for (let key of fields.concat(form_data.has('og') ? extraInfoFields : [])) {
         if (!form_data.has(key)) {
-            return redirectError(`Missing required key: ${key}`);
+            return respondError(`Missing required key: ${key}`);
         }
     }
     
     if (!form_data.has('person')) {
-        return redirectError(`Missing required key: person`);
+        return respondError(`Missing required key: person`);
     }
 
     if (!form_data.has('link') && !form_data.has('image')) {
-        return redirectError('Need one of link or image keys');
+        return respondError('Need one of link or image keys');
     }
 
     let link;
@@ -87,7 +86,7 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
     try {
         batch_result = await db.batch(batch);
     } catch (e) {
-        return redirectError(e.message);
+        return respondError(e.message);
     }
     
     let inserted = batch_result[0].results.length == 0;
@@ -98,11 +97,11 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
             key, form_data.get('image').stream(), {onlyIf: {etagDoesNotMatch: '*'}}
         );
         if (r2Obj === null) {
-            return redirectError('Failed to upload object');
+            return respondError('Failed to upload object');
         }
     }
 
-    return Response.redirect(new URL(`/admin/add-${challenge}-result?edit=${edit_mode}&inserted=${inserted}`, context.request.url), 302);
+    return Response.json({ inserted });
 }
 
 export { handleAddSubmit };

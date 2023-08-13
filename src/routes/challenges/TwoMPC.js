@@ -1,19 +1,44 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import useIndexSearch from "../../util/useIndexSearch";
 import useToggleList from "../../util/useToggleList";
 import { useRef, useCallback } from "react";
 
 export default function TwoMPC() {
-    const {query, completions, offset, hasNext, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2mp");
+    const {query, completions, offset, hasNext, onSearch, onPrev, onNext, forceReload} = useIndexSearch("/fetch-2mp");
 
     const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
 
     const deleteForm = useRef(null);
 
-    const onDelete = useCallback(() => {
+    const { getAccessTokenWithPopup } = useAuth0();
+
+    const onDelete = useCallback(async () => {
         if (window.confirm(`Are you sure you want to delete ${selectedCompletions.length} completion(s)?`)) {
-            deleteForm.current.submit();
+            try {
+                const token = await getAccessTokenWithPopup({
+                    authorizationParams: {
+                        audience: 'https://btd6index.win/'
+                    }
+                });
+                let result = await fetch(deleteForm.current.action, {
+                    method: 'post',
+                    body: new FormData(deleteForm.current),
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                result = await result.json();
+                if ('error' in result) {
+                    throw new Error(result.error);
+                } else {
+                    window.alert('Successfully deleted 2MP.');
+                    forceReload();
+                }
+            } catch (error) {
+                window.alert(`Error deleting 2MP: ${error.message}`);
+            }
         }
-    }, [selectedCompletions, deleteForm]);
+    }, [selectedCompletions, deleteForm, getAccessTokenWithPopup, forceReload]);
 
     return <>
         <h1>2 Million Pops CHIMPS</h1>

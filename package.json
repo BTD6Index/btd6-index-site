@@ -3,18 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.0",
+    "@babel/plugin-proposal-private-property-in-object": "*",
     "@cloudflare/pages-plugin-cloudflare-access": "^1.0.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "jose": "^4.14.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.2",
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.4",
     "web-vitals": "^2.1.4",
-    "wrangler": "^3.4.0",
-    "@babel/plugin-proposal-private-property-in-object": "*"
+    "wrangler": "^3.4.0"
   },
   "scripts": {
     "start": "concurrently -k true 'npm:start-react' 'npm:start-wrangler'",

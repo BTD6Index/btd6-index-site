@@ -1,14 +1,20 @@
 import Select from "react-select";
 import selectStyle from "../../util/selectStyle";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../util/selectOptions";
+import adminsOnly from "../../util/adminsOnly";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
     const [ogInfo, setOGInfo] = useState(null);
+
+    const theForm = useRef();
+
+    const { getAccessTokenWithPopup } = useAuth0();
 
     const doEdit = editedTower1 !== null && editedTower2 !== null && editedMap !== null;
 
@@ -45,10 +51,36 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
         }
     }, [editedTower1, editedTower2, editedMap, doEdit]);
 
+    const submitCallback = useCallback((e) => {
+        e.preventDefault();
+        const formData = new FormData(theForm.current);
+        getAccessTokenWithPopup({
+            authorizationParams: {
+                audience: 'https://btd6index.win/'
+            }
+        }).then(async (token) => {
+            let result = await fetch(theForm.current.action, {
+                method: 'post',
+                body: formData,
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            result = await result.json();
+            if ('error' in result) {
+                throw new Error(result.error);
+            } else {
+                window.alert(result.inserted ? 'Successfully registered 2TC' : '2TC already exists');
+            }
+        }).catch(error => {
+            window.alert(`Error adding 2TC: ${error.message}`);
+        });
+    }, [getAccessTokenWithPopup]);
+
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>
         <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC on ${editedMap}` : "Add a 2TC Completion"}</h1>
-        <form method="post" encType="multipart/form-data" action="/admin/add-2tc-submit">
+        <form method="post" encType="multipart/form-data" action="/admin/add-2tc-submit" onSubmit={submitCallback} ref={theForm}>
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1</label>
                 <Select name="tower1" options={[...towerToOptions.values()]} styles={selectStyle} value={
@@ -114,24 +146,25 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
                     <br />
                 </>
             }
-            <input type="hidden" name="edited-tower1" value={editedTower1} />
-            <input type="hidden" name="edited-tower2" value={editedTower2} />
-            <input type="hidden" name="edited-map" value={editedMap} />
+            {editedTower1 && <input type="hidden" name="edited-tower1" value={editedTower1} />}
+            {editedTower2 && <input type="hidden" name="edited-tower2" value={editedTower2} />}
+            {editedMap && <input type="hidden" name="edited-map" value={editedMap} />}
             <input type="hidden" name="edit" value={doEdit} />
             <input type="submit" name="submit" value={doEdit ? "Update 2TC" : "Add 2TC"} />
         </form>
     </>
 };
 
-function AddTwoTC() {
+const AddTwoTC = adminsOnly(() => {
     return <ManipTwoTC />;
-}
-function EditTwoTC() {
+});
+
+const EditTwoTC = adminsOnly(() => {
     const [params,] = useSearchParams();
     if (['tower1', 'tower2', 'map'].some(key => !params.has(key))) {
         return <h1>Need to specify tower1, tower2, and map</h1>;
     }
     return <ManipTwoTC editedTower1={params.get('tower1')} editedTower2={params.get('tower2')} editedMap={params.get('map')} />
-};
+});
 
 export {AddTwoTC, EditTwoTC};

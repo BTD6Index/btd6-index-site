@@ -1,19 +1,44 @@
 import useIndexSearch from "../../util/useIndexSearch";
 import { useCallback, useRef } from "react";
 import useToggleList from "../../util/useToggleList";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function TwoTC() {
-    const {query, completions, offset, hasNext, onSearch, onPrev, onNext} = useIndexSearch("/fetch-2tc");
+    const {query, completions, offset, hasNext, onSearch, onPrev, onNext, forceReload} = useIndexSearch("/fetch-2tc");
 
     const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
 
     const deleteForm = useRef(null);
 
-    const onDelete = useCallback(() => {
+    const { getAccessTokenWithPopup } = useAuth0();
+
+    const onDelete = useCallback(async () => {
         if (window.confirm(`Are you sure you want to delete ${selectedCompletions.length} completion(s)?`)) {
-            deleteForm.current.submit();
+            try {
+                const token = await getAccessTokenWithPopup({
+                    authorizationParams: {
+                        audience: 'https://btd6index.win/'
+                    }
+                });
+                let result = await fetch(deleteForm.current.action, {
+                    method: 'post',
+                    body: new FormData(deleteForm.current),
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                result = await result.json();
+                if ('error' in result) {
+                    throw new Error(result.error);
+                } else {
+                    window.alert('Successfully deleted 2TC.');
+                    forceReload();
+                }
+            } catch (error) {
+                window.alert(`Error deleting 2TC: ${error.message}`);
+            }
         }
-    }, [selectedCompletions, deleteForm]);
+    }, [selectedCompletions, deleteForm, getAccessTokenWithPopup, forceReload]);
 
     return <>
         <h1>Two Towers CHIMPS</h1>

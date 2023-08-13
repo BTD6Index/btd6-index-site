@@ -5,6 +5,7 @@ export default function useIndexSearch(endpoint) {
     const [offset, setOffset] = useState(0);
     const [completions, setCompletions] = useState([]);
     const [hasNext, setHasNext] = useState(false);
+    const [_reloadVar, _setReloadVar] = useState(false);
 
     useEffect(() => {
         fetch(endpoint + "?" + new URLSearchParams({
@@ -28,7 +29,7 @@ export default function useIndexSearch(endpoint) {
             }
         })
         .catch(err => console.log(err));
-    }, [query, offset, endpoint]);
+    }, [query, offset, endpoint, _reloadVar]);
 
     const onSearch = useCallback((e) => {
         setOffset(0);
@@ -36,12 +37,16 @@ export default function useIndexSearch(endpoint) {
     }, []);
 
     const onPrev = useCallback(() => {
-        setOffset(Math.max(offset - 10, 0));
-    }, [offset]);
+        setOffset(state => Math.max(state - 10, 0));
+    }, []);
 
     const onNext = useCallback(() => {
-        setOffset(offset + 10);
-    }, [offset]);
+        setOffset(state => state + 10);
+    }, []);
+
+    const forceReload = useCallback(() => {
+        _setReloadVar(state => !state);
+    }, []);
 
     return {
         query,
@@ -50,6 +55,7 @@ export default function useIndexSearch(endpoint) {
         hasNext,
         onSearch,
         onPrev,
-        onNext
+        onNext,
+        forceReload
     };
 };
