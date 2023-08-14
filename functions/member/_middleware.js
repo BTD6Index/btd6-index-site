@@ -11,9 +11,6 @@ async function auth(context) {
                 issuer: 'https://lordlandmaster.us.auth0.com/',
                 audience: 'https://btd6index.win/'
             });
-            if (!result?.payload?.['https://btd6index.win/roles']?.includes('Index Helper')) {
-                throw new Error('You do not have index helper perms');
-            }
         } catch (e) {
             return Response.json({error: 'Unauthorized access'}, {status: 401});
         }
