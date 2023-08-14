@@ -2,6 +2,14 @@ function fieldsCondition(fields, startIdx) {
     return fields.map((field, idx) => `${field} = ?${idx + startIdx}`).join(' AND ');
 }
 
+function paramsList(startIdx, endIdx) {
+    let buf = []
+    for (let i = startIdx; i < endIdx; ++i) {
+        buf.push(`?${i+1}`);
+    }
+    return buf.join(',');
+}
+
 async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
     const db = context.env.BTD6_INDEX_DB;
 
@@ -45,22 +53,18 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
 
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
 
-    // ?1, ..., ?[number of fields, plus 3 for person/link/og]
-    const all_fields_placeholder = Array.from({length: fields.length + 3}, (_dummy, idx) => `?${idx+1}`).join(',');
-    // ?1, ..., ?[number of fields]
-    const info_fields_placeholder = Array.from({length: extraInfoFields.length}, (_dummy, idx) => `?${idx+1}`).join(',');
-
     const completion_already_exists = `SELECT * FROM "${challenge}_completions" WHERE ${fieldsCondition(fields, 1)}`;
 
     let add_completion_stmt;
     let add_info_stmt;
     if (edit_mode) {
-        add_completion_stmt = `UPDATE "${challenge}_completions" SET (${fields.join(',')},person,link,og) = (${all_fields_placeholder}) WHERE ${fieldsCondition(fields, fields.length + 4)} AND NOT EXISTS (${completion_already_exists})`;
-        add_info_stmt = `UPDATE "${challenge}_extra_info" SET (${extraInfoFields.join(',')}) = (${info_fields_placeholder}) WHERE ${fieldsCondition(shared_fields, extraInfoFields.length + 1)}`;
+        add_completion_stmt = `UPDATE "${challenge}_completions" SET (${fields.join(',')},person,link,og) = (${paramsList(0, fields.length+3)}) `
+        + `WHERE ${fieldsCondition(fields, fields.length + 5)} AND pending = ?${fields.length + 4} AND NOT EXISTS (${completion_already_exists})`;
+        add_info_stmt = `UPDATE "${challenge}_extra_info" SET (${extraInfoFields.join(',')}) = (${paramsList(0, extraInfoFields.length)}) WHERE ${fieldsCondition(shared_fields, extraInfoFields.length + 1)}`;
     } else {
-        add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og) SELECT ${all_fields_placeholder} `
+        add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) SELECT ${paramsList(0, fields.length+4)} `
         + `WHERE NOT EXISTS (${completion_already_exists}) RETURNING *`;
-        add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${info_fields_placeholder}) RETURNING *`;
+        add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${paramsList(0, extraInfoFields.length)}) RETURNING *`;
     }
     
     let batch = [
@@ -71,7 +75,11 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
             form_data.get('person'),
             link,
             form_data.has('og') ? 1 : 0,
-            ...(edit_mode ? fields.map(field => form_data.get(`edited-${field}`)) : [])
+            context.data.jwt_result.payload.sub, // user id
+            ...(edit_mode
+                ? fields.map(field => form_data.get(`edited-${field}`))
+                : []
+                )
         )
     ];
     if (form_data.has('og')) {

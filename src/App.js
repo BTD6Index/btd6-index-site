@@ -9,11 +9,9 @@ import {
 } from "react-router-dom";
 import TwoTC from './routes/challenges/TwoTC';
 import TwoMPC from './routes/challenges/TwoMPC';
-import { AddTwoTC, EditTwoTC } from './routes/admin/ManipTwoTC';
-import DeleteTwoTCResult from './routes/admin/DeleteTwoTCResult';
+import { AddTwoTC, EditTwoTC } from './routes/manip/ManipTwoTC';
 import NotFound from './routes/NotFound';
-import DeleteTwoMPResult from './routes/admin/DeleteTwoMPResult';
-import { AddTwoMP, EditTwoMP } from './routes/admin/ManipTwoMP';
+import { AddTwoMP, EditTwoMP } from './routes/manip/ManipTwoMP';
 import TwoTCExtraInfo from './routes/challenges/info/TwoTCExtraInfo';
 import TwoMPExtraInfo from './routes/challenges/info/TwoMPExtraInfo';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
@@ -37,28 +35,20 @@ const router = createBrowserRouter([
         element: <TwoMPC />
       },
       {
-        path: "admin/add-2tc-form",
+        path: "add-2tc-form",
         element: <AddTwoTC />
       },
       {
-        path: "admin/add-2mp-form",
+        path: "add-2mp-form",
         element: <AddTwoMP />
       },
       {
-        path: "admin/edit-2mp-form",
+        path: "edit-2mp-form",
         element: <EditTwoMP />
       },
       {
-        path: "admin/edit-2tc-form",
+        path: "edit-2tc-form",
         element: <EditTwoTC />
-      },
-      {
-        path: "admin/delete-2tc-result",
-        element: <DeleteTwoTCResult />
-      },
-      {
-        path: "admin/delete-2mp-result",
-        element: <DeleteTwoMPResult />
       },
       {
         path: "2tc/extra-info",

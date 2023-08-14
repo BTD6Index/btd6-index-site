@@ -139,6 +139,11 @@ table th, table td {
 thead tr:last-child th, thead tr:last-child {
   border-bottom: 2px solid white;
 }
+.pendingCompletion {
+  color: #bbb;
+  font-weight: 200;
+  font-style: oblique;
+}
 #latestvid {
   aspect-ratio: 16 / 9;
   width: 100%;

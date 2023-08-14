@@ -1,12 +1,11 @@
 import Select from "react-select";
 import selectStyle from "../../util/selectStyle";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../util/selectOptions";
-import adminsOnly from "../../util/adminsOnly";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
-function ManipTwoMP({editedEntity = null, editedMap = null}) {
+function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
@@ -16,12 +15,13 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
 
     const { getAccessTokenWithPopup } = useAuth0();
 
-    const doEdit = editedEntity !== null && editedMap !== null;
+    const doEdit = editedTower1 !== null && editedTower2 !== null && editedMap !== null;
 
     useEffect(() => {
         if (doEdit) {
-            fetch('/fetch-2mp?' + new URLSearchParams([
-                ['entity', editedEntity],
+            fetch('/fetch-2tc?' + new URLSearchParams([
+                ['tower1', editedTower1],
+                ['tower2', editedTower2],
                 ['map', editedMap]
             ])).then(async (res) => {
                 let json = await res.json();
@@ -33,8 +33,9 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
                     let og = json.results?.[0]?.og;
                     setOG(!!og);
                     if (og) {
-                        let ogRes = await fetch('/fetch-2mp-og-info?' + new URLSearchParams([
-                            ['entity', editedEntity]
+                        let ogRes = await fetch('/fetch-2tc-og-info?' + new URLSearchParams([
+                            ['tower1', editedTower1],
+                            ['tower2', editedTower2]
                         ]));
                         let ogJson = await ogRes.json();
                         if ('error' in ogJson) {
@@ -46,8 +47,8 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
                     }
                 }
             });
-        };
-    }, [doEdit, editedEntity, editedMap]);
+        }
+    }, [editedTower1, editedTower2, editedMap, doEdit]);
 
     const submitCallback = useCallback((e) => {
         e.preventDefault();
@@ -68,29 +69,36 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
             if ('error' in result) {
                 throw new Error(result.error);
             } else {
-                window.alert(result.inserted ? 'Successfully registered 2MP' : '2MP already exists');
+                window.alert(result.inserted ? 'Successfully registered 2TC' : '2TC already exists');
             }
         }).catch(error => {
-            window.alert(`Error adding 2MP: ${error.message}`);
+            window.alert(`Error adding 2TC: ${error.message}`);
         });
     }, [getAccessTokenWithPopup]);
 
     return <>
-        <p><a href="/2mp">Back to 2MPs</a></p>
-        <h1>{doEdit ? `Edit ${editedEntity} 2MP on ${editedMap}` : "Add a 2MP Completion"}</h1>
-        <form method="post" encType="multipart/form-data" action="/admin/add-2mp-submit" onSubmit={submitCallback} ref={theForm}>
+        <p><a href="/2tc">Back to 2TCs</a></p>
+        <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC on ${editedMap}` : "Add a 2TC Completion"}</h1>
+        <form method="post" encType="multipart/form-data" action="/member/add-2tc-submit" onSubmit={submitCallback} ref={theForm}>
             <span className="formLine">
-                <label htmlFor="entity">Tower</label>
-                <Select name="entity" options={[...towerToOptions.values()]} styles={selectStyle} value={
-                    towerToOptions.get(existingInfo?.[0]?.entity)
+                <label htmlFor="tower1">Tower 1</label>
+                <Select name="tower1" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
+                    towerToOptions.get(editedTower1) ?? undefined
+                    } required />
+            </span>
+            <br />
+            <span className="formLine">
+                <label htmlFor="tower2">Tower 2</label>
+                <Select name="tower2" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
+                    towerToOptions.get(editedTower2) ?? undefined
                     } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} value={
-                    mapToOptions.get(existingInfo?.[0]?.map)
-                } required />
+                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} defaultValue={
+                    mapToOptions.get(editedMap) ?? undefined
+                    } required />
             </span>
             <br />
             <span className="formLine">
@@ -100,7 +108,7 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
             <br />
             <span className="formLine">
                 <label htmlFor="link">Link</label>
-                <input name="link" type="text" placeholder="Link" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.link} />
+                <input name="link" type="text" placeholder="Link" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.link}  />
             </span>
             <br />
             <span className="formLine">
@@ -116,8 +124,13 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
             {
                 isOG && <>
                     <span className="formLine">
-                        <label htmlFor="upgrade">Upgrade</label>
-                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} defaultValue={ogInfo?.upgrade} required />
+                        <label htmlFor="upgrade1">Tower 1 Upgrade</label>
+                        <input name="upgrade1" type="text" placeholder="Upgrade 1" style={{width: '14ch'}} defaultValue={ogInfo?.upgrade1} required />
+                    </span>
+                    <br />
+                    <span className="formLine">
+                        <label htmlFor="upgrade2">Tower 2 Upgrade</label>
+                        <input name="upgrade2" type="text" placeholder="Upgrade 2" style={{width: '14ch'}} defaultValue={ogInfo?.upgrade2} required />
                     </span>
                     <br />
                     <span className="formLine">
@@ -132,24 +145,25 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
                     <br />
                 </>
             }
-            {editedEntity && <input type="hidden" name="edited-entity" value={editedEntity} />}
+            {editedTower1 && <input type="hidden" name="edited-tower1" value={editedTower1} />}
+            {editedTower2 && <input type="hidden" name="edited-tower2" value={editedTower2} />}
             {editedMap && <input type="hidden" name="edited-map" value={editedMap} />}
             <input type="hidden" name="edit" value={doEdit} />
-            <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} />
+            <input type="submit" name="submit" value={doEdit ? "Update 2TC" : "Add 2TC"} />
         </form>
     </>
 };
 
-const AddTwoMP = adminsOnly(() => {
-    return <ManipTwoMP />;
+const AddTwoTC = withAuthenticationRequired(() => {
+    return <ManipTwoTC />;
 });
 
-const EditTwoMP = adminsOnly(() => {
+const EditTwoTC = withAuthenticationRequired(() => {
     const [params,] = useSearchParams();
-    if (!params.has('entity') || !params.has('map')) {
-        return <h1>Need to specify entity and map</h1>;
+    if (['tower1', 'tower2', 'map'].some(key => !params.has(key))) {
+        return <h1>Need to specify tower1, tower2, and map</h1>;
     }
-    return <ManipTwoMP editedEntity={params.get('entity')} editedMap={params.get('map')} />
+    return <ManipTwoTC editedTower1={params.get('tower1')} editedTower2={params.get('tower2')} editedMap={params.get('map')} />
 });
 
-export {AddTwoMP, EditTwoMP};
+export {AddTwoTC, EditTwoTC};
