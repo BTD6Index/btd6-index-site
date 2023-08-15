@@ -78,6 +78,10 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
         <p><a href="/2mp">Back to 2MPs</a></p>
         <h1>{doEdit ? `Edit ${editedEntity} 2MP on ${editedMap}` : "Add a 2MP Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/member/add-2mp-submit" onSubmit={submitCallback} ref={theForm}>
+            {existingInfo?.[0]?.pending ? <><span className="formLine">
+                <label htmlFor="verify">Mark as verified?</label>
+                <input type="checkbox" name="verify" />
+            </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="entity">Tower</label>
                 <Select name="entity" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={

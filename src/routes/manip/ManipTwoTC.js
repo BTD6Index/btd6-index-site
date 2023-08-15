@@ -80,6 +80,10 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
         <p><a href="/2tc">Back to 2TCs</a></p>
         <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC on ${editedMap}` : "Add a 2TC Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/member/add-2tc-submit" onSubmit={submitCallback} ref={theForm}>
+            {existingInfo?.[0]?.pending ? <><span className="formLine">
+                <label htmlFor="verify">Mark as verified?</label>
+                <input type="checkbox" name="verify" />
+            </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1</label>
                 <Select name="tower1" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={

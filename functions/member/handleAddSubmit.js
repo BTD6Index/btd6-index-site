@@ -12,6 +12,8 @@ function paramsList(startIdx, endIdx) {
 
 async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
     const db = context.env.BTD6_INDEX_DB;
+    const jwt_result = context.data.jwt_result;
+    const is_helper = jwt_result.payload['https://btd6index.win/roles'].includes('Index Helper');
 
     const respondError = (error) => {
         return Response.json({error}, {status: 400});
@@ -53,13 +55,16 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
 
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
 
-    const completion_already_exists = `SELECT * FROM "${challenge}_completions" WHERE ${fieldsCondition(fields, 1)}`;
+    const in_place_update = edit_mode && fields.every(field => form_data.get(`edited-${field}`) === form_data.get(field));
+
+    const completion_already_exists = `SELECT * FROM "${challenge}_completions" WHERE ${in_place_update ? 'FALSE' : 'TRUE'} AND ${fieldsCondition(fields, 1)}`;
 
     let add_completion_stmt;
     let add_info_stmt;
     if (edit_mode) {
-        add_completion_stmt = `UPDATE "${challenge}_completions" SET (${fields.join(',')},person,link,og) = (${paramsList(0, fields.length+3)}) `
-        + `WHERE ${fieldsCondition(fields, fields.length + 5)} AND pending = ?${fields.length + 4} AND NOT EXISTS (${completion_already_exists})`;
+        add_completion_stmt = `UPDATE "${challenge}_completions" SET (${fields.join(',')},person,link,og,pending) = (${paramsList(0, fields.length+4)}) `
+        + `WHERE ${fieldsCondition(fields, fields.length + 5)} AND ${is_helper ? 'TRUE' : `pending = ?${fields.length + 4}`} `
+        + `AND NOT EXISTS (${completion_already_exists})`;
         add_info_stmt = `UPDATE "${challenge}_extra_info" SET (${extraInfoFields.join(',')}) = (${paramsList(0, extraInfoFields.length)}) WHERE ${fieldsCondition(shared_fields, extraInfoFields.length + 1)}`;
     } else {
         add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) SELECT ${paramsList(0, fields.length+4)} `
@@ -75,7 +80,7 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
             form_data.get('person'),
             link,
             form_data.has('og') ? 1 : 0,
-            context.data.jwt_result.payload.sub, // user id
+            form_data.has('verify') && is_helper ? null : jwt_result.payload.sub, // user id
             ...(edit_mode
                 ? fields.map(field => form_data.get(`edited-${field}`))
                 : []

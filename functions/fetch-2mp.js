@@ -27,10 +27,10 @@ export async function onRequest(context) {
     }
     let query_stmt;
     if (query) {
-        let tokenized_query = query.split(/\s+/);
+        let tokenized_query = query.split(/\s+/).filter(token => !!token);
         query_stmt = db
         .prepare(`SELECT * FROM "2mp_completions" (?1) WHERE ${specific_field_conds(4)} ORDER BY entity, map LIMIT ?2 OFFSET ?3`)
-        .bind(tokenized_query.map(token => `"${token.replace('"', '\\"')}"`).join(" "), count+1, offset, JSON.stringify(field_values));
+        .bind(tokenized_query.map(token => `"${token.replace('"', '\\"')}" *`).join(" AND "), count+1, offset, JSON.stringify(field_values));
     } else {
         query_stmt = db
         .prepare(`SELECT * FROM "2mp_completions" WHERE ${specific_field_conds(3)} ORDER BY entity, map LIMIT ?1 OFFSET ?2`)

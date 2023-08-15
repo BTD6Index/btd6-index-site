@@ -10,8 +10,6 @@ export default function ChallengePage({ challenge, header, description, fields, 
 
     const deleteForm = useRef(null);
 
-    const verifyForm = useRef(null);
-
     const { getAccessTokenWithPopup, isAuthenticated, isLoading, getIdTokenClaims, user } = useAuth0();
 
     const [isAdmin, setAdmin] = useState(false);
@@ -69,12 +67,12 @@ export default function ChallengePage({ challenge, header, description, fields, 
         <table>
             <thead>
                 <tr>
+                    { !isLoading && isAuthenticated && <th>Select</th> }
                     {fieldHeaders.map(fh => <th key={fh}>{fh}</th>)}
                     <th>Map</th>
                     <th>Player</th>
                     <th>Completion Link</th>
                     <th>OG?</th>
-                    { !isLoading && isAuthenticated && <th>Select</th> }
                     { !isLoading && isAuthenticated && <th>Edit</th> }
                 </tr>
             </thead>
@@ -85,13 +83,6 @@ export default function ChallengePage({ challenge, header, description, fields, 
                             const key = JSON.stringify([...fields.map(field => completion[field]), completion.map]);
                             const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
                             return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
-                                { fields.map(field => <td key={field}>{completion[field]}</td>) }
-                                <td>{completion.map}</td>
-                                <td>{completion.person}{completion.pending ? ' (Pending)' : ''}</td>
-                                <td><a href={completion.link}>Link</a></td>
-                                <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
-                                    fields.map(field => [field, completion[field]])
-                                )}>Yes</a> : 'No'}</td>
                                 { hasWritePerms && <td>
                                     <input
                                         type="checkbox"
@@ -102,11 +93,20 @@ export default function ChallengePage({ challenge, header, description, fields, 
                                         }}
                                     />
                                 </td> }
+                                { fields.map(field => <td key={field}>{completion[field]}</td>) }
+                                <td>{completion.map}</td>
+                                <td>{completion.person}{completion.pending ? ' (Pending)' : ''}</td>
+                                <td><a href={completion.link}>Link</a></td>
+                                <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
+                                    fields.map(field => [field, completion[field]])
+                                )}>Yes</a> : 'No'}</td>
                                 {
                                 hasWritePerms &&
-                                <td><a href={`/edit-${challenge}-form?` + new URLSearchParams([
-                                    ...fields.map(field => [field, completion[field]]), ["map", completion.map]
-                                ])}>Edit</a></td>
+                                <td>
+                                    <a href={`/edit-${challenge}-form?` + new URLSearchParams([
+                                        ...fields.map(field => [field, completion[field]]), ["map", completion.map]
+                                    ])}>Edit{!!completion.pending && " or Verify"}</a>
+                                </td>
                                 }
                             </tr>;
                         }
@@ -119,11 +119,6 @@ export default function ChallengePage({ challenge, header, description, fields, 
             <input type="hidden" name="entries" value={
                 JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
                 } />
-        </form>
-        <form ref={verifyForm} style={{display: 'none'}} action={`/admin/verify-${challenge}-submit`} method="post">
-            <input type="hidden" name="entries" value={
-                    JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
-                    } />
         </form>
     </>
 };
