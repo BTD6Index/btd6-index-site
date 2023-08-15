@@ -1,9 +1,11 @@
 import Select from "react-select";
 import selectStyle from "../../util/selectStyle";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../util/selectOptions";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
+import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import { useSubmitCallback } from "./manipCommon";
 
 function ManipTwoMP({editedEntity = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
@@ -13,7 +15,7 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
 
     const theForm = useRef();
 
-    const { getAccessTokenWithPopup } = useAuth0();
+    const isAdmin = useCheckIfAdmin();
 
     const doEdit = editedEntity !== null && editedMap !== null;
 
@@ -48,37 +50,13 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
         };
     }, [doEdit, editedEntity, editedMap]);
 
-    const submitCallback = useCallback((e) => {
-        e.preventDefault();
-        const formData = new FormData(theForm.current);
-        getAccessTokenWithPopup({
-            authorizationParams: {
-                audience: 'https://btd6index.win/'
-            }
-        }).then(async (token) => {
-            let result = await fetch(theForm.current.action, {
-                method: 'post',
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            result = await result.json();
-            if ('error' in result) {
-                throw new Error(result.error);
-            } else {
-                window.alert(result.inserted ? 'Successfully registered 2MP' : '2MP already exists');
-            }
-        }).catch(error => {
-            window.alert(`Error adding 2MP: ${error.message}`);
-        });
-    }, [getAccessTokenWithPopup]);
+    const submitCallback = useSubmitCallback(theForm, '2mp');
 
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>
         <h1>{doEdit ? `Edit ${editedEntity} 2MP on ${editedMap}` : "Add a 2MP Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/member/add-2mp-submit" onSubmit={submitCallback} ref={theForm}>
-            {existingInfo?.[0]?.pending ? <><span className="formLine">
+            {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}

@@ -10,4 +10,10 @@ CREATE TABLE '2tc_extra_info' (
 CREATE TABLE '2mp_extra_info' (
     entity PRIMARY KEY, upgrade, version, date
 );
-CREATE TABLE 'lcc' (map PRIMARY KEY, cost, version, date, person, link);
+CREATE TABLE 'fttc_completions' (
+    towerset, map PRIMARY KEY, person, link, og, version, date
+);
+CREATE TABLE 'ltc_completions' (
+    towerset, map PRIMARY KEY, person, link, og, upgradeset, version, date
+);
+CREATE TABLE 'lcc_completions' (map PRIMARY KEY, cost, version, date, person, link);

@@ -1,9 +1,11 @@
 import Select from "react-select";
 import selectStyle from "../../util/selectStyle";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../util/selectOptions";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
+import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import { useSubmitCallback } from "./manipCommon";
 
 function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}) {
     const [isOG, setOG] = useState(false);
@@ -13,7 +15,7 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
 
     const theForm = useRef();
 
-    const { getAccessTokenWithPopup } = useAuth0();
+    const isAdmin = useCheckIfAdmin();
 
     const doEdit = editedTower1 !== null && editedTower2 !== null && editedMap !== null;
 
@@ -50,37 +52,13 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
         }
     }, [editedTower1, editedTower2, editedMap, doEdit]);
 
-    const submitCallback = useCallback((e) => {
-        e.preventDefault();
-        const formData = new FormData(theForm.current);
-        getAccessTokenWithPopup({
-            authorizationParams: {
-                audience: 'https://btd6index.win/'
-            }
-        }).then(async (token) => {
-            let result = await fetch(theForm.current.action, {
-                method: 'post',
-                body: formData,
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            result = await result.json();
-            if ('error' in result) {
-                throw new Error(result.error);
-            } else {
-                window.alert(result.inserted ? 'Successfully registered 2TC' : '2TC already exists');
-            }
-        }).catch(error => {
-            window.alert(`Error adding 2TC: ${error.message}`);
-        });
-    }, [getAccessTokenWithPopup]);
+    const submitCallback = useSubmitCallback(theForm, '2tc');
 
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>
         <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC on ${editedMap}` : "Add a 2TC Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/member/add-2tc-submit" onSubmit={submitCallback} ref={theForm}>
-            {existingInfo?.[0]?.pending ? <><span className="formLine">
+            {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}

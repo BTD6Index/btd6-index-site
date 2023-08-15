@@ -1,7 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import useIndexSearch from "../../util/useIndexSearch";
 import useToggleList from "../../util/useToggleList";
-import { useRef, useCallback, useEffect, useState } from "react";
+import { useRef, useCallback } from "react";
+import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 
 export default function ChallengePage({ challenge, header, description, fields, fieldHeaders }) {
     const {query, completions, offset, hasNext, onSearch, onPrev, onNext, forceReload} = useIndexSearch(`/fetch-${challenge}`);
@@ -10,17 +11,9 @@ export default function ChallengePage({ challenge, header, description, fields, 
 
     const deleteForm = useRef(null);
 
-    const { getAccessTokenWithPopup, isAuthenticated, isLoading, getIdTokenClaims, user } = useAuth0();
+    const { getAccessTokenWithPopup, isAuthenticated, isLoading, user } = useAuth0();
 
-    const [isAdmin, setAdmin] = useState(false);
-
-    useEffect(() => {
-        if (!isLoading && isAuthenticated) {
-            getIdTokenClaims().then((claims) => {
-                setAdmin(claims?.['https://btd6index.win/roles']?.includes('Index Helper') ?? false);
-            });
-        }
-    }, [getIdTokenClaims, isLoading, isAuthenticated]);
+    const isAdmin = useCheckIfAdmin();
 
     const onDelete = useCallback(async () => {
         if (window.confirm(`Are you sure you want to delete ${selectedCompletions.length} completion(s)?`)) {
