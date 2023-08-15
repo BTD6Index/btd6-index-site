@@ -10,6 +10,8 @@ export default function ChallengePage({ challenge, header, description, fields, 
 
     const deleteForm = useRef(null);
 
+    const verifyForm = useRef(null);
+
     const { getAccessTokenWithPopup, isAuthenticated, isLoading, getIdTokenClaims, user } = useAuth0();
 
     const [isAdmin, setAdmin] = useState(false);
@@ -113,10 +115,15 @@ export default function ChallengePage({ challenge, header, description, fields, 
             </tbody>
         </table>
         </div>
-        <form ref={deleteForm} style={{display: 'none'}} action={`/admin/delete-${challenge}-submit`} method="post">
+        <form ref={deleteForm} style={{display: 'none'}} action={`/member/delete-${challenge}-submit`} method="post">
             <input type="hidden" name="entries" value={
                 JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
                 } />
+        </form>
+        <form ref={verifyForm} style={{display: 'none'}} action={`/admin/verify-${challenge}-submit`} method="post">
+            <input type="hidden" name="entries" value={
+                    JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
+                    } />
         </form>
     </>
 };
