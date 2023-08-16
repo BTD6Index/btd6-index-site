@@ -105,7 +105,12 @@ function AppImplImpl() {
               <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
             </ul>
           </li>
-          <li>Guides</li>
+          <li>
+            Guides
+            <ul className='dropdown'>
+              <li>Coming soon!</li>
+            </ul>
+          </li>
         </ul>
       </nav>
     </header>
