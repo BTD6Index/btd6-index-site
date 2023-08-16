@@ -99,6 +99,11 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
             </span>
             <br />
             <span className="formLine">
+                <label htmlFor="notes">Completion Notes/Proof</label>
+                <textarea name="notes" rows="5" cols="40"></textarea>
+            </span>
+            <br />
+            <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
                 <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
             </span>

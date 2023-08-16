@@ -9,4 +9,4 @@ if __name__ == '__main__':
     for sql_file in ['destroy-tables.sql', 'init-tables.sql', '2mp-migrate.sql', '2tc-migrate.sql']:
         subprocess.run([
             shutil.which('npx'), 'wrangler', 'd1', 'execute', 'btd6index', '--file', sql_file
-            ] + (['--local'] if args.local else []))
+            ] + (['--local'] if args.local else []), check=True)

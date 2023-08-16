@@ -15,6 +15,8 @@ import { AddTwoMP, EditTwoMP } from './routes/manip/ManipTwoMP';
 import TwoTCExtraInfo from './routes/challenges/info/TwoTCExtraInfo';
 import TwoMPExtraInfo from './routes/challenges/info/TwoMPExtraInfo';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
+import TwoMPNotes from './routes/challenges/notes/TwoMPNotes';
+import TwoTCNotes from './routes/challenges/notes/TwoTCNotes';
 
 
 const router = createBrowserRouter([
@@ -57,6 +59,14 @@ const router = createBrowserRouter([
       {
         path: "2mp/extra-info",
         element: <TwoMPExtraInfo />
+      },
+      {
+        path: "2mp/notes",
+        element: <TwoMPNotes />
+      },
+      {
+        path: "2tc/notes",
+        element: <TwoTCNotes />
       },
       {
         path: "*",

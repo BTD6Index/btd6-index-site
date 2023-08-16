@@ -57,13 +57,18 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
     
     let add_completion_stmt;
     let add_info_stmt;
+    let add_notes_stmt;
     if (edit_mode) {
         add_completion_stmt = `UPDATE "${challenge}_completions" SET (${fields.join(',')},person,link,og,pending) = (${paramsList(0, fields.length+4)}) `
         + `WHERE ${fieldsCondition(fields, fields.length + 5)} AND ${is_helper ? 'TRUE' : `pending = ?${fields.length + 4}`} RETURNING *`;
-        add_info_stmt = `UPDATE "${challenge}_extra_info" SET (${extraInfoFields.join(',')}) = (${paramsList(0, extraInfoFields.length)}) WHERE ${fieldsCondition(shared_fields, extraInfoFields.length + 1)}`;
+        add_info_stmt = `UPDATE "${challenge}_extra_info" SET (${extraInfoFields.join(',')}) = (${paramsList(0, extraInfoFields.length)}) `
+        + `WHERE ${fieldsCondition(shared_fields, extraInfoFields.length + 1)}`;
+        add_notes_stmt = `UPDATE "${challenge}_completion_notes" SET (${fields.join(',')},notes) = (${paramsList(0, fields.length+1)}) `
+        + `WHERE ${fieldsCondition(fields, fields.length + 2)}`;
     } else {
         add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) VALUES (${paramsList(0, fields.length+4)}) RETURNING *`;
         add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${paramsList(0, extraInfoFields.length)})`;
+        add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${paramsList(0, fields.length + 1)})`;
     }
     
     let batch = [
@@ -86,6 +91,19 @@ async function handleAddSubmit({context, challenge, fields, extraInfoFields}) {
             .bind(
                 ...extraInfoFields.map(field => form_data.get(field)),
                 ...(edit_mode ? shared_fields.map(field => form_data.get(`edited-${field}`)) : [])
+            )
+        );
+    }
+    if (form_data.has('notes')) {
+        batch.push(
+            db.prepare(add_notes_stmt)
+            .bind(
+                ...fields.map(field => form_data.get(field)),
+                form_data.get('notes'),
+                ...(edit_mode
+                    ? fields.map(field => form_data.get(`edited-${field}`))
+                    : []
+                    )
             )
         );
     }

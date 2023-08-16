@@ -11,7 +11,8 @@ async function auth(context) {
                 audience: 'https://btd6index.win/'
             });
         } catch (e) {
-            return Response.json({error: 'Unauthorized access'}, {status: 401});
+            // 403 b/c user is already authenticated
+            return Response.json({error: 'Unauthorized access'}, {status: 403});
         }
     } else {
         return Response.json({error: 'Unauthorized access'}, {status: 401});

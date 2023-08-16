@@ -64,7 +64,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
                     {fieldHeaders.map(fh => <th key={fh}>{fh}</th>)}
                     <th>Map</th>
                     <th>Player</th>
-                    <th>Completion Link</th>
+                    <th>Info</th>
                     <th>OG?</th>
                     { !isLoading && isAuthenticated && <th>Edit</th> }
                 </tr>
@@ -89,7 +89,9 @@ export default function ChallengePage({ challenge, header, description, fields, 
                                 { fields.map(field => <td key={field}>{completion[field]}</td>) }
                                 <td>{completion.map}</td>
                                 <td>{completion.person}{completion.pending ? ' (Pending)' : ''}</td>
-                                <td><a href={completion.link}>Link</a></td>
+                                <td><a href={completion.link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
+                                    fields.concat('map').map(field => [field, completion[field]])
+                                )}>Notes</a></td>
                                 <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
                                     fields.map(field => [field, completion[field]])
                                 )}>Yes</a> : 'No'}</td>
