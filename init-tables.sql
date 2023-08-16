@@ -1,3 +1,5 @@
+-- NOTE: You need to add a single space character after BEGIN if you want the CREATE TRIGGER stuff to run properly on CloudFlare D1!
+
 -- 2 Towers CHIMPS
 CREATE TABLE '2tc_completions' (
     tower1, tower2, map, person, link, og, pending, PRIMARY KEY (tower1, tower2, map)
