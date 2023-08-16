@@ -15,7 +15,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     const jwt_result = context.data.jwt_result;
     const is_helper = jwt_result.payload['https://btd6index.win/roles'].includes('Index Helper');
 
-    const webhookUrls = JSON.parse(context.env.WEBHOOKS ?? "[]");
+    const webhookUrls = typeof context.env.WEBHOOKS === 'string' ? JSON.parse(context.env.WEBHOOKS) : (context.env.WEBHOOKS ?? []);
 
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
