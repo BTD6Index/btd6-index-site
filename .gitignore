@@ -25,3 +25,5 @@ yarn-error.log*
 .wrangler
 2tc-migrate.sql
 2mp-migrate.sql
+
+.dev.vars
