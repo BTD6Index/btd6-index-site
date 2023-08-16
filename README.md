@@ -1,2 +1,5 @@
 # The BTD6 Index Website (WIP)
-Run `npm install` to install dependencies and `npm start` to start the application locally. This project uses [CloudFlare Pages](https://developers.cloudflare.com/pages/).
+This project uses [CloudFlare Pages](https://developers.cloudflare.com/pages/).
+## Setup/Running
+- Run `npm install` to install dependencies 
+- Run `npm start` to start the application locally.
