@@ -102,7 +102,14 @@ main {
   padding: 0 1rem;
 }
 
-a.nolinkstyle {
+a {
+  color: #20d5d8;
+}
+a:visited {
+  color: #e359e5;
+}
+
+a.nolinkstyle, a:visited.nolinkstyle {
   text-decoration: none;
   color: white;
 }
