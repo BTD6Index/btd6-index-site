@@ -76,15 +76,15 @@ export default function ChallengePage({ challenge, header, description, fields, 
                             const key = JSON.stringify([...fields.map(field => completion[field]), completion.map]);
                             const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
                             return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
-                                { hasWritePerms && <td>
-                                    <input
+                                { !isLoading && isAuthenticated && <td>
+                                    {hasWritePerms && <input
                                         type="checkbox"
                                         style={{verticalAlign: "middle"}}
                                         checked={selectedCompletions.includes(key)}
                                         onChange={() => {
                                             toggleSelectedCompletions(key);
                                         }}
-                                    />
+                                    /> }
                                 </td> }
                                 { fields.map(field => <td key={field}>{completion[field]}</td>) }
                                 <td>{completion.map}</td>
@@ -95,12 +95,11 @@ export default function ChallengePage({ challenge, header, description, fields, 
                                 <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
                                     fields.map(field => [field, completion[field]])
                                 )}>Yes</a> : 'No'}</td>
-                                {
-                                hasWritePerms &&
+                                { !isLoading && isAuthenticated &&
                                 <td>
-                                    <a href={`/edit-${challenge}-form?` + new URLSearchParams([
+                                    {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams([
                                         ...fields.map(field => [field, completion[field]]), ["map", completion.map]
-                                    ])}>Edit{!!completion.pending && " or Verify"}</a>
+                                    ])}>Edit{!!completion.pending && " or Verify"}</a>}
                                 </td>
                                 }
                             </tr>;
