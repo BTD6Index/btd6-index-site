@@ -22,6 +22,8 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" AS ext WHERE EXISTS (${select_og_completion_stmt} WHERE ${delete_info_condition})`;
     const delete_completion_stmt = `DELETE FROM "${challenge}_completions" AS cmp WHERE EXISTS (SELECT 1 FROM json_each(?1) `
     + `WHERE ${delete_completion_condition} AND ${is_helper ? '?2 = ?2' : 'pending = ?2'})`;
+    const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" AS cmp WHERE EXISTS (SELECT 1 FROM json_each(?1) `
+    + `WHERE ${delete_completion_condition})`;
     
     await db.batch([
         db.prepare(delete_info_stmt).bind(
@@ -30,6 +32,9 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
         db.prepare(delete_completion_stmt).bind(
             form_data.get('entries'),
             jwt_result.payload.sub
+            ),
+        db.prepare(delete_notes_stmt).bind(
+            form_data.get('entries')
             )
     ]);
 
