@@ -43,7 +43,7 @@ export async function onRequest(context) {
 
     try {
         let query_result = await query_stmt.all();
-        return Response.json({results: query_result['results'].slice(0, count-1), more: query_result['results'].length > count});
+        return Response.json({results: query_result['results'].slice(0, count), more: query_result['results'].length > count});
     } catch (e) {
         return Response.json({error: e.message}, {status: 400});
     }
