@@ -1,10 +1,10 @@
 import Select from "react-select";
-import selectStyle from "../../util/selectStyle";
+import selectStyle from "../../../util/selectStyle";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions, towerToOptions } from "../../util/selectOptions";
+import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useSubmitCallback } from "./manipCommon";
 
 function ManipTwoMP({editedEntity = null, editedMap = null}) {
@@ -50,7 +50,7 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
         };
     }, [doEdit, editedEntity, editedMap]);
 
-    const submitCallback = useSubmitCallback(theForm, '2mp');
+    const submitCallback = useSubmitCallback(theForm, '2mp', existingInfo?.[0]?.link);
 
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>

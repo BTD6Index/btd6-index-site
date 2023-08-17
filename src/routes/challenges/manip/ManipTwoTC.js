@@ -1,10 +1,10 @@
 import Select from "react-select";
-import selectStyle from "../../util/selectStyle";
+import selectStyle from "../../../util/selectStyle";
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions, towerToOptions } from "../../util/selectOptions";
+import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useSubmitCallback } from "./manipCommon";
 
 function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}) {
@@ -52,7 +52,7 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
         }
     }, [editedTower1, editedTower2, editedMap, doEdit]);
 
-    const submitCallback = useSubmitCallback(theForm, '2tc');
+    const submitCallback = useSubmitCallback(theForm, '2tc', existingInfo?.[0]?.link);
 
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>

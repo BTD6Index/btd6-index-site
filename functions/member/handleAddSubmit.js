@@ -1,3 +1,5 @@
+import { imageObjectRegex } from "../imageObjectRegex";
+
 function fieldsCondition(fields, startIdx) {
     return fields.map((field, idx) => `${field} = ?${idx + startIdx}`).join(' AND ');
 }
@@ -58,7 +60,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
 
     const delete_completion_statement = `DELETE FROM "${challenge}_completions" WHERE ${fieldsCondition(fields, 1)} `
-        + `AND ${is_helper ? `?${fields.length + 1} = ?${fields.length + 1}` : `pending = ?${fields.length + 1}`}`;
+        + `AND ${is_helper ? `?${fields.length + 1} = ?${fields.length + 1}` : `pending = ?${fields.length + 1}`} RETURNING *`;
     const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${fieldsCondition(shared_fields, 1)}`;
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${fieldsCondition(fields, 1)}`;
     const add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) VALUES (${paramsList(0, fields.length + 4)})`;
@@ -117,31 +119,41 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
         return respondError(e.message);
     }
 
-    let inserted = true; // always true with this implementation due to primary key constraints
+    if (edit_mode) {
+        for (let row of res[0].results) {
+            let link = row?.['link'];
+    
+            if (link) {
+                // attempt to delete old image object if applicable
+                let match = imageObjectRegex.exec(link);
+                if (match) {
+                    context.waitUntil(context.env.BTD6_INDEX_MEDIA.delete(match[1]));
+                }
+            }
+        }
+    }
 
-    if (inserted && hasImage) {
+    if (hasImage) {
         // upload only when uuid doesn't exist
         let r2Obj = await context.env.BTD6_INDEX_MEDIA.put(
             key, form_data.get('image').stream(), { onlyIf: { etagDoesNotMatch: '*' } }
         );
         if (r2Obj === null) {
-            return respondError('Failed to upload object');
+            return respondError('Failed to upload image object');
         }
     }
 
-    if (inserted) {
-        for (let webhookUrl of webhookUrls) {
-            context.waitUntil(fetch(webhookUrl, {
-                body: JSON.stringify(genEmbedFunction({ link, formData: form_data, edit: edit_mode })),
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }));
-        }
+    for (let webhookUrl of webhookUrls) {
+        context.waitUntil(fetch(webhookUrl, {
+            body: JSON.stringify(genEmbedFunction({ link, formData: form_data, edit: edit_mode })),
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }));
     }
 
-    return Response.json({ inserted });
+    return Response.json({ inserted: true });
 }
 
 export { handleAddSubmit };

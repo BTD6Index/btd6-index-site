@@ -9,9 +9,9 @@ import {
 } from "react-router-dom";
 import TwoTC from './routes/challenges/TwoTC';
 import TwoMPC from './routes/challenges/TwoMPC';
-import { AddTwoTC, EditTwoTC } from './routes/manip/ManipTwoTC';
+import { AddTwoTC, EditTwoTC } from './routes/challenges/manip/ManipTwoTC';
 import NotFound from './routes/NotFound';
-import { AddTwoMP, EditTwoMP } from './routes/manip/ManipTwoMP';
+import { AddTwoMP, EditTwoMP } from './routes/challenges/manip/ManipTwoMP';
 import TwoTCExtraInfo from './routes/challenges/info/TwoTCExtraInfo';
 import TwoMPExtraInfo from './routes/challenges/info/TwoMPExtraInfo';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';

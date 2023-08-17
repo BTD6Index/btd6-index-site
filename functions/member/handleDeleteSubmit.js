@@ -1,3 +1,5 @@
+import { imageObjectRegex } from "../imageObjectRegex";
+
 async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const db = context.env.BTD6_INDEX_DB;
     const jwt_result = context.data.jwt_result;
@@ -21,11 +23,11 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const select_og_completion_stmt = `SELECT 1 FROM "${challenge}_completions" AS cmp INNER JOIN json_each(?1) ON ${delete_completion_condition} AND cmp.og = 1`;
     const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" AS ext WHERE EXISTS (${select_og_completion_stmt} WHERE ${delete_info_condition})`;
     const delete_completion_stmt = `DELETE FROM "${challenge}_completions" AS cmp WHERE EXISTS (SELECT 1 FROM json_each(?1) `
-    + `WHERE ${delete_completion_condition} AND ${is_helper ? '?2 = ?2' : 'pending = ?2'})`;
+    + `WHERE ${delete_completion_condition} AND ${is_helper ? '?2 = ?2' : 'pending = ?2'}) RETURNING *`;
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" AS cmp WHERE EXISTS (SELECT 1 FROM json_each(?1) `
     + `WHERE ${delete_completion_condition})`;
     
-    await db.batch([
+    let res = await db.batch([
         db.prepare(delete_info_stmt).bind(
             form_data.get('entries')
             ),
@@ -37,6 +39,18 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
             form_data.get('entries')
             )
     ]);
+
+    for (let row of res[1].results) {
+        let link = row?.['link'];
+
+        if (link) {
+            // attempt to delete old image object if applicable
+            let match = imageObjectRegex.exec(link);
+            if (match) {
+                context.waitUntil(context.env.BTD6_INDEX_MEDIA.delete(match[1]));
+            }
+        }
+    }
 
     return Response.json({});
 }
