@@ -57,67 +57,67 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
 
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
 
-    let add_completion_stmt;
-    let add_info_stmt;
-    let add_notes_stmt;
+    const delete_completion_statement = `DELETE FROM "${challenge}_completions" WHERE ${fieldsCondition(fields, 1)} `
+        + `AND ${is_helper ? `?${fields.length + 1} = ?${fields.length + 1}` : `pending = ?${fields.length + 1}`}`;
+    const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${fieldsCondition(shared_fields, 1)}`;
+    const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${fieldsCondition(fields, 1)}`;
+    const add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) VALUES (${paramsList(0, fields.length + 4)})`;
+    const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${paramsList(0, extraInfoFields.length)})`;
+    const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${paramsList(0, fields.length + 1)})`;
+
+    let batched_stmts = [];
     if (edit_mode) {
-        add_completion_stmt = `UPDATE "${challenge}_completions" SET (${fields.join(',')},person,link,og,pending) = (${paramsList(0, fields.length + 4)}) `
-            + `WHERE ${fieldsCondition(fields, fields.length + 5)} AND ${is_helper ? 'TRUE' : `pending = ?${fields.length + 4}`} RETURNING *`;
-        add_info_stmt = `UPDATE "${challenge}_extra_info" SET (${extraInfoFields.join(',')}) = (${paramsList(0, extraInfoFields.length)}) `
-            + `WHERE ${fieldsCondition(shared_fields, extraInfoFields.length + 1)}`;
-        add_notes_stmt = `UPDATE "${challenge}_completion_notes" SET (${fields.join(',')},notes) = (${paramsList(0, fields.length + 1)}) `
-            + `WHERE ${fieldsCondition(fields, fields.length + 2)}`;
-    } else {
-        add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) VALUES (${paramsList(0, fields.length + 4)}) RETURNING *`;
-        add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${paramsList(0, extraInfoFields.length)})`;
-        add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${paramsList(0, fields.length + 1)})`;
+        batched_stmts.push(db.prepare(delete_completion_statement).bind(
+            ...fields.map(field => form_data.get(`edited-${field}`)),
+            jwt_result.payload.sub // user id
+        ));
+        if (form_data.has('og')) {
+            batched_stmts.push(db.prepare(delete_info_stmt).bind(
+                ...shared_fields.map(field => form_data.get(`edited-${field}`))
+            ));
+        }
+        if (form_data.has('notes')) {
+            batched_stmts.push(db.prepare(delete_notes_stmt).bind(
+                ...fields.map(field => form_data.get(`edited-${field}`))
+            ));
+        }
     }
 
-    let batch = [
-        db.prepare(add_completion_stmt)
-            .bind(
-                ...fields.map(field => form_data.get(field)),
-                form_data.get('person'),
-                link,
-                form_data.has('og') ? 1 : 0,
-                form_data.has('verify') && is_helper ? null : jwt_result.payload.sub, // user id
-                ...(edit_mode
-                    ? fields.map(field => form_data.get(`edited-${field}`))
-                    : []
-                )
-            )
-    ];
+    batched_stmts.push(db.prepare(add_completion_stmt)
+        .bind(
+            ...fields.map(field => form_data.get(field)),
+            form_data.get('person'),
+            link,
+            form_data.has('og') ? 1 : 0,
+            form_data.has('verify') && is_helper ? null : jwt_result.payload.sub, // user id
+        ));
+
     if (form_data.has('og')) {
-        batch.push(
+        batched_stmts.push(
             db.prepare(add_info_stmt)
                 .bind(
-                    ...extraInfoFields.map(field => form_data.get(field)),
-                    ...(edit_mode ? shared_fields.map(field => form_data.get(`edited-${field}`)) : [])
+                    ...extraInfoFields.map(field => form_data.get(field))
                 )
         );
     }
     if (form_data.has('notes')) {
-        batch.push(
+        batched_stmts.push(
             db.prepare(add_notes_stmt)
                 .bind(
                     ...fields.map(field => form_data.get(field)),
-                    form_data.get('notes'),
-                    ...(edit_mode
-                        ? fields.map(field => form_data.get(`edited-${field}`))
-                        : []
-                    )
+                    form_data.get('notes')
                 )
         );
     }
 
     let batch_result;
     try {
-        batch_result = await db.batch(batch);
+        batch_result = await db.batch(batched_stmts);
     } catch (e) {
         return respondError(e.message);
     }
 
-    let inserted = batch_result[0].results.length > 0;
+    let inserted = true; // always true with this implementation due to primary key constraints
 
     if (inserted && hasImage) {
         // upload only when uuid doesn't exist
@@ -132,7 +132,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     if (inserted) {
         for (let webhookUrl of webhookUrls) {
             context.waitUntil(fetch(webhookUrl, {
-                body: JSON.stringify(genEmbedFunction({link, formData: form_data, edit: edit_mode})),
+                body: JSON.stringify(genEmbedFunction({ link, formData: form_data, edit: edit_mode })),
                 method: "post",
                 headers: {
                     "Content-Type": "application/json"
