@@ -6,6 +6,7 @@ export default function useIndexSearch(endpoint) {
     const [completions, setCompletions] = useState([]);
     const [hasNext, setHasNext] = useState(false);
     const [_reloadVar, _setReloadVar] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fetch(endpoint + "?" + new URLSearchParams({
@@ -13,22 +14,21 @@ export default function useIndexSearch(endpoint) {
             offset: offset
         }))
         .then(async response => {
-            if (!response.ok) {
-                const json = await response.json();
-                console.log(json);
-                return null;
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data !== null) {
+            const data = await response.json();
+            if ('error' in data) {
+                throw new Error(data.error);
+            } else if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            } else if (data !== null) {
                 setCompletions(data.results);
                 setHasNext(data.more);
             } else {
                 setHasNext(false);
             }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            setError(err.message);
+        });
     }, [query, offset, endpoint, _reloadVar]);
 
     const onSearch = useCallback((e) => {
@@ -53,6 +53,7 @@ export default function useIndexSearch(endpoint) {
         completions,
         offset,
         hasNext,
+        error,
         onSearch,
         onPrev,
         onNext,

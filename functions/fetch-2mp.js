@@ -1,3 +1,5 @@
+import { processQuery } from "./processQuery";
+
 export async function onRequest(context) {
     const db = context.env.BTD6_INDEX_DB;
 
@@ -30,10 +32,9 @@ export async function onRequest(context) {
     }
     let query_stmt;
     if (query) {
-        let tokenized_query = query.split(/\s+/).filter(token => !!token);
         query_stmt = db
         .prepare(`SELECT * FROM "2mp_completions_fts" (?1) WHERE ${specific_field_conds(4)} ORDER BY entity, map LIMIT ?2 OFFSET ?3`)
-        .bind(tokenized_query.map(token => `"${token.replace('"', '\\"')}" *`).join(" AND "), count+1, offset, JSON.stringify(field_values));
+        .bind(processQuery(query, field_keys), count+1, offset, JSON.stringify(field_values));
     } else {
         query_stmt = db
         .prepare(`SELECT * FROM "2mp_completions_fts" WHERE ${specific_field_conds(3)} ORDER BY entity, map LIMIT ?1 OFFSET ?2`)

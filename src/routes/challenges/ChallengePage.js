@@ -5,7 +5,9 @@ import { useRef, useCallback } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 
 export default function ChallengePage({ challenge, header, description, fields, fieldHeaders }) {
-    const {query, completions, offset, hasNext, onSearch, onPrev, onNext, forceReload} = useIndexSearch(`/fetch-${challenge}`);
+    const {
+        query, completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError
+    } = useIndexSearch(`/fetch-${challenge}`);
 
     const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
 
@@ -56,59 +58,61 @@ export default function ChallengePage({ challenge, header, description, fields, 
                 Delete Selected
             </button>
         }
+        { searchError ? <p>Error while searching: {searchError}</p> :
         <div className="tableContainer">
-        <table>
-            <thead>
-                <tr>
-                    { !isLoading && isAuthenticated && <th>Select</th> }
-                    {fieldHeaders.map(fh => <th key={fh}>{fh}</th>)}
-                    <th>Map</th>
-                    <th>Player</th>
-                    <th>Info</th>
-                    <th>OG?</th>
-                    { !isLoading && isAuthenticated && <th>Edit</th> }
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    completions.map(
-                        completion => {
-                            const key = JSON.stringify([...fields.map(field => completion[field]), completion.map]);
-                            const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
-                            return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
-                                { !isLoading && isAuthenticated && <td>
-                                    {hasWritePerms && <input
-                                        type="checkbox"
-                                        style={{verticalAlign: "middle"}}
-                                        checked={selectedCompletions.includes(key)}
-                                        onChange={() => {
-                                            toggleSelectedCompletions(key);
-                                        }}
-                                    /> }
-                                </td> }
-                                { fields.map(field => <td key={field}>{completion[field]}</td>) }
-                                <td>{completion.map}</td>
-                                <td>{completion.person}{completion.pending ? ' (Pending)' : ''}</td>
-                                <td><a href={completion.link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
-                                    fields.concat('map').map(field => [field, completion[field]])
-                                )}>Notes</a></td>
-                                <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
-                                    fields.map(field => [field, completion[field]])
-                                )}>Yes</a> : 'No'}</td>
-                                { !isLoading && isAuthenticated &&
-                                <td>
-                                    {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams([
-                                        ...fields.map(field => [field, completion[field]]), ["map", completion.map]
-                                    ])}>Edit{!!completion.pending && " or Verify"}</a>}
-                                </td>
-                                }
-                            </tr>;
-                        }
-                    )
-                }
-            </tbody>
-        </table>
+            <table>
+                <thead>
+                    <tr>
+                        { !isLoading && isAuthenticated && <th>Select</th> }
+                        {fieldHeaders.map(fh => <th key={fh}>{fh}</th>)}
+                        <th>Map</th>
+                        <th>Player</th>
+                        <th>Info</th>
+                        <th>OG?</th>
+                        { !isLoading && isAuthenticated && <th>Edit</th> }
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        completions.map(
+                            completion => {
+                                const key = JSON.stringify([...fields.map(field => completion[field]), completion.map]);
+                                const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
+                                return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
+                                    { !isLoading && isAuthenticated && <td>
+                                        {hasWritePerms && <input
+                                            type="checkbox"
+                                            style={{verticalAlign: "middle"}}
+                                            checked={selectedCompletions.includes(key)}
+                                            onChange={() => {
+                                                toggleSelectedCompletions(key);
+                                            }}
+                                        /> }
+                                    </td> }
+                                    { fields.map(field => <td key={field}>{completion[field]}</td>) }
+                                    <td>{completion.map}</td>
+                                    <td>{completion.person}{completion.pending ? ' (Pending)' : ''}</td>
+                                    <td><a href={completion.link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
+                                        fields.concat('map').map(field => [field, completion[field]])
+                                    )}>Notes</a></td>
+                                    <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
+                                        fields.map(field => [field, completion[field]])
+                                    )}>Yes</a> : 'No'}</td>
+                                    { !isLoading && isAuthenticated &&
+                                    <td>
+                                        {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams([
+                                            ...fields.map(field => [field, completion[field]]), ["map", completion.map]
+                                        ])}>Edit{!!completion.pending && " or Verify"}</a>}
+                                    </td>
+                                    }
+                                </tr>;
+                            }
+                        )
+                    }
+                </tbody>
+            </table>
         </div>
+        }
         <form ref={deleteForm} style={{display: 'none'}} action={`/member/delete-${challenge}-submit`} method="post">
             <input type="hidden" name="entries" value={
                 JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
