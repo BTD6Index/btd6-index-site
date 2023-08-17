@@ -6,11 +6,14 @@ export async function onRequest(context) {
     let offset = parseInt(search_params.get('offset') ?? '0');
     let count = Math.min(parseInt(search_params.get('count') ?? '10'), 100);
 
-    let field_keys = ['entity', 'map', 'person', 'link', 'og'];
+    let field_keys = ['entity', 'map', 'person', 'link', 'og', 'pending'];
     let specific_field_conds = (param_pos) => {
         return field_keys
         .flatMap((field, idx) => {
             if (search_params.has(field)) {
+                if (field === 'pending') {
+                    return [`(${field} IS NULL) != (json_extract(?${param_pos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
+                }
                 return [`${field} = json_extract(?${param_pos}, '$[${idx}]')`];
             } else {
                 return [];
