@@ -7,7 +7,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useSubmitCallback } from "./manipCommon";
 
-function ManipTwoMP({ editParams = null }) {
+function ManipTwoMP({ editParams = null, setEditParams = null }) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
@@ -51,7 +51,7 @@ function ManipTwoMP({ editParams = null }) {
     }, [doEdit, editParams]);
 
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link
+        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams
     });
 
     return <>
@@ -133,11 +133,11 @@ const AddTwoMP = withAuthenticationRequired(() => {
 });
 
 const EditTwoMP = withAuthenticationRequired(() => {
-    const [params,] = useSearchParams();
+    const [params, setParams] = useSearchParams();
     if (!params.has('entity') || !params.has('map')) {
         return <h1>Need to specify entity and map</h1>;
     }
-    return <ManipTwoMP editParams={params} />
+    return <ManipTwoMP editParams={params} setEditParams={setParams} />
 });
 
 export { AddTwoMP, EditTwoMP };

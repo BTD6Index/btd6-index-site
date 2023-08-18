@@ -7,7 +7,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useSubmitCallback } from "./manipCommon";
 
-function ManipTwoTC({editParams = null}) {
+function ManipTwoTC({editParams = null, setEditParams = null}) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
@@ -53,7 +53,7 @@ function ManipTwoTC({editParams = null}) {
     }, [editParams, doEdit]);
 
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: '2tc', oldLink: existingInfo?.[0]?.link
+        formRef: theForm, challenge: '2tc', oldLink: existingInfo?.[0]?.link, setEditParams
     });
 
     return <>
@@ -150,11 +150,11 @@ const AddTwoTC = withAuthenticationRequired(() => {
 });
 
 const EditTwoTC = withAuthenticationRequired(() => {
-    const [params,] = useSearchParams();
+    const [params, setParams] = useSearchParams();
     if (['tower1', 'tower2', 'map'].some(key => !params.has(key))) {
         return <h1>Need to specify tower1, tower2, and map</h1>;
     }
-    return <ManipTwoTC editParams={params} />
+    return <ManipTwoTC editParams={params} setEditParams={setParams} />
 });
 
 export {AddTwoTC, EditTwoTC};

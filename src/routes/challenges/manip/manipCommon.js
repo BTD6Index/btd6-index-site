@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
 import { imageObjectRegex } from "../../../util/imageObjectRegex";
 
-function useSubmitCallback({formRef, challenge, oldLink}) {
+function useSubmitCallback({formRef, challenge, oldLink, setEditParams}) {
     const { getAccessTokenWithPopup } = useAuth0();
 
     return useCallback((e) => {
@@ -29,11 +29,20 @@ function useSubmitCallback({formRef, challenge, oldLink}) {
                 throw new Error(result.error);
             } else {
                 window.alert(result.inserted ? `Successfully registered ${challenge}` : `${challenge} already exists`);
+                if (setEditParams) {
+                    let newParams = {};
+                    for (let dataKey of formData.keys()) {
+                        if (dataKey.startsWith('edited-')) {
+                            newParams[dataKey.substring(7)] = formData.get(dataKey.substring(7));
+                        }
+                    }
+                    setEditParams(newParams, {replace: true});
+                }
             }
         }).catch(error => {
             window.alert(`Error adding ${challenge}: ${error.message}`);
         });
-    }, [getAccessTokenWithPopup, challenge, formRef, oldLink]);
+    }, [getAccessTokenWithPopup, challenge, formRef, oldLink, setEditParams]);
 }
 
 export { useSubmitCallback };
