@@ -7,7 +7,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useSubmitCallback } from "./manipCommon";
 
-function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}) {
+function ManipTwoTC({editParams = null}) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
@@ -17,14 +17,14 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
 
     const isAdmin = useCheckIfAdmin();
 
-    const doEdit = editedTower1 !== null && editedTower2 !== null && editedMap !== null;
+    const doEdit = editParams !== null;
 
     useEffect(() => {
         if (doEdit) {
             fetch('/fetch-2tc?' + new URLSearchParams([
-                ['tower1', editedTower1],
-                ['tower2', editedTower2],
-                ['map', editedMap]
+                ['tower1', editParams.get('tower1')],
+                ['tower2', editParams.get('tower2')],
+                ['map', editParams.get('map')]
             ])).then(async (res) => {
                 let json = await res.json();
                 if ('error' in json) {
@@ -36,8 +36,8 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
                     setOG(!!og);
                     if (og) {
                         let ogRes = await fetch('/fetch-2tc-og-info?' + new URLSearchParams([
-                            ['tower1', editedTower1],
-                            ['tower2', editedTower2]
+                            ['tower1', editParams.get('tower1')],
+                            ['tower2', editParams.get('tower2')]
                         ]));
                         let ogJson = await ogRes.json();
                         if ('error' in ogJson) {
@@ -50,13 +50,18 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
                 }
             });
         }
-    }, [editedTower1, editedTower2, editedMap, doEdit]);
+    }, [editParams, doEdit]);
 
-    const submitCallback = useSubmitCallback(theForm, '2tc', existingInfo?.[0]?.link);
+    const submitCallback = useSubmitCallback({
+        formRef: theForm, challenge: '2tc', oldLink: existingInfo?.[0]?.link
+    });
 
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>
-        <h1>{doEdit ? `Edit ${editedTower1} and ${editedTower2} 2TC on ${editedMap}` : "Add a 2TC Completion"}</h1>
+        <h1>{
+        doEdit
+        ? `Edit ${editParams.get('tower1')} and ${editParams.get('tower2')} 2TC on ${editParams.get('map')}`
+        : "Add a 2TC Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/member/add-2tc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -65,21 +70,21 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1</label>
                 <Select name="tower1" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
-                    towerToOptions.get(editedTower1) ?? undefined
+                    towerToOptions.get(editParams?.get('tower1')) ?? undefined
                     } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="tower2">Tower 2</label>
                 <Select name="tower2" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
-                    towerToOptions.get(editedTower2) ?? undefined
+                    towerToOptions.get(editParams?.get('tower2')) ?? undefined
                     } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
                 <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} defaultValue={
-                    mapToOptions.get(editedMap) ?? undefined
+                    mapToOptions.get(editParams?.get('map')) ?? undefined
                     } required />
             </span>
             <br />
@@ -132,9 +137,8 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
                     <br />
                 </>
             }
-            {editedTower1 && <input type="hidden" name="edited-tower1" value={editedTower1} />}
-            {editedTower2 && <input type="hidden" name="edited-tower2" value={editedTower2} />}
-            {editedMap && <input type="hidden" name="edited-map" value={editedMap} />}
+            {editParams && ['tower1', 'tower2', 'map'].map(
+                field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field)} />)}
             <input type="hidden" name="edit" value={doEdit} />
             <input type="submit" name="submit" value={doEdit ? "Update 2TC" : "Add 2TC"} />
         </form>
@@ -150,7 +154,7 @@ const EditTwoTC = withAuthenticationRequired(() => {
     if (['tower1', 'tower2', 'map'].some(key => !params.has(key))) {
         return <h1>Need to specify tower1, tower2, and map</h1>;
     }
-    return <ManipTwoTC editedTower1={params.get('tower1')} editedTower2={params.get('tower2')} editedMap={params.get('map')} />
+    return <ManipTwoTC editParams={params} />
 });
 
 export {AddTwoTC, EditTwoTC};

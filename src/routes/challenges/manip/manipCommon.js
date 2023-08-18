@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback } from "react";
 import { imageObjectRegex } from "../../../util/imageObjectRegex";
 
-function useSubmitCallback(formRef, challenge, oldLink) {
+function useSubmitCallback({formRef, challenge, oldLink}) {
     const { getAccessTokenWithPopup } = useAuth0();
 
     return useCallback((e) => {

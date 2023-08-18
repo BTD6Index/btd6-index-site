@@ -7,7 +7,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useSubmitCallback } from "./manipCommon";
 
-function ManipTwoMP({editedEntity = null, editedMap = null}) {
+function ManipTwoMP({ editParams = null }) {
     const [isOG, setOG] = useState(false);
 
     const [existingInfo, setExistingInfo] = useState(null);
@@ -17,13 +17,13 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
 
     const isAdmin = useCheckIfAdmin();
 
-    const doEdit = editedEntity !== null && editedMap !== null;
+    const doEdit = editParams !== null;
 
     useEffect(() => {
         if (doEdit) {
             fetch('/fetch-2mp?' + new URLSearchParams([
-                ['entity', editedEntity],
-                ['map', editedMap]
+                ['entity', editParams.get('entity')],
+                ['map', editParams.get('map')]
             ])).then(async (res) => {
                 let json = await res.json();
                 if ('error' in json) {
@@ -35,7 +35,7 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
                     setOG(!!og);
                     if (og) {
                         let ogRes = await fetch('/fetch-2mp-og-info?' + new URLSearchParams([
-                            ['entity', editedEntity]
+                            ['entity', editParams.get('entity')]
                         ]));
                         let ogJson = await ogRes.json();
                         if ('error' in ogJson) {
@@ -48,13 +48,15 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
                 }
             });
         };
-    }, [doEdit, editedEntity, editedMap]);
+    }, [doEdit, editParams]);
 
-    const submitCallback = useSubmitCallback(theForm, '2mp', existingInfo?.[0]?.link);
+    const submitCallback = useSubmitCallback({
+        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link
+    });
 
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>
-        <h1>{doEdit ? `Edit ${editedEntity} 2MP on ${editedMap}` : "Add a 2MP Completion"}</h1>
+        <h1>{doEdit ? `Edit ${editParams.get('entity')} 2MP on ${editParams.get('map')}` : "Add a 2MP Completion"}</h1>
         <form method="post" encType="multipart/form-data" action="/member/add-2mp-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -63,25 +65,25 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
             <span className="formLine">
                 <label htmlFor="entity">Tower</label>
                 <Select name="entity" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
-                    towerToOptions.get(editedEntity) ?? undefined
-                    } required />
+                    towerToOptions.get(editParams?.get('entity')) ?? undefined
+                } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
                 <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} defaultValue={
-                    mapToOptions.get(editedMap) ?? undefined
+                    mapToOptions.get(editParams?.get('map')) ?? undefined
                 } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="person">Person</label>
-                <input name="person" type="text" placeholder="Person" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.person} required />
+                <input name="person" type="text" placeholder="Person" style={{ width: '14ch' }} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="link">Link</label>
-                <input name="link" type="text" placeholder="Link" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.link} />
+                <input name="link" type="text" placeholder="Link" style={{ width: '14ch' }} defaultValue={existingInfo?.[0]?.link} />
             </span>
             <br />
             <span className="formLine">
@@ -103,23 +105,23 @@ function ManipTwoMP({editedEntity = null, editedMap = null}) {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade">Upgrade</label>
-                        <input name="upgrade" type="text" placeholder="Upgrade" style={{width: '14ch'}} defaultValue={ogInfo?.upgrade} required />
+                        <input name="upgrade" type="text" placeholder="Upgrade" style={{ width: '14ch' }} defaultValue={ogInfo?.upgrade} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="version">Update</label>
-                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} defaultValue={ogInfo?.version} required />
+                        <input name="version" type="text" placeholder="Update" style={{ width: '14ch' }} defaultValue={ogInfo?.version} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} defaultValue={ogInfo?.date} required />
+                        <input name="date" type="date" placeholder="Completion Date" style={{ width: '14ch' }} defaultValue={ogInfo?.date} required />
                     </span>
                     <br />
                 </>
             }
-            {editedEntity && <input type="hidden" name="edited-entity" value={editedEntity} />}
-            {editedMap && <input type="hidden" name="edited-map" value={editedMap} />}
+            {editParams && ['entity', 'map'].map(
+                field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field)} />)}
             <input type="hidden" name="edit" value={doEdit} />
             <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} />
         </form>
@@ -135,7 +137,7 @@ const EditTwoMP = withAuthenticationRequired(() => {
     if (!params.has('entity') || !params.has('map')) {
         return <h1>Need to specify entity and map</h1>;
     }
-    return <ManipTwoMP editedEntity={params.get('entity')} editedMap={params.get('map')} />
+    return <ManipTwoMP editParams={params} />
 });
 
-export {AddTwoMP, EditTwoMP};
+export { AddTwoMP, EditTwoMP };
