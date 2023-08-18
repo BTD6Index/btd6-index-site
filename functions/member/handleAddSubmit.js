@@ -120,7 +120,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     }
 
     if (edit_mode) {
-        for (let row of res[0].results) {
+        for (let row of batch_result[0].results) {
             let link = row?.['link'];
     
             if (link) {
