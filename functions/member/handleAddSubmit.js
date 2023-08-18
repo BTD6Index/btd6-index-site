@@ -65,7 +65,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${fieldsCondition(fields, 1)}`;
     const add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) VALUES (${paramsList(0, fields.length + 4)})`;
     const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${paramsList(0, extraInfoFields.length)})`;
-    const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${paramsList(0, fields.length + 1)}, '[]')`;
+    const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${paramsList(0, fields.length + 1)})`;
 
     let batched_stmts = [];
     if (edit_mode) {

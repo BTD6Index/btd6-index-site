@@ -6,7 +6,7 @@ import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 
 export default function ChallengePage({ challenge, header, description, fields, fieldHeaders }) {
     const {
-        query, completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError
+        completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError
     } = useIndexSearch(`/fetch-${challenge}`);
 
     const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
@@ -49,7 +49,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
         <h1>{header}</h1>
         <p>{description}</p>
         { !isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p> }
-        <input type="text" name="search" id="searchbar" placeholder="Search" value={query} onChange={onSearch} />
+        <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
         <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
         <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>
         {

@@ -5,13 +5,18 @@ import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
-import { useSubmitCallback } from "./manipCommon";
+import { IMAGE_FORMATS, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
+
+const FIELDS = ['tower1', 'tower2']; // needs to be outside so react doesn't treat value as changed every re-render
 
 function ManipTwoTC({editParams = null, setEditParams = null}) {
     const [isOG, setOG] = useState(false);
 
-    const [existingInfo, setExistingInfo] = useState(null);
-    const [ogInfo, setOGInfo] = useState(null);
+    const {existingInfo, ogInfo, noteInfo} = useFetchExistingInfo({
+        editParams,
+        fields: FIELDS,
+        challenge: '2tc'
+    });
 
     const theForm = useRef();
 
@@ -20,37 +25,8 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
     const doEdit = editParams !== null;
 
     useEffect(() => {
-        if (doEdit) {
-            fetch('/fetch-2tc?' + new URLSearchParams([
-                ['tower1', editParams.get('tower1')],
-                ['tower2', editParams.get('tower2')],
-                ['map', editParams.get('map')]
-            ])).then(async (res) => {
-                let json = await res.json();
-                if ('error' in json) {
-                    console.log(json.error);
-                    setExistingInfo(null);
-                } else {
-                    setExistingInfo(json.results);
-                    let og = json.results?.[0]?.og;
-                    setOG(!!og);
-                    if (og) {
-                        let ogRes = await fetch('/fetch-2tc-og-info?' + new URLSearchParams([
-                            ['tower1', editParams.get('tower1')],
-                            ['tower2', editParams.get('tower2')]
-                        ]));
-                        let ogJson = await ogRes.json();
-                        if ('error' in ogJson) {
-                            console.log(ogJson.error);
-                            setOGInfo(null);
-                        } else {
-                            setOGInfo(ogJson.result);
-                        }
-                    }
-                }
-            });
-        }
-    }, [editParams, doEdit]);
+        setOG(!!existingInfo?.[0]?.og);
+    }, [existingInfo]);
 
     const submitCallback = useSubmitCallback({
         formRef: theForm, challenge: '2tc', oldLink: existingInfo?.[0]?.link, setEditParams
@@ -99,15 +75,20 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             </span>
             <br />
             <span className="formLine">
-                <label htmlFor="image">Or Upload Image</label>
-                <input type="file" name="image" accept="image/jpeg, image/png, image/gif, image/webp, image/apng, video/webm, video/ogg, video/mp4" />
+                <label htmlFor="image">Or Upload Image/Video</label>
+                <input type="file" name="image" accept={IMAGE_FORMATS} />
             </span>
             <br />
             <span className="formLine" style={{flexDirection: 'column'}}>
                 <label htmlFor="notes">Completion Notes/Proof (Please specify challenge code here)</label>
-                <textarea name="notes" rows="5" cols="40"></textarea>
+                <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
             <br />
+            { /* <span className="formLine">
+                <label htmlFor="attachments">Additional Attachments</label>
+                <input type="file" name="attachments" accept={IMAGE_FORMATS} multiple />
+            </span>
+            <br /> */ }
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
                 <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />

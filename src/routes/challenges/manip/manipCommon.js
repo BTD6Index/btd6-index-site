@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { imageObjectRegex } from "../../../util/imageObjectRegex";
 
 function useSubmitCallback({formRef, challenge, oldLink, setEditParams}) {
@@ -45,4 +45,55 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams}) {
     }, [getAccessTokenWithPopup, challenge, formRef, oldLink, setEditParams]);
 }
 
-export { useSubmitCallback };
+function useFetchExistingInfo({editParams, fields, challenge}) {
+    const [existingInfo, setExistingInfo] = useState(null);
+    const [ogInfo, setOGInfo] = useState(null);
+    const [noteInfo, setNoteInfo] = useState(null);
+
+    const doEdit = editParams !== null;
+
+    useEffect(() => {
+        if (doEdit) {
+            fetch(`/fetch-${challenge}?` + new URLSearchParams(
+                fields.concat(['map']).map(field => [field, editParams.get(field)])
+                ))
+            .then(async (res) => {
+                let json = await res.json();
+                if ('error' in json) {
+                    console.log(json.error);
+                    setExistingInfo(null);
+                } else {
+                    setExistingInfo(json.results);
+                    if (json.results?.[0]?.og) {
+                        let ogRes = await fetch(`/fetch-${challenge}-og-info?` + new URLSearchParams(
+                            fields.map(field => [field, editParams.get(field)])
+                        ));
+                        let ogJson = await ogRes.json();
+                        if ('error' in ogJson) {
+                            console.log(ogJson.error);
+                            setOGInfo(null);
+                        } else {
+                            setOGInfo(ogJson.result);
+                        }
+                    }
+                    let notesRes = await fetch(`/fetch-${challenge}-notes?` + new URLSearchParams(
+                        fields.concat(['map']).map(field => [field, editParams.get(field)])
+                    ));
+                    let notesJson = await notesRes.json();
+                    if ('error' in notesJson) {
+                        console.log(notesJson.error);
+                        setNoteInfo(null);
+                    } else {
+                        setNoteInfo(notesJson);
+                    }
+                }
+            });
+        }
+    }, [editParams, doEdit, challenge, fields]);
+
+    return {existingInfo, ogInfo, noteInfo};
+}
+
+const IMAGE_FORMATS = "image/jpeg, image/png, image/gif, image/webp, image/apng, video/webm, video/ogg, video/mp4";
+
+export { useSubmitCallback, useFetchExistingInfo, IMAGE_FORMATS };

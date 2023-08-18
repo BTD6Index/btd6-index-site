@@ -5,50 +5,28 @@ import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
-import { useSubmitCallback } from "./manipCommon";
+import { IMAGE_FORMATS, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
+
+const FIELDS = ['entity']; // needs to be outside so react doesn't treat value as changed every re-render
 
 function ManipTwoMP({ editParams = null, setEditParams = null }) {
     const [isOG, setOG] = useState(false);
 
-    const [existingInfo, setExistingInfo] = useState(null);
-    const [ogInfo, setOGInfo] = useState(null);
+    const {existingInfo, ogInfo, noteInfo} = useFetchExistingInfo({
+        editParams,
+        fields: FIELDS,
+        challenge: '2mp'
+    });
+
+    useEffect(() => {
+        setOG(!!existingInfo?.[0]?.og);
+    }, [existingInfo]);
 
     const theForm = useRef();
 
     const isAdmin = useCheckIfAdmin();
 
     const doEdit = editParams !== null;
-
-    useEffect(() => {
-        if (doEdit) {
-            fetch('/fetch-2mp?' + new URLSearchParams([
-                ['entity', editParams.get('entity')],
-                ['map', editParams.get('map')]
-            ])).then(async (res) => {
-                let json = await res.json();
-                if ('error' in json) {
-                    console.log(json.error);
-                    setExistingInfo(null);
-                } else {
-                    setExistingInfo(json.results);
-                    let og = json.results?.[0]?.og;
-                    setOG(!!og);
-                    if (og) {
-                        let ogRes = await fetch('/fetch-2mp-og-info?' + new URLSearchParams([
-                            ['entity', editParams.get('entity')]
-                        ]));
-                        let ogJson = await ogRes.json();
-                        if ('error' in ogJson) {
-                            console.log(ogJson.error);
-                            setOGInfo(null);
-                        } else {
-                            setOGInfo(ogJson.result);
-                        }
-                    }
-                }
-            });
-        };
-    }, [doEdit, editParams]);
 
     const submitCallback = useSubmitCallback({
         formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams
@@ -87,15 +65,20 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
             </span>
             <br />
             <span className="formLine">
-                <label htmlFor="image">Or Upload Image</label>
-                <input type="file" name="image" accept="image/jpeg, image/png, image/gif, image/webp, image/apng, video/webm, video/ogg, video/mp4" />
+                <label htmlFor="image">Or Upload Image/Video</label>
+                <input type="file" name="image" accept={IMAGE_FORMATS} />
             </span>
             <br />
-            <span className="formLine">
+            <span className="formLine" style={{flexDirection: 'column'}}>
                 <label htmlFor="notes">Completion Notes/Proof</label>
-                <textarea name="notes" rows="5" cols="40"></textarea>
+                <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
             <br />
+            { /* <span className="formLine">
+                <label htmlFor="attachments">Additional Attachments</label>
+                <input type="file" name="attachments" accept={IMAGE_FORMATS} multiple />
+            </span>
+            <br /> */ }
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
                 <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
