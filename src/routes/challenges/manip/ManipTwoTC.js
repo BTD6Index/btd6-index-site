@@ -98,8 +98,8 @@ function ManipTwoTC({editedTower1 = null, editedTower2 = null, editedMap = null}
                 <input type="file" name="image" accept="image/jpeg, image/png, image/gif, image/webp, image/apng, video/webm, video/ogg, video/mp4" />
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="notes">Completion Notes/Proof</label>
+            <span className="formLine" style={{flexDirection: 'column'}}>
+                <label htmlFor="notes">Completion Notes/Proof (Please specify challenge code here)</label>
                 <textarea name="notes" rows="5" cols="40"></textarea>
             </span>
             <br />
