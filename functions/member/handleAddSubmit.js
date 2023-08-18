@@ -1,15 +1,15 @@
 import { imageObjectRegex } from "../imageObjectRegex";
 
-function fieldsCondition(fields, startIdx) {
-    return fields.map((field, idx) => `${field} = ?${idx + startIdx}`).join(' AND ');
-}
-
-function paramsList(startIdx, endIdx) {
-    let buf = []
-    for (let i = startIdx; i < endIdx; ++i) {
-        buf.push(`?${i + 1}`);
+function expandSQLArray(paramNo, arrayLen) {
+    let buf = [];
+    for (let i = 0; i < arrayLen; ++i) {
+        buf.push(`json_extract(?${paramNo}, '$[${i}]')`);
     }
     return buf.join(',');
+}
+
+function sqlArrayCondition(paramNo, fields) {
+    return fields.map((field, i) => `${field} = json_extract(?${paramNo}, '$[${i}]')`).join(' AND ');
 }
 
 async function handleAddSubmit({ context, challenge, fields, extraInfoFields, genEmbedFunction }) {
@@ -46,48 +46,48 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     }
 
     let link;
-    let key;
+    let imageKey;
 
     const hasImage = form_data.has('image') && form_data.get('image') instanceof File;
 
     if (hasImage) {
-        key = crypto.randomUUID();
-        link = `https://media.btd6index.win/${key}`;
+        imageKey = crypto.randomUUID();
+        link = `https://media.btd6index.win/${imageKey}`;
     } else {
         link = form_data.get('link');
     }
 
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
 
-    const delete_completion_statement = `DELETE FROM "${challenge}_completions" WHERE ${fieldsCondition(fields, 1)} `
-        + `AND ${is_helper ? `?${fields.length + 1} = ?${fields.length + 1}` : `pending = ?${fields.length + 1}`} RETURNING *`;
-    const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${fieldsCondition(shared_fields, 1)}`;
-    const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${fieldsCondition(fields, 1)}`;
-    const add_completion_stmt = `INSERT INTO "${challenge}_completions" (${fields.join(',')},person,link,og,pending) VALUES (${paramsList(0, fields.length + 4)})`;
-    const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${paramsList(0, extraInfoFields.length)})`;
-    const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${paramsList(0, fields.length + 1)})`;
+    const delete_completion_statement = `DELETE FROM "${challenge}_completions" WHERE ${sqlArrayCondition(1, fields)} `
+        + `AND ${is_helper ? `?2 = ?2` : `pending = ?2`} RETURNING *`;
+    const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${sqlArrayCondition(1, shared_fields)}`;
+    const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${sqlArrayCondition(1, fields)}`;
+    const add_completion_stmt = `INSERT INTO "${challenge}_completions" VALUES (${expandSQLArray(1, fields.length)}, ?2, ?3, ?4, ?5)`;
+    const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${expandSQLArray(1, extraInfoFields.length)})`;
+    const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
 
     let batched_stmts = [];
     if (edit_mode) {
         batched_stmts.push(db.prepare(delete_completion_statement).bind(
-            ...fields.map(field => form_data.get(`edited-${field}`)),
+            JSON.stringify(fields.map(field => form_data.get(`edited-${field}`))),
             jwt_result.payload.sub // user id
         ));
         if (form_data.has('og')) {
             batched_stmts.push(db.prepare(delete_info_stmt).bind(
-                ...shared_fields.map(field => form_data.get(`edited-${field}`))
+                JSON.stringify(shared_fields.map(field => form_data.get(`edited-${field}`)))
             ));
         }
         if (form_data.has('notes')) {
             batched_stmts.push(db.prepare(delete_notes_stmt).bind(
-                ...fields.map(field => form_data.get(`edited-${field}`))
+                JSON.stringify(fields.map(field => form_data.get(`edited-${field}`)))
             ));
         }
     }
 
     batched_stmts.push(db.prepare(add_completion_stmt)
         .bind(
-            ...fields.map(field => form_data.get(field)),
+            JSON.stringify(fields.map(field => form_data.get(field))),
             form_data.get('person'),
             link,
             form_data.has('og') ? 1 : 0,
@@ -98,7 +98,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
         batched_stmts.push(
             db.prepare(add_info_stmt)
                 .bind(
-                    ...extraInfoFields.map(field => form_data.get(field))
+                    JSON.stringify(extraInfoFields.map(field => form_data.get(field)))
                 )
         );
     }
@@ -106,7 +106,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
         batched_stmts.push(
             db.prepare(add_notes_stmt)
                 .bind(
-                    ...fields.map(field => form_data.get(field)),
+                    JSON.stringify(fields.map(field => form_data.get(field))),
                     form_data.get('notes')
                 )
         );
@@ -136,7 +136,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     if (hasImage) {
         // upload only when uuid doesn't exist
         let r2Obj = await context.env.BTD6_INDEX_MEDIA.put(
-            key, form_data.get('image').stream(), { onlyIf: { etagDoesNotMatch: '*' } }
+            imageKey, form_data.get('image').stream(), { onlyIf: { etagDoesNotMatch: '*' } }
         );
         if (r2Obj === null) {
             return respondError('Failed to upload image object');
