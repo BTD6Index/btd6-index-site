@@ -1,6 +1,6 @@
 import { imageObjectRegex } from "../imageObjectRegex";
 
-export default async function onRequest(context) {
+export async function onRequest(context) {
     const db = context.env.BTD6_INDEX_DB;
 
     let rows = await db.prepare('SELECT tower1, tower2, map, link FROM "2tc_completions"').all();
