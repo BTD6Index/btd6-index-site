@@ -45,16 +45,13 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
         return respondError('Need one of link or image keys');
     }
 
-    let link;
-    let imageKey;
+    let link = null;
+    let imageKey = crypto.randomUUID();
 
     const hasImage = form_data.has('image') && form_data.get('image') instanceof File;
 
-    if (hasImage) {
-        imageKey = crypto.randomUUID();
-        link = `https://media.btd6index.win/${imageKey}`;
-    } else {
-        link = form_data.get('link');
+    if (!hasImage) {
+        link = form_data.get('link') || null;
     }
 
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
@@ -63,10 +60,14 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
         + `AND ${is_helper ? `?2 = ?2` : `pending = ?2`} RETURNING *`;
     const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${sqlArrayCondition(1, shared_fields)}`;
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${sqlArrayCondition(1, fields)}`;
+    const update_filekeys_stmt = `UPDATE "${challenge}_filekeys" SET (${fields.join(',')}) = (${expandSQLArray(1, fields.length)}) `
+    + `WHERE ${sqlArrayCondition(2, fields)} RETURNING filekey`;
+    const insert_filekeys_stmt = `INSERT INTO "${challenge}_filekeys" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
     const add_completion_stmt = `INSERT INTO "${challenge}_completions" VALUES (${expandSQLArray(1, fields.length)}, ?2, ?3, ?4, ?5)`;
     const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${expandSQLArray(1, extraInfoFields.length)})`;
     const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
 
+    let update_filekeys_idx = -1;
     let batched_stmts = [];
     if (edit_mode) {
         batched_stmts.push(db.prepare(delete_completion_statement).bind(
@@ -83,6 +84,16 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
                 JSON.stringify(fields.map(field => form_data.get(`edited-${field}`)))
             ));
         }
+        update_filekeys_idx = batched_stmts.length;
+        batched_stmts.push(db.prepare(update_filekeys_stmt).bind(
+            JSON.stringify(fields.map(field => form_data.get(`${field}`))),
+            JSON.stringify(fields.map(field => form_data.get(`edited-${field}`)))
+        ));
+    } else {
+        batched_stmts.push(db.prepare(insert_filekeys_stmt).bind(
+            JSON.stringify(fields.map(field => form_data.get(`${field}`))),
+            imageKey
+        ));
     }
 
     batched_stmts.push(db.prepare(add_completion_stmt)
@@ -120,23 +131,13 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     }
 
     if (edit_mode) {
-        for (let row of batch_result[0].results) {
-            let link = row?.['link'];
-    
-            if (link) {
-                // attempt to delete old image object if applicable
-                let match = imageObjectRegex.exec(link);
-                if (match) {
-                    context.waitUntil(context.env.BTD6_INDEX_MEDIA.delete(match[1]));
-                }
-            }
-        }
+        imageKey = batch_result[update_filekeys_idx].results[0].filekey;
     }
 
     if (hasImage) {
-        // upload only when uuid doesn't exist
+        // in add mode, upload only when uuid doesn't exist
         let r2Obj = await context.env.BTD6_INDEX_MEDIA.put(
-            imageKey, form_data.get('image').stream(), { onlyIf: { etagDoesNotMatch: '*' } }
+            imageKey, form_data.get('image').stream(), edit_mode ? {} : { onlyIf: { etagDoesNotMatch: '*' } }
         );
         if (r2Obj === null) {
             return respondError('Failed to upload image object');

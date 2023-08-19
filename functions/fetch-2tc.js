@@ -33,11 +33,11 @@ export async function onRequest(context) {
     let query_stmt;
     if (query) {
         query_stmt = db
-        .prepare(`SELECT * FROM "2tc_completions_fts" (?1) WHERE ${specific_field_conds(4)} ORDER BY tower1, tower2, map LIMIT ?2 OFFSET ?3`)
+        .prepare(`SELECT * FROM "2tc_completions_fts" INNER JOIN "2tc_filekeys" USING (tower1,tower2,map) WHERE "2tc_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY tower1, tower2, map LIMIT ?2 OFFSET ?3`)
         .bind(processQuery(query, field_keys), count+1, offset, JSON.stringify(field_values));
     } else {
         query_stmt = db
-        .prepare(`SELECT * FROM "2tc_completions_fts" WHERE ${specific_field_conds(3)} ORDER BY tower1, tower2, map LIMIT ?1 OFFSET ?2`)
+        .prepare(`SELECT * FROM "2tc_completions_fts" INNER JOIN "2tc_filekeys" USING (tower1,tower2,map) WHERE ${specific_field_conds(3)} ORDER BY tower1, tower2, map LIMIT ?1 OFFSET ?2`)
         .bind(count+1, offset, JSON.stringify(field_values));
     }
 

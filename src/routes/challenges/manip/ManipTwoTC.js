@@ -70,7 +70,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             </span>
             <br />
             <span className="formLine">
-                <label htmlFor="link">Link</label>
+                <label htmlFor="link">Link (leave blank to use potentially already-uploaded image/video)</label>
                 <input name="link" type="text" placeholder="Link" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.link}  />
             </span>
             <br />

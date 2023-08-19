@@ -3,6 +3,7 @@ import useIndexSearch from "../../util/useIndexSearch";
 import useToggleList from "../../util/useToggleList";
 import { useRef, useCallback } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import { imageObjectRegex } from "../../util/imageObjectRegex";
 
 export default function ChallengePage({ challenge, header, description, fields, fieldHeaders }) {
     const {
@@ -78,6 +79,8 @@ export default function ChallengePage({ challenge, header, description, fields, 
                             completion => {
                                 const key = JSON.stringify([...fields.map(field => completion[field]), completion.map]);
                                 const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
+                                const link = !completion.link || imageObjectRegex.exec(completion.link) ? `https://media.btd6index.win/${completion.filekey}` : completion.link
+                                
                                 return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
                                     { !isLoading && isAuthenticated && <td>
                                         {hasWritePerms && <input
@@ -92,7 +95,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
                                     { fields.map(field => <td key={field}>{completion[field]}</td>) }
                                     <td>{completion.map}</td>
                                     <td>{completion.person}{completion.pending ? ' (Pending)' : ''}</td>
-                                    <td><a href={completion.link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
+                                    <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
                                         fields.concat('map').map(field => [field, completion[field]])
                                     )}>Notes</a></td>
                                     <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
