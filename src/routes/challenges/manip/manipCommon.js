@@ -1,9 +1,9 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { useCallback, useState, useEffect, Fragment } from "react";
 import { imageObjectRegex } from "../../../util/imageObjectRegex";
+import useAccessToken from "../../../util/useAccessToken";
 
 function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceReload}) {
-    const { getAccessTokenWithPopup } = useAuth0();
+    const getToken = useAccessToken();
 
     return useCallback((e) => {
         e.preventDefault();
@@ -12,7 +12,7 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
             alert('You cannot reference a media.btd6index.win image from a different completion');
             return;
         }
-        getAccessTokenWithPopup({
+        getToken({
             authorizationParams: {
                 audience: 'https://btd6index.win/'
             }
@@ -43,7 +43,7 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
         }).catch(error => {
             window.alert(`Error adding ${challenge}: ${error.message}`);
         });
-    }, [getAccessTokenWithPopup, challenge, formRef, oldLink, setEditParams, forceReload]);
+    }, [getToken, challenge, formRef, oldLink, setEditParams, forceReload]);
 }
 
 function useFetchExistingInfo({editParams, fields, challenge}) {

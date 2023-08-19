@@ -4,6 +4,7 @@ import useToggleList from "../../util/useToggleList";
 import { useRef, useCallback } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import { imageObjectRegex } from "../../util/imageObjectRegex";
+import useAccessToken from "../../util/useAccessToken";
 
 export default function ChallengePage({ challenge, header, description, fields, fieldHeaders }) {
     const {
@@ -14,14 +15,15 @@ export default function ChallengePage({ challenge, header, description, fields, 
 
     const deleteForm = useRef(null);
 
-    const { getAccessTokenWithPopup, isAuthenticated, isLoading, user } = useAuth0();
+    const { isAuthenticated, isLoading, user } = useAuth0();
+    const getToken = useAccessToken();
 
     const isAdmin = useCheckIfAdmin();
 
     const onDelete = useCallback(async () => {
         if (window.confirm(`Are you sure you want to delete ${selectedCompletions.length} completion(s)?`)) {
             try {
-                const token = await getAccessTokenWithPopup({
+                const token = await getToken({
                     authorizationParams: {
                         audience: 'https://btd6index.win/'
                     }
@@ -44,7 +46,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
                 window.alert(`Error deleting ${challenge}: ${error.message}`);
             }
         }
-    }, [selectedCompletions, deleteForm, getAccessTokenWithPopup, forceReload, challenge]);
+    }, [selectedCompletions, deleteForm, getToken, forceReload, challenge]);
 
     return <>
         <h1>{header}</h1>
