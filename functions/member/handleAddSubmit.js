@@ -132,7 +132,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     if (edit_mode) {
         imageKey = batch_result[update_filekeys_idx].results[0].filekey;
 
-        if (!hasImage) {
+        if (link) {
             // delete image if replaced with link
             context.waitUntil(media.delete(imageKey));
         }
