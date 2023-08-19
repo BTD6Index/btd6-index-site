@@ -5,14 +5,14 @@ export async function onRequest(context) {
         context, challenge: '2tc',
         fields: ['tower1', 'tower2', 'map'],
         extraInfoFields: ['tower1', 'tower2', 'upgrade1', 'upgrade2', 'version', 'date'],
-        genEmbedFunction: ({ link, formData, edit }) => ({
+        genEmbedFunction: ({ link, formData, edit, filekey }) => ({
             "content": null,
             "embeds": [
                 {
                     "title": `${formData.get('tower1')} and ${formData.get('tower2')} 2TC on ${formData.get('map')} ${
                         edit ? 'Edited' : 'Submitted'
                     }${formData.has('verify') ? ' and Verified' : ''}`,
-                    "description": `Person: ${formData.get('person')}\nCompletion link: ${link}\nView 2TCs: https://btd6index.win/2tc`,
+                    "description": `Person: ${formData.get('person')}\nCompletion link: ${link || `https://media.btd6index.win/${filekey}`}\nView 2TCs: https://btd6index.win/2tc`,
                     "color": 0xc40707
                 }
             ],

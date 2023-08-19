@@ -146,7 +146,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
 
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(fetch(webhookUrl, {
-            body: JSON.stringify(genEmbedFunction({ link, formData: form_data, edit: edit_mode })),
+            body: JSON.stringify(genEmbedFunction({ link, formData: form_data, edit: edit_mode, filekey: imageKey })),
             method: "post",
             headers: {
                 "Content-Type": "application/json"

@@ -5,14 +5,14 @@ export async function onRequest(context) {
         context, challenge: '2mp',
         fields: ['entity', 'map'],
         extraInfoFields: ['entity', 'upgrade', 'version', 'date'],
-        genEmbedFunction: ({link, formData, edit}) => ({
+        genEmbedFunction: ({link, formData, edit, filekey}) => ({
             "content": null,
             "embeds": [
                 {
                     "title": `${formData.get('entity')} 2MPC on ${formData.get('map')} ${
                         edit ? 'Edited' : 'Submitted'
                     }${formData.has('verify') ? ' and Verified' : ''}`,
-                    "description": `Person: ${formData.get('person')}\nCompletion link: ${link}\nView 2MPs: https://btd6index.win/2mp`,
+                    "description": `Person: ${formData.get('person')}\nCompletion link: ${link || `https://media.btd6index.win/${filekey}`}\nView 2MPs: https://btd6index.win/2mp`,
                     "color": 0x2d00c1
                 }
             ],
