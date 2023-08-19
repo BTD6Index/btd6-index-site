@@ -6,7 +6,8 @@ export default function TwoTCRules() {
             <li>Any tower that (in the past or currently) soloes CHIMPS entirely on its own is disallowed. At the time of writing, they are <strong>Sauda</strong> and <strong>Geraldo</strong>.</li>
             <li>
                 Challenge editor should be set to hard difficulty and CHIMPS mode.
-                Default values for Starting Cash, Staring Lives, Max Lives, Start Round, and End Round are acceptable.
+                Default values for Starting Cash, Starting Lives, Max Lives, Start Round, and End Round should be kept.
+                Sliders (regrow rate, etc.) should be at their default value.
                 <strong> Under no circumstances should your end round be set to r101, r120, r140, or r300.</strong>
             </li>
             <li>Least Cash condition set to "No Score Set" is required for any run being submitted (you can easily reset this after winning a run by clicking auto twice)</li>
