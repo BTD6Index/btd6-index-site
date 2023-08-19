@@ -47,8 +47,8 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     for (let row of res[3].results) {
         context.waitUntil(
             media.list({prefix: row.filekey})
-            .then(listRes => {
-                media.delete(listRes.objects.map(obj => obj.key));
+            .then(async (listRes) => {
+                await media.delete(listRes.objects.map(obj => obj.key));
             })
         );
     }

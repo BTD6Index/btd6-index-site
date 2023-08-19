@@ -167,13 +167,20 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
         ));
 
     for (let webhookUrl of webhookUrls) {
-        context.waitUntil(fetch(webhookUrl, {
-            body: JSON.stringify(genEmbedFunction({ link, formData: form_data, edit: edit_mode, filekey: imageKey })),
-            method: "post",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }));
+        context.waitUntil(
+            media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
+                await fetch(webhookUrl, {
+                    body: JSON.stringify(genEmbedFunction({
+                        link, formData: form_data, edit: edit_mode, filekey: imageKey,
+                        attachmentKeys: listRes.objects.map(object => object.key)
+                    })),
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+            })
+        );
     }
 
     return Response.json({ inserted: true });
