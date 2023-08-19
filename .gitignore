@@ -23,7 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 .wrangler
-2tc-migrate.sql
-2mp-migrate.sql
+
+*.sql
+!init-tables.sql
+!destroy-tables.sql
 
 .dev.vars

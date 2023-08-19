@@ -25,6 +25,8 @@ CREATE TABLE "2tc_completion_notes" (
     tower1, tower2, map, notes PRIMARY KEY (tower1, tower2, map)
 );
 
+CREATE TABLE "2tc_filekeys" (tower1, tower2, map, filekey, PRIMARY KEY (tower1, tower2, map));
+
 -- 2 Megapops CHIMPS
 CREATE TABLE "2mp_completions" (
     entity, map, person, link, og, pending, PRIMARY KEY (entity, map)
@@ -50,6 +52,8 @@ CREATE TABLE "2mp_extra_info" (
 CREATE TABLE "2mp_completion_notes" (
     entity, map, notes PRIMARY KEY (entity, map)
 );
+
+CREATE TABLE "2mp_filekeys" (entity, map, filekey, PRIMARY KEY (entity, map));
 
 -- Others
 CREATE TABLE "fttc_completions" (
