@@ -14,7 +14,7 @@ export async function onRequest(context) {
                     }${formData.has('verify') ? ' and Verified' : ''}`,
                     "description": `Person: ${formData.get('person')}\nView 2MPs: https://btd6index.win/2mp`,
                     "color": 0x2d00c1,
-                    "link": link || `https://media.btd6index.win/${filekey}`
+                    "url": link || `https://media.btd6index.win/${filekey}`
                 }
             ],
             "username": "Glue Rat",
