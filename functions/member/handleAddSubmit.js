@@ -172,7 +172,8 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
                 await fetch(webhookUrl, {
                     body: JSON.stringify(genEmbedFunction({
                         link, formData: form_data, edit: edit_mode, filekey: imageKey,
-                        attachmentKeys: listRes.objects.map(object => object.key)
+                        attachmentKeys: listRes.objects.map(object => object.key),
+                        verify: form_data.has('verify') && is_helper
                     })),
                     method: "post",
                     headers: {
