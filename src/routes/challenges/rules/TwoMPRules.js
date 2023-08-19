@@ -6,7 +6,7 @@ export default function TwoMPRules() {
             <li>
                 Challenge editor should be set to hard difficulty and CHIMPS mode.
                 Default values for Starting Cash, Staring Lives, Max Lives, Start Round, and End Round are acceptable.
-                <strong>Under no circumstances should your end round be set to r101, r120, r140, or r300.</strong>
+                <strong> Under no circumstances should your end round be set to r101, r120, r140, or r300.</strong>
             </li>
             <li>Least Cash condition set to "No Score Set" is required for any run being submitted (you can easily reset this after winning a run by clicking auto twice)</li>
             <li>
