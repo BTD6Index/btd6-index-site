@@ -1,5 +1,3 @@
-import { imageObjectRegex } from "../imageObjectRegex";
-
 async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const db = context.env.BTD6_INDEX_DB;
     const jwt_result = context.data.jwt_result;

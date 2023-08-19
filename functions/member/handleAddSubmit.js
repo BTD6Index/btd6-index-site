@@ -1,5 +1,3 @@
-import { imageObjectRegex } from "../imageObjectRegex";
-
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
     for (let i = 0; i < arrayLen; ++i) {
