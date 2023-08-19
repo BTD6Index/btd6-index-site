@@ -7,7 +7,7 @@ import { imageObjectRegex } from "../../util/imageObjectRegex";
 
 export default function ChallengePage({ challenge, header, description, fields, fieldHeaders }) {
     const {
-        completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError
+        completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
     } = useIndexSearch(`/fetch-${challenge}`);
 
     const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
@@ -50,15 +50,21 @@ export default function ChallengePage({ challenge, header, description, fields, 
         <h1>{header}</h1>
         <p>{description}</p>
         { !isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p> }
-        <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
-        <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
-        <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>
-        {
-            !isLoading && isAuthenticated
-            && <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
-                Delete Selected
-            </button>
-        }
+        <div className="searchUiGroup">
+            <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
+            <input type="checkbox" name="pending" onChange={e => setPendingFilter(e.target.checked)} />
+            <label htmlFor="pending">Pending completions only</label>
+        </div>
+        <div className="searchUiGroup">
+            <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
+            <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>
+            {
+                !isLoading && isAuthenticated
+                && <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
+                    Delete Selected
+                </button>
+            }
+        </div>
         { searchError ? <p>Error while searching: {searchError}</p> :
         <div className="tableContainer">
             <table>

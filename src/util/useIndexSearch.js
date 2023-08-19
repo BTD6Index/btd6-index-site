@@ -7,11 +7,13 @@ export default function useIndexSearch(endpoint) {
     const [hasNext, setHasNext] = useState(false);
     const [_reloadVar, _setReloadVar] = useState(false);
     const [error, setError] = useState(null);
+    const [pendingFilter, setPendingFilter] = useState(false);
 
     useEffect(() => {
         fetch(endpoint + "?" + new URLSearchParams({
             query: query,
-            offset: offset
+            offset: offset,
+            ...(pendingFilter ? {pending: 1} : {})
         }))
         .then(async response => {
             const data = await response.json();
@@ -29,7 +31,7 @@ export default function useIndexSearch(endpoint) {
         .catch(err => {
             setError(err.message);
         });
-    }, [query, offset, endpoint, _reloadVar]);
+    }, [query, offset, endpoint, _reloadVar, pendingFilter]);
 
     const onSearch = useCallback((e) => {
         setOffset(0);
@@ -57,6 +59,7 @@ export default function useIndexSearch(endpoint) {
         onSearch,
         onPrev,
         onNext,
-        forceReload
+        forceReload,
+        setPendingFilter
     };
 };

@@ -181,3 +181,11 @@ input[type="file"] {
   align-items: center;
 }
 
+.searchUiGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5vw;
+  margin: 0.2em 0;
+}
