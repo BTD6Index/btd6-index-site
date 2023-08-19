@@ -10,7 +10,7 @@ const towerToOptions = new Map(
 
 const mapToOptions = new Map(
     Object.entries(maps)
-        .map(entry => [entry[1], {value: entry[1], label: entry[0]}])
+        .map(entry => [entry[0], {value: entry[0], label: entry[0]}])
 );
 
 export {towerToOptions, mapToOptions};

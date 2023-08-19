@@ -22,10 +22,12 @@ CREATE TABLE "2tc_extra_info" (
     tower1, tower2, upgrade1, upgrade2, version, date, PRIMARY KEY (tower1, tower2)
 );
 CREATE TABLE "2tc_completion_notes" (
-    tower1, tower2, map, notes PRIMARY KEY (tower1, tower2, map)
+    tower1, tower2, map, notes, PRIMARY KEY (tower1, tower2, map)
 );
 
-CREATE TABLE "2tc_filekeys" (tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map));
+CREATE TABLE "2tc_filekeys" (
+    tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map)
+);
 
 -- 2 Megapops CHIMPS
 CREATE TABLE "2mp_completions" (
@@ -50,10 +52,12 @@ CREATE TABLE "2mp_extra_info" (
     entity PRIMARY KEY, upgrade, version, date
 );
 CREATE TABLE "2mp_completion_notes" (
-    entity, map, notes PRIMARY KEY (entity, map)
+    entity, map, notes, PRIMARY KEY (entity, map)
 );
 
-CREATE TABLE "2mp_filekeys" (entity, map, filekey UNIQUE, PRIMARY KEY (entity, map));
+CREATE TABLE "2mp_filekeys" (
+    entity, map, filekey UNIQUE, PRIMARY KEY (entity, map)
+);
 
 -- Others
 CREATE TABLE "fttc_completions" (
