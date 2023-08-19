@@ -71,7 +71,7 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
                 <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
             <br />
-            <AttachmentsWidget existingAttachments={existingAttachments} />
+            <AttachmentsWidget existingAttachments={existingAttachments} attachmentsLabel="Upload Attachments (victory screen image, etc.)" />
             <br />
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>

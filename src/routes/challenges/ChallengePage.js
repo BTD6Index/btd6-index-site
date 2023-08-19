@@ -51,6 +51,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
     return <>
         <h1>{header}</h1>
         <p>{description}</p>
+        <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
         { !isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p> }
         <div className="searchUiGroup">
             <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />

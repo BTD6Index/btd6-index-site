@@ -114,10 +114,10 @@ function FormLinkEntry({existingInfo}) {
             </span>;
 }
 
-function AttachmentsWidget({existingAttachments}) {
+function AttachmentsWidget({existingAttachments, attachmentsLabel = null}) {
     return <>
         <span className="formLine">
-            <label htmlFor="attachments">Upload Attachments</label>
+            <label htmlFor="attachments">{attachmentsLabel ?? "Upload Attachments"}</label>
             <input type="file" name="attachments" accept={IMAGE_FORMATS} multiple />
         </span>
         {
