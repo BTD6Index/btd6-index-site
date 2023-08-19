@@ -66,7 +66,7 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
                 <input type="file" name="image" accept={IMAGE_FORMATS} />
             </span>
             <br />
-            <span className="formLine" style={{flexDirection: 'column'}}>
+            <span className="formLine">
                 <label htmlFor="notes">Completion Notes/Proof</label>
                 <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
