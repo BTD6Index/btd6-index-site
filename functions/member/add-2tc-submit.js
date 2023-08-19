@@ -6,14 +6,15 @@ export async function onRequest(context) {
         fields: ['tower1', 'tower2', 'map'],
         extraInfoFields: ['tower1', 'tower2', 'upgrade1', 'upgrade2', 'version', 'date'],
         genEmbedFunction: ({ link, formData, edit, filekey }) => ({
-            "content": null,
+            "content": `${link || `https://media.btd6index.win/${filekey}`}`,
             "embeds": [
                 {
                     "title": `${formData.get('tower1')} and ${formData.get('tower2')} 2TC on ${formData.get('map')} ${
                         edit ? 'Edited' : 'Submitted'
                     }${formData.has('verify') ? ' and Verified' : ''}`,
-                    "description": `Person: ${formData.get('person')}\nCompletion link: ${link || `https://media.btd6index.win/${filekey}`}\nView 2TCs: https://btd6index.win/2tc`,
-                    "color": 0xc40707
+                    "description": `Person: ${formData.get('person')}\nView 2TCs: https://btd6index.win/2tc`,
+                    "color": 0xc40707,
+                    "link": link || `https://media.btd6index.win/${filekey}`
                 }
             ],
             "username": "Glue Rat",
