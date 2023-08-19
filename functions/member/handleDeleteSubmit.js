@@ -1,5 +1,6 @@
 async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const db = context.env.BTD6_INDEX_DB;
+    const media = context.env.BTD6_INDEX_MEDIA;
     const jwt_result = context.data.jwt_result;
     const is_helper = jwt_result.payload.permissions.includes('write:admin');
 
@@ -44,7 +45,12 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     ]);
 
     for (let row of res[3].results) {
-        context.waitUntil(context.env.BTD6_INDEX_MEDIA.delete(row.filekey));
+        context.waitUntil(
+            media.list({prefix: row.filekey})
+            .then(listRes => {
+                media.delete(listRes.objects.map(obj => obj.key));
+            })
+        );
     }
 
     return Response.json({});

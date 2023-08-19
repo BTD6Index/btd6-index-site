@@ -1,8 +1,8 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, Fragment } from "react";
 import { imageObjectRegex } from "../../../util/imageObjectRegex";
 
-function useSubmitCallback({formRef, challenge, oldLink, setEditParams}) {
+function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceReload}) {
     const { getAccessTokenWithPopup } = useAuth0();
 
     return useCallback((e) => {
@@ -36,19 +36,22 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams}) {
                             newParams[dataKey.substring(7)] = formData.get(dataKey.substring(7));
                         }
                     }
+                    forceReload();
                     setEditParams(newParams, {replace: true});
                 }
             }
         }).catch(error => {
             window.alert(`Error adding ${challenge}: ${error.message}`);
         });
-    }, [getAccessTokenWithPopup, challenge, formRef, oldLink, setEditParams]);
+    }, [getAccessTokenWithPopup, challenge, formRef, oldLink, setEditParams, forceReload]);
 }
 
 function useFetchExistingInfo({editParams, fields, challenge}) {
     const [existingInfo, setExistingInfo] = useState(null);
     const [ogInfo, setOGInfo] = useState(null);
     const [noteInfo, setNoteInfo] = useState(null);
+    const [existingAttachments, setExistingAttachments] = useState(null);
+    const [_reloadVar, _setReloadVar] = useState(false);
 
     const doEdit = editParams !== null;
 
@@ -86,14 +89,50 @@ function useFetchExistingInfo({editParams, fields, challenge}) {
                     } else {
                         setNoteInfo(notesJson);
                     }
+                    let attachmentsRes = await fetch(`/list-attachments?` + new URLSearchParams([
+                        ['key', json.results?.[0]?.filekey]
+                    ]));
+                    setExistingAttachments((await attachmentsRes.json()).files);
                 }
             });
         }
-    }, [editParams, doEdit, challenge, fields]);
+    }, [editParams, doEdit, challenge, fields, _reloadVar]);
 
-    return {existingInfo, ogInfo, noteInfo};
+    const forceReload = useCallback(() => {
+        _setReloadVar(state => !state);
+    }, []);
+
+    return {existingInfo, ogInfo, noteInfo, existingAttachments, forceReload};
 }
 
 const IMAGE_FORMATS = "image/jpeg, image/png, image/gif, image/webp, image/apng, video/webm, video/ogg, video/mp4";
 
-export { useSubmitCallback, useFetchExistingInfo, IMAGE_FORMATS };
+function FormLinkEntry({existingInfo}) {
+    return <span className="formLine">
+                <label htmlFor="link">Link (leave blank to use potentially already-uploaded image/video)</label>
+                <input name="link" type="text" placeholder="Link" style={{ width: '14ch' }} defaultValue={existingInfo?.[0]?.link} />
+            </span>;
+}
+
+function AttachmentsWidget({existingAttachments}) {
+    return <>
+        <span className="formLine">
+            <label htmlFor="attachments">Upload Attachments</label>
+            <input type="file" name="attachments" accept={IMAGE_FORMATS} multiple />
+        </span>
+        {
+            (existingAttachments ?? []).map(attachmentKey => {
+                const link = `https://media.btd6index.win/${attachmentKey}`;
+                return <Fragment key={attachmentKey}>
+                    <br />
+                    <span className="formLine">
+                        <label htmlFor="delete-attachments">Delete attachment <a href={link}>{link}</a>?</label>
+                        <input type="checkbox" name="delete-attachments" value={attachmentKey} />
+                    </span>
+                </Fragment>;
+            })
+        }
+    </>;
+}
+
+export { useSubmitCallback, useFetchExistingInfo, IMAGE_FORMATS, FormLinkEntry, AttachmentsWidget };

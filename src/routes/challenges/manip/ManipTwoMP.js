@@ -5,14 +5,14 @@ import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
-import { IMAGE_FORMATS, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
+import { AttachmentsWidget, FormLinkEntry, IMAGE_FORMATS, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
 
 const FIELDS = ['entity']; // needs to be outside so react doesn't treat value as changed every re-render
 
 function ManipTwoMP({ editParams = null, setEditParams = null }) {
     const [isOG, setOG] = useState(false);
 
-    const {existingInfo, ogInfo, noteInfo} = useFetchExistingInfo({
+    const {existingInfo, ogInfo, noteInfo, existingAttachments, forceReload} = useFetchExistingInfo({
         editParams,
         fields: FIELDS,
         challenge: '2mp'
@@ -29,7 +29,7 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
     const doEdit = editParams !== null;
 
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams
+        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
     });
 
     return <>
@@ -59,10 +59,7 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
                 <input name="person" type="text" placeholder="Person" style={{ width: '14ch' }} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="link">Link (leave blank to use potentially already-uploaded image/video)</label>
-                <input name="link" type="text" placeholder="Link" style={{ width: '14ch' }} defaultValue={existingInfo?.[0]?.link} />
-            </span>
+            <FormLinkEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
                 <label htmlFor="image">Or Upload Image/Video</label>
@@ -74,11 +71,8 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
                 <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
             <br />
-            { /* <span className="formLine">
-                <label htmlFor="attachments">Additional Attachments</label>
-                <input type="file" name="attachments" accept={IMAGE_FORMATS} multiple />
-            </span>
-            <br /> */ }
+            <AttachmentsWidget existingAttachments={existingAttachments} />
+            <br />
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
                 <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
@@ -104,7 +98,7 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
                 </>
             }
             {editParams && ['entity', 'map'].map(
-                field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field)} />)}
+                field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field) ?? undefined} />)}
             <input type="hidden" name="edit" value={doEdit} />
             <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} />
         </form>

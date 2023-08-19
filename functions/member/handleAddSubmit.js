@@ -12,6 +12,7 @@ function sqlArrayCondition(paramNo, fields) {
 
 async function handleAddSubmit({ context, challenge, fields, extraInfoFields, genEmbedFunction }) {
     const db = context.env.BTD6_INDEX_DB;
+    const media = context.env.BTD6_INDEX_MEDIA;
     const jwt_result = context.data.jwt_result;
     const is_helper = jwt_result.payload.permissions.includes('write:admin');
 
@@ -130,17 +131,40 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
 
     if (edit_mode) {
         imageKey = batch_result[update_filekeys_idx].results[0].filekey;
+
+        if (!hasImage) {
+            // delete image if replaced with link
+            context.waitUntil(media.delete(imageKey));
+        }
     }
 
     if (hasImage) {
         // in add mode, upload only when uuid doesn't exist
-        let r2Obj = await context.env.BTD6_INDEX_MEDIA.put(
+        let r2Obj = await media.put(
             imageKey, form_data.get('image').stream(), edit_mode ? {} : { onlyIf: { etagDoesNotMatch: '*' } }
         );
         if (r2Obj === null) {
             return respondError('Failed to upload image object');
         }
     }
+
+    for (let attachment of form_data.getAll('attachments')) {
+        if (attachment instanceof File) {
+            let r2Obj = await media.put(
+                `${imageKey}/attach/${crypto.randomUUID()}`,
+                attachment.stream(), { onlyIf: { etagDoesNotMatch: '*' } }
+            );
+            if (r2Obj === null) {
+                return respondError('Failed to upload an attachment');
+            }
+        }
+    }
+    
+    context.waitUntil(media.delete(
+        form_data
+        .getAll('delete-attachments')
+        .filter(key => key.startsWith(`${imageKey}/attach`)) // for security reasons
+        ));
 
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(fetch(webhookUrl, {
