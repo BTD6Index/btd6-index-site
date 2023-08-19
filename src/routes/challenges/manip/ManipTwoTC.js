@@ -32,6 +32,8 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
         formRef: theForm, challenge: '2tc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
     });
 
+    const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo'].includes(value));
+
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>
         <h1>{
@@ -45,14 +47,14 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1</label>
-                <Select name="tower1" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
+                <Select name="tower1" options={filteredTowerOptions} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('tower1')) ?? undefined
                     } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="tower2">Tower 2</label>
-                <Select name="tower2" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
+                <Select name="tower2" options={filteredTowerOptions} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('tower2')) ?? undefined
                     } required />
             </span>
