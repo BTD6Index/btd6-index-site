@@ -3,7 +3,7 @@ import { imageObjectRegex } from "../imageObjectRegex";
 async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const db = context.env.BTD6_INDEX_DB;
     const jwt_result = context.data.jwt_result;
-    const is_helper = jwt_result.payload['https://btd6index.win/roles'].includes('Index Helper');
+    const is_helper = jwt_result.payload.permissions.includes('write:admin');
 
     const respondError = (error) => {
         return Response.json({error}, {status: 400});
