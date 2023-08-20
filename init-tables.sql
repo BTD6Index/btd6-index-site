@@ -59,6 +59,38 @@ CREATE TABLE "2mp_filekeys" (
     entity, map, filekey UNIQUE, PRIMARY KEY (entity, map)
 );
 
+-- 2 Towers Co-op CHIMPS
+CREATE TABLE "2tcc_completions" (
+    tower1, tower2, map, person1, person2, link, og, pending, PRIMARY KEY (tower1, tower2, map)
+);
+CREATE VIRTUAL TABLE "2tcc_completions_fts" USING fts5(
+    tower1, tower2, map, person1, person2, link, og, pending UNINDEXED, content='2tcc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+);
+CREATE TRIGGER "2tcc_completions_ai" AFTER INSERT ON '2tcc_completions' BEGIN 
+    INSERT INTO "2tcc_completions_fts" (rowid, tower1, tower2, map, person1, person2, link, og, pending)
+    VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person1, new.person2, new.link, new.og, new.pending);
+END;
+CREATE TRIGGER "2tcc_completions_ad" AFTER DELETE ON '2tcc_completions' BEGIN 
+    INSERT INTO "2tcc_completions_fts" ('2tcc_completions_fts', rowid, tower1, tower2, map, person1, person2, link, og, pending)
+    VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person1, old.person2, old.link, old.og, old.pending);
+END;
+CREATE TRIGGER "2tcc_completions_au" AFTER UPDATE ON '2tcc_completions' BEGIN 
+    INSERT INTO "2tcc_completions_fts" ('2tcc_completions_fts', rowid, tower1, tower2, map, person1, person2, link, og, pending)
+    VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person1, old.person2, old.link, old.og, old.pending);
+    
+    INSERT INTO "2tcc_completions_fts" (rowid, tower1, tower2, map, person1, person2, link, og, pending)
+    VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person1, new.person2, new.link, new.og, new.pending);
+END;
+CREATE TABLE "2tcc_extra_info" (
+    tower1, tower2, upgrade1, upgrade2, version, date, money, PRIMARY KEY (tower1, tower2)
+);
+CREATE TABLE "2tcc_completion_notes" (
+    tower1, tower2, map, notes, PRIMARY KEY (tower1, tower2, map)
+);
+CREATE TABLE "2tcc_filekeys" (
+    tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map)
+);
+
 -- Others
 CREATE TABLE "fttc_completions" (
     towerset, map PRIMARY KEY, person, link, og, version, date

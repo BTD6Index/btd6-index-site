@@ -26,6 +26,9 @@ yarn-error.log*
 
 *.sql
 !init-tables.sql
-!destroy-tables.sql
+
+google_service_creds/*.json
 
 .dev.vars
+
+__pycache__

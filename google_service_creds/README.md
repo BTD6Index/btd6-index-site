@@ -1,1 +1,1 @@
-Place service account credentials in this folder
+Place service account credentials in this folder for migration
