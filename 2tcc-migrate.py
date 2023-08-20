@@ -38,14 +38,14 @@ with open('2tcc-migrate.sql', 'wb') as f:
         link = mu.sql_escape(row['values'][12]['hyperlink'])
         money = row['values'][13]['formattedValue']
         money = int(re.sub('[$,]', '', money)) if money != '-' else 1800
-        f.write(f'INSERT INTO "2tcc_extra_info" VALUES ({tower1}, {tower2}, {upgrade1}, {upgrade2}, {version}, {date}, {money})\n'.encode())
-        f.write(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {ogMap}, {ogPerson1}, {ogPerson2}, {link}, TRUE, NULL)\n'.encode())
-        f.write(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {ogMap}, {mu.sql_escape(str(uuid.uuid4()))})\n'.encode())
+        f.write(f'INSERT INTO "2tcc_extra_info" VALUES ({tower1}, {tower2}, {upgrade1}, {upgrade2}, {version}, {date}, {money});\n'.encode())
+        f.write(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {ogMap}, {ogPerson1}, {ogPerson2}, {link}, TRUE, NULL);\n'.encode())
+        f.write(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {ogMap}, {mu.sql_escape(str(uuid.uuid4()))});\n'.encode())
         for altMapNote in altMapNotes.split('\n') if altMapNotes else []:
             match = re.match(ALT_MAPS_REGEX, altMapNote)
             altMap = mu.sql_escape(abbrevToFullName[match.group("map")])
-            f.write(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(match.group("person1"))}, {mu.sql_escape(match.group("person2"))}, {mu.sql_escape(match.group("link"))}, FALSE, NULL)\n'.encode())
-            f.write(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(str(uuid.uuid4()))})\n'.encode())
+            f.write(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(match.group("person1"))}, {mu.sql_escape(match.group("person2"))}, {mu.sql_escape(match.group("link"))}, FALSE, NULL);\n'.encode())
+            f.write(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(str(uuid.uuid4()))});\n'.encode())
 
 #with open('out.json', 'w') as f:
 #    json.dump(res, f, indent='\t')
