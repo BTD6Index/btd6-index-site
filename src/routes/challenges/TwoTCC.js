@@ -6,8 +6,8 @@ export default function TwoTCC() {
     header="2 Towers Co-op CHIMPS"
     description={
         <>
-            In this challenge, win a game of <strong>co-op</strong> (with 2 real players) CHIMPS with buying exactly two towers
-            (including heroes and excluding towers/heroes that have, in the past or currently, solo CHIMPS as a single tower).
+            In this challenge, win a game of <strong>co-op</strong> CHIMPS with buying exactly two towers
+            (including heroes, and excluding pairs of towers/heroes that can do 2TC in singleplayer).
         </>
     }
     fieldHeaders={['Tower 1', 'Tower 2']}

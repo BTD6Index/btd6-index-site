@@ -32,7 +32,8 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
         formRef: theForm, challenge: '2tcc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
     });
 
-    const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo'].includes(value));
+    const filteredTowerOptions = [...towerToOptions.values()]
+    /*.filter(({value}) => !['Sauda', 'Geraldo'].includes(value))*/;
 
     return <>
         <p><a href="/2tcc">Back to 2TCCs</a></p>
