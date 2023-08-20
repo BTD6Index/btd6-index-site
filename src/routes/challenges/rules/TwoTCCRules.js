@@ -4,12 +4,12 @@ export default function TwoTCCRules() {
         <h1>Rules for 2TCC</h1>
         <h2>Tower Limitations</h2>
         <p>
-            Pairs of towers that beat single-player 2TC do <strong>not</strong> count as 2TCC.
+            Pairs of towers that already beat single-player 2TC do <strong>not</strong> count as 2TCC.
             Unlike single-player 2TC, Towers that have successfully soloed CHIMPS mode in the past or currently <strong>are</strong> allowed.
         </p>
         <h2>Challenge Settings</h2>
         <p>
-            Must be done in a real co-op game.
+            Must be done in a real co-op game (not challenge editor with extra starting cash).
             Alternate accounts of the same player are disallowed except to give co-op cash and then immediately leave.
             Using glitches to get extra cash per round is disallowed.
             The bug where you can disconnect for a round-ish and reconnect, all while letting your partner micro 1 tower without lag, is disallowed.
