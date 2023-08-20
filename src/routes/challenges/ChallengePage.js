@@ -6,7 +6,7 @@ import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import { imageObjectRegex } from "../../util/imageObjectRegex";
 import useAccessToken from "../../util/useAccessToken";
 
-export default function ChallengePage({ challenge, header, description, fields, personFields = ['player'], fieldHeaders, personFieldHeaders = ['Player'] }) {
+export default function ChallengePage({ challenge, header, description, fields, personFields = ['person'], fieldHeaders, personFieldHeaders = ['Player'] }) {
     const {
         completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
     } = useIndexSearch(`/fetch-${challenge}`);
