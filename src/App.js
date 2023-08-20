@@ -19,6 +19,11 @@ import TwoMPNotes from './routes/challenges/notes/TwoMPNotes';
 import TwoTCNotes from './routes/challenges/notes/TwoTCNotes';
 import TwoTCRules from './routes/challenges/rules/TwoTCRules';
 import TwoMPRules from './routes/challenges/rules/TwoMPRules';
+import TwoTCC from './routes/challenges/TwoTCC';
+import TwoTCCNotes from './routes/challenges/notes/TwoTCCNotes';
+import TwoTCCExtraInfo from './routes/challenges/info/TwoTCCExtraInfo';
+import { AddTwoTCC, EditTwoTCC } from './routes/challenges/manip/ManipTwoTCC';
+import TwoTCCRules from './routes/challenges/rules/TwoTCCRules';
 
 
 const router = createBrowserRouter([
@@ -39,12 +44,20 @@ const router = createBrowserRouter([
         element: <TwoMPC />
       },
       {
+        path: "2tcc",
+        element: <TwoTCC />
+      },
+      {
         path: "add-2tc-form",
         element: <AddTwoTC />
       },
       {
         path: "add-2mp-form",
         element: <AddTwoMP />
+      },
+      {
+        path: "add-2tcc-form",
+        element: <AddTwoTCC />
       },
       {
         path: "edit-2mp-form",
@@ -55,12 +68,20 @@ const router = createBrowserRouter([
         element: <EditTwoTC />
       },
       {
+        path: "edit-2tcc-form",
+        element: <EditTwoTCC />
+      },
+      {
         path: "2tc/extra-info",
         element: <TwoTCExtraInfo />
       },
       {
         path: "2mp/extra-info",
         element: <TwoMPExtraInfo />
+      },
+      {
+        path: "2tcc/extra-info",
+        element: <TwoTCCExtraInfo />
       },
       {
         path: "2mp/notes",
@@ -71,12 +92,20 @@ const router = createBrowserRouter([
         element: <TwoTCNotes />
       },
       {
+        path: "2tcc/notes",
+        element: <TwoTCCNotes />
+      },
+      {
         path: "2mp/rules",
         element: <TwoMPRules />
       },
       {
         path: "2tc/rules",
         element: <TwoTCRules />
+      },
+      {
+        path: "2tcc/rules",
+        element: <TwoTCCRules />
       },
       {
         path: "*",
@@ -113,6 +142,7 @@ function AppImplImpl() {
             <ul className='dropdown'>
               <li><a className='nolinkstyle' href='/2tc'>2TC</a></li>
               <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
+              <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
             </ul>
           </li>
           <li>

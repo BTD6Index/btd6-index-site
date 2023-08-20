@@ -10,6 +10,7 @@ export default function useIndexSearch(endpoint) {
     const [pendingFilter, setPendingFilter] = useState(false);
 
     useEffect(() => {
+        setError(null);
         fetch(endpoint + "?" + new URLSearchParams({
             query: query,
             offset: offset,

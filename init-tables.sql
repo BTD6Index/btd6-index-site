@@ -82,7 +82,7 @@ CREATE TRIGGER "2tcc_completions_au" AFTER UPDATE ON '2tcc_completions' BEGIN
     VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person1, new.person2, new.link, new.og, new.pending);
 END;
 CREATE TABLE "2tcc_extra_info" (
-    tower1, tower2, upgrade1, upgrade2, version, date, money, PRIMARY KEY (tower1, tower2)
+    tower1, tower2, upgrade1, upgrade2, version, date, money INTEGER, PRIMARY KEY (tower1, tower2)
 );
 CREATE TABLE "2tcc_completion_notes" (
     tower1, tower2, map, notes, PRIMARY KEY (tower1, tower2, map)

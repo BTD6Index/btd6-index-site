@@ -6,7 +6,7 @@ import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import { imageObjectRegex } from "../../util/imageObjectRegex";
 import useAccessToken from "../../util/useAccessToken";
 
-export default function ChallengePage({ challenge, header, description, fields, fieldHeaders }) {
+export default function ChallengePage({ challenge, header, description, fields, personFields = ['player'], fieldHeaders, personFieldHeaders = ['Player'] }) {
     const {
         completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
     } = useIndexSearch(`/fetch-${challenge}`);
@@ -76,7 +76,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
                         { !isLoading && isAuthenticated && <th>Select</th> }
                         {fieldHeaders.map(fh => <th key={fh}>{fh}</th>)}
                         <th>Map</th>
-                        <th>Player</th>
+                        { personFieldHeaders.map(header => <th key={header}>{header}</th>) }
                         <th>Info</th>
                         <th>OG?</th>
                         { !isLoading && isAuthenticated && <th>Edit</th> }
@@ -103,7 +103,9 @@ export default function ChallengePage({ challenge, header, description, fields, 
                                     </td> }
                                     { fields.map(field => <td key={field}>{completion[field]}</td>) }
                                     <td>{completion.map}</td>
-                                    <td>{completion.person}{completion.pending ? ' (Pending)' : ''}</td>
+                                    {
+                                        personFields.map(field => <td key={field}>{completion[field]}{completion.pending ? ' (Pending)' : ''}</td>)
+                                    }
                                     <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
                                         fields.concat('map').map(field => [field, completion[field]])
                                     )}>Notes</a></td>

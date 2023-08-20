@@ -1,6 +1,6 @@
 import ChallengePage from "./ChallengePage"
 
-export default function TwoMPC() {
+export default function TwoTC() {
     return <ChallengePage
     challenge="2tc"
     header="2 Towers CHIMPS"

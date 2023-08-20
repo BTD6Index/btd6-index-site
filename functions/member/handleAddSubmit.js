@@ -10,7 +10,14 @@ function sqlArrayCondition(paramNo, fields) {
     return fields.map((field, i) => `${field} = json_extract(?${paramNo}, '$[${i}]')`).join(' AND ');
 }
 
-async function handleAddSubmit({ context, challenge, fields, extraInfoFields, genEmbedFunction }) {
+async function handleAddSubmit({
+    context,
+    challenge,
+    fields,
+    extraInfoFields,
+    genEmbedFunction,
+    personFields = ['person']
+}) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwt_result = context.data.jwt_result;
@@ -36,8 +43,10 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
         }
     }
 
-    if (!form_data.has('person')) {
-        return respondError(`Missing required key: person`);
+    for (let key of personFields) {
+        if (!form_data.has(key)) {
+            return respondError(`Missing required key: ${key}`);
+        }
     }
 
     if (!form_data.has('link') && !form_data.has('image')) {
@@ -62,7 +71,8 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     const update_filekeys_stmt = `UPDATE "${challenge}_filekeys" SET (${fields.join(',')}) = (${expandSQLArray(1, fields.length)}) `
     + `WHERE ${sqlArrayCondition(2, fields)} RETURNING filekey`;
     const insert_filekeys_stmt = `INSERT INTO "${challenge}_filekeys" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
-    const add_completion_stmt = `INSERT INTO "${challenge}_completions" VALUES (${expandSQLArray(1, fields.length)}, ?2, ?3, ?4, ?5)`;
+    const add_completion_stmt = `INSERT INTO "${challenge}_completions" VALUES `
+    + `(${expandSQLArray(1, fields.length)}, ${expandSQLArray(2, personFields.length)}, ?3, ?4, ?5)`;
     const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${expandSQLArray(1, extraInfoFields.length)})`;
     const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
 
@@ -98,7 +108,7 @@ async function handleAddSubmit({ context, challenge, fields, extraInfoFields, ge
     batched_stmts.push(db.prepare(add_completion_stmt)
         .bind(
             JSON.stringify(fields.map(field => form_data.get(field))),
-            form_data.get('person'),
+            JSON.stringify(personFields.map(field => form_data.get(field))),
             link,
             form_data.has('og') ? 1 : 0,
             form_data.has('verify') && is_helper ? null : jwt_result.payload.sub, // user id
