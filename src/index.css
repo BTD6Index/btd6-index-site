@@ -14,6 +14,7 @@ body {
   /* background-attachment: fixed; */
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -22,4 +23,5 @@ body {
 
 #root {
   position: absolute;
+  width: 100vw;
 }
