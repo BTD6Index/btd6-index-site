@@ -20,13 +20,30 @@ res = sheet.get(
 with open('fttc-migrate.sql', 'wb') as f:
     for row in res[0]['rowData']:
         vals = row['values']
-        ogMap = mu.standardize_entity(vals[0]['formattedValue'])
-        altStuff = vals[0].get('notes', None)
-        towerset = mu.standardize_entity(json.dumps([vals[2]['formattedValue']]))
-        version = mu.standardize_entity(vals[3]['formattedValue'])
+        map = mu.sql_escape(mu.standardize_entity(vals[0]['formattedValue']))
+        altStuff: str = vals[0].get('note', None)
+        towerset = mu.sql_escape(
+            json.dumps([
+                vals[2]['formattedValue']
+                ])
+        )
+        version = mu.sql_escape(vals[3]['formattedValue'])
         date = mu.date_to_sql(vals[4]['formattedValue'])
-        person = mu.standardize_entity(vals[5]['formattedValue'])
-        link = mu.standardize_entity(vals[7]['hyperlink'])
+        person = mu.sql_escape(vals[5]['formattedValue'])
+        link = mu.sql_escape(vals[7]['hyperlink'])
+        f.write(f'INSERT INTO "fttc_extra_info" VALUES ({map}, {version}, {date});\n'.encode())
+        f.write(f'INSERT INTO "fttc_completions" VALUES ({map}, {towerset}, {person}, {link}, TRUE, NULL);\n'.encode())
+        f.write(f'INSERT INTO "fttc_filekeys" VALUES ({map}, {towerset}, {mu.sql_escape(str(uuid.uuid4()))});\n'.encode())
+        for altRow in (altStuff.split('\n') if altStuff else []):
+            altTowerset, altPerson, altLink = (s.strip() for s in altRow.split('|'))
+            altTowerset = mu.sql_escape(
+                json.dumps([s.strip() for s in altTowerset.split(',')])
+                )
+            altPerson = mu.sql_escape(altPerson)
+            altLink = mu.sql_escape(altLink)
+            f.write(f'INSERT INTO "fttc_completions" VALUES ({map}, {altTowerset}, {altPerson}, {altLink}, FALSE, NULL);\n'.encode())
+            f.write(f'INSERT INTO "fttc_filekeys" VALUES ({map}, {altTowerset}, {mu.sql_escape(str(uuid.uuid4()))});\n'.encode())
+
 
 #with open('out.json', 'w') as f:
 #    json.dump(res, f, indent='\t')
