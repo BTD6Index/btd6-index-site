@@ -8,7 +8,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fixed-bg {
+body::before {
+  content: "";
   background-color: #111;
   background-image: url("randy_cornfield_bg.webp");
   /* background-attachment: fixed; */
@@ -19,6 +20,7 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: -1;
+  transform: translate3d(0, 0, 0);
 }
 
 #root {

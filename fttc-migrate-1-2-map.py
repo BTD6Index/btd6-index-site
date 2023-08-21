@@ -20,6 +20,13 @@ res = sheet.get(
 with open('fttc-migrate.sql', 'wb') as f:
     for row in res[0]['rowData']:
         vals = row['values']
+        ogMap = mu.standardize_entity(vals[0]['formattedValue'])
+        altStuff = vals[0].get('notes', None)
+        towerset = mu.standardize_entity(json.dumps([vals[2]['formattedValue']]))
+        version = mu.standardize_entity(vals[3]['formattedValue'])
+        date = mu.date_to_sql(vals[4]['formattedValue'])
+        person = mu.standardize_entity(vals[5]['formattedValue'])
+        link = mu.standardize_entity(vals[7]['hyperlink'])
 
 #with open('out.json', 'w') as f:
 #    json.dump(res, f, indent='\t')

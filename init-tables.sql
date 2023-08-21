@@ -91,14 +91,24 @@ CREATE TABLE "2tcc_filekeys" (
     tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map)
 );
 
--- Others
+-- Fewest Type of Towers CHIMPS
 CREATE TABLE "fttc_completions" (
-    towerset, map PRIMARY KEY, person, link, og, version, date
+    map, towerset, person, link, og, pending, PRIMARY KEY (map, towerset)
 );
+CREATE TABLE "fttc_extra_info" (
+    map PRIMARY KEY, version, date
+);
+CREATE TABLE "fttc_completion_notes" (
+    map, towerset, notes, PRIMARY KEY (map, towerset)
+);
+CREATE TABLE "fttc_filekeys" (
+    map, towerset, filekey UNIQUE, PRIMARY KEY (map, towerset)
+);
+/*
 CREATE TABLE "ltc_completions" (
-    towerset, map PRIMARY KEY, person, link, og, upgradeset, version, date
+    towerset, map PRIMARY KEY, person, link, upgradeset, version, date, notes, filekey UNIQUE
 );
-CREATE TABLE "lcc_completions" (map PRIMARY KEY, cost, version, date, person, link);
-CREATE TABLE "fttc_filekeys" (map PRIMARY KEY, filekey UNIQUE);
-CREATE TABLE "ltc_filekeys" (map PRIMARY KEY, filekey UNIQUE);
-CREATE TABLE "lcc_filekeys" (map PRIMARY KEY, filekey UNIQUE);
+CREATE TABLE "lcc_completions" (
+    cost, map PRIMARY KEY, person, link, version, date, notes, filekey UNIQUE
+);
+*/
