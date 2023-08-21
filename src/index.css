@@ -11,7 +11,7 @@ body {
 #fixed-bg {
   background-color: #111;
   background-image: url("randy_cornfield_bg.webp");
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
   background-size: cover;
   background-position: center;
   position: fixed;
