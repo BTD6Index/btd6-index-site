@@ -6,6 +6,7 @@ header {
   justify-content: space-between;
   border-bottom: 1px solid white;
   align-items: center;
+  background-color: #111;
 }
 
 .glueRat {
@@ -37,7 +38,7 @@ button.dangerButton:not(:disabled) {
 }
 
 nav > ul, .dropdown {
-  background-color: #222;
+  background-color: #111;
   z-index: 2;
 }
 

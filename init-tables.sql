@@ -99,3 +99,6 @@ CREATE TABLE "ltc_completions" (
     towerset, map PRIMARY KEY, person, link, og, upgradeset, version, date
 );
 CREATE TABLE "lcc_completions" (map PRIMARY KEY, cost, version, date, person, link);
+CREATE TABLE "fttc_filekeys" (map PRIMARY KEY, filekey UNIQUE);
+CREATE TABLE "ltc_filekeys" (map PRIMARY KEY, filekey UNIQUE);
+CREATE TABLE "lcc_filekeys" (map PRIMARY KEY, filekey UNIQUE);

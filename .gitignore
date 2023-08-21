@@ -32,3 +32,5 @@ google_service_creds/*.json
 .dev.vars
 
 __pycache__
+
+/out.json
