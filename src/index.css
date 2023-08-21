@@ -2,6 +2,7 @@
 
 body {
   margin: 0;
+  width: 100vw;
   font-family: Dosis, sans-serif;
   color: white;
   -webkit-font-smoothing: antialiased;
