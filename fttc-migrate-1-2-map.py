@@ -19,7 +19,7 @@ res = sheet.get(
 
 with open('fttc-migrate.sql', 'wb') as f:
     for row in res[0]['rowData']:
-        pass
+        vals = row['values']
 
 #with open('out.json', 'w') as f:
 #    json.dump(res, f, indent='\t')
