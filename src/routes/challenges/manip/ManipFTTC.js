@@ -1,21 +1,23 @@
 import Select from "react-select";
 import selectStyle from "../../../util/selectStyle";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
+import { mapToOptions, towerTypeToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkEntry, IMAGE_FORMATS, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
 
-const FIELDS = ['entity']; // needs to be outside so react doesn't treat value as changed every re-render
+const FIELDS = ['map']; // needs to be outside so react doesn't treat value as changed every re-render
+const ALT_FIELDS = ['towerset'];
 
-function ManipTwoMP({ editParams = null, setEditParams = null }) {
+function ManipFTTC({ editParams = null, setEditParams = null }) {
     const [isOG, setOG] = useState(false);
 
     const {existingInfo, ogInfo, noteInfo, existingAttachments, forceReload} = useFetchExistingInfo({
         editParams,
         fields: FIELDS,
-        challenge: '2mp'
+        altFields: ALT_FIELDS,
+        challenge: 'fttc'
     });
 
     useEffect(() => {
@@ -29,29 +31,41 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
     const doEdit = editParams !== null;
 
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
+        formRef: theForm, challenge: 'fttc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
     });
 
+    const towersetList = editParams?.get('towerset') ? JSON.parse(editParams?.get('towerset')) : []
+
+    const [towersetValue, setTowersetValue] = useState(JSON.stringify(towersetList));
+
     return <>
-        <p><a href="/2mp">Back to 2MPs</a></p>
-        <h1>{doEdit ? `Edit ${editParams.get('entity')} 2MP on ${editParams.get('map')}` : "Add a 2MP Completion"}</h1>
-        <form method="post" encType="multipart/form-data" action="/member/add-2mp-submit" onSubmit={submitCallback} ref={theForm}>
+        <p><a href="/fttc">Back to FTTCs</a></p>
+        <h1>{doEdit ? `Edit (${towersetList.join(', ')}) FTTC on ${editParams.get('map')}` : "Add an FTTC Completion"}</h1>
+        <form method="post" encType="multipart/form-data" action="/member/add-fttc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
-                <label htmlFor="entity">Tower</label>
-                <Select name="entity" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
-                    towerToOptions.get(editParams?.get('entity')) ?? undefined
-                } required />
-            </span>
-            <br />
-            <span className="formLine">
                 <label htmlFor="map">Map</label>
                 <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} defaultValue={
                     mapToOptions.get(editParams?.get('map')) ?? undefined
                 } required />
+            </span>
+            <br />
+            <span className="formLine">
+                <label htmlFor="towerset">Tower Types</label>
+                <Select
+                    isMulti
+                    options={[...towerTypeToOptions.values()]}
+                    styles={selectStyle}
+                    defaultValue={towersetList.map(towerType => towerTypeToOptions.get(towerType))}
+                    onChange={useCallback((newValue) => {
+                        setTowersetValue(JSON.stringify(newValue.map(val => val.value)));
+                    }, [])}
+                    required 
+                />
+                <input type="hidden" name="towerset" value={towersetValue} />
             </span>
             <br />
             <span className="formLine">
@@ -81,11 +95,6 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
             {
                 isOG && <>
                     <span className="formLine">
-                        <label htmlFor="upgrade">Upgrade</label>
-                        <input name="upgrade" type="text" placeholder="Upgrade" style={{ width: '20ch' }} defaultValue={ogInfo?.upgrade} required />
-                    </span>
-                    <br />
-                    <span className="formLine">
                         <label htmlFor="version">Update</label>
                         <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={ogInfo?.version} required />
                     </span>
@@ -97,24 +106,24 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
                     <br />
                 </>
             }
-            {editParams && ['entity', 'map'].map(
+            {editParams && ['map', 'towerset'].map(
                 field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field) ?? undefined} />)}
             <input type="hidden" name="edit" value={doEdit} />
-            <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} />
+            <input type="submit" name="submit" value={doEdit ? "Update FTTC" : "Add FTTC"} />
         </form>
     </>
 };
 
-const AddTwoMP = withAuthenticationRequired(() => {
-    return <ManipTwoMP />;
+const AddFTTC = withAuthenticationRequired(() => {
+    return <ManipFTTC />;
 });
 
-const EditTwoMP = withAuthenticationRequired(() => {
+const EditFTTC = withAuthenticationRequired(() => {
     const [params, setParams] = useSearchParams();
-    if (!params.has('entity') || !params.has('map')) {
-        return <h1>Need to specify entity and map</h1>;
+    if (!params.has('towerset') || !params.has('map')) {
+        return <h1>Need to specify map and towerset</h1>;
     }
-    return <ManipTwoMP editParams={params} setEditParams={setParams} />
+    return <ManipFTTC editParams={params} setEditParams={setParams} />
 });
 
-export { AddTwoMP, EditTwoMP };
+export { AddFTTC, EditFTTC };

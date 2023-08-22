@@ -24,6 +24,10 @@ import TwoTCCNotes from './routes/challenges/notes/TwoTCCNotes';
 import TwoTCCExtraInfo from './routes/challenges/info/TwoTCCExtraInfo';
 import { AddTwoTCC, EditTwoTCC } from './routes/challenges/manip/ManipTwoTCC';
 import TwoTCCRules from './routes/challenges/rules/TwoTCCRules';
+import FTTC from './routes/challenges/FTTC';
+import FTTCExtraInfo from './routes/challenges/info/FTTCExtraInfo';
+import FTTCNotes from './routes/challenges/notes/FTTCNotes';
+import { AddFTTC, EditFTTC } from './routes/challenges/manip/ManipFTTC';
 
 
 const router = createBrowserRouter([
@@ -44,6 +48,10 @@ const router = createBrowserRouter([
         element: <TwoMPC />
       },
       {
+        path: "fttc",
+        element: <FTTC />
+      },
+      {
         path: "2tcc",
         element: <TwoTCC />
       },
@@ -54,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "add-2mp-form",
         element: <AddTwoMP />
+      },
+      {
+        path: "add-fttc-form",
+        element: <AddFTTC />
       },
       {
         path: "add-2tcc-form",
@@ -68,6 +80,10 @@ const router = createBrowserRouter([
         element: <EditTwoTC />
       },
       {
+        path: "edit-fttc-form",
+        element: <EditFTTC />
+      },
+      {
         path: "edit-2tcc-form",
         element: <EditTwoTCC />
       },
@@ -80,6 +96,10 @@ const router = createBrowserRouter([
         element: <TwoMPExtraInfo />
       },
       {
+        path: "fttc/extra-info",
+        element: <FTTCExtraInfo />
+      },
+      {
         path: "2tcc/extra-info",
         element: <TwoTCCExtraInfo />
       },
@@ -90,6 +110,10 @@ const router = createBrowserRouter([
       {
         path: "2tc/notes",
         element: <TwoTCNotes />
+      },
+      {
+        path: "fttc/notes",
+        element: <FTTCNotes />
       },
       {
         path: "2tcc/notes",
@@ -142,6 +166,7 @@ function AppImplImpl() {
             <ul className='dropdown'>
               <li><a className='nolinkstyle' href='/2tc'>2TC</a></li>
               <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
+              <li><a className='nolinkstyle' href='/fttc'>FTTC</a></li>
               <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
             </ul>
           </li>

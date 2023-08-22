@@ -6,7 +6,18 @@ import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import { imageObjectRegex } from "../../util/imageObjectRegex";
 import useAccessToken from "../../util/useAccessToken";
 
-export default function ChallengePage({ challenge, header, description, fields, personFields = ['person'], fieldHeaders, personFieldHeaders = ['Player'] }) {
+export default function ChallengePage({
+    challenge,
+    header,
+    description,
+    fields,
+    altFields = ['map'],
+    personFields = ['person'],
+    fieldHeaders,
+    altFieldHeaders = ['Map'],
+    personFieldHeaders = ['Player'],
+    fieldDisplayFunc = (_fieldName, fieldValue) => fieldValue
+}) {
     const {
         completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
     } = useIndexSearch(`/fetch-${challenge}`);
@@ -74,8 +85,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
                 <thead>
                     <tr>
                         { !isLoading && isAuthenticated && <th>Select</th> }
-                        {fieldHeaders.map(fh => <th key={fh}>{fh}</th>)}
-                        <th>Map</th>
+                        {fieldHeaders.concat(altFieldHeaders).map(fh => <th key={fh}>{fh}</th>)}
                         { personFieldHeaders.map(header => <th key={header}>{header}</th>) }
                         <th>Info</th>
                         <th>OG?</th>
@@ -86,7 +96,7 @@ export default function ChallengePage({ challenge, header, description, fields, 
                     {
                         completions.map(
                             completion => {
-                                const key = JSON.stringify([...fields.map(field => completion[field]), completion.map]);
+                                const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
                                 const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
                                 const link = !completion.link || imageObjectRegex.exec(completion.link) ? `https://media.btd6index.win/${completion.filekey}` : completion.link
                                 
@@ -101,22 +111,21 @@ export default function ChallengePage({ challenge, header, description, fields, 
                                             }}
                                         /> }
                                     </td> }
-                                    { fields.map(field => <td key={field}>{completion[field]}</td>) }
-                                    <td>{completion.map}</td>
+                                    { fields.concat(altFields).map(field => <td key={field}>{fieldDisplayFunc(field, completion[field])}</td>) }
                                     {
                                         personFields.map(field => <td key={field}>{completion[field]}{completion.pending ? ' (Pending)' : ''}</td>)
                                     }
                                     <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
-                                        fields.concat('map').map(field => [field, completion[field]])
+                                        fields.concat(altFields).map(field => [field, completion[field]])
                                     )}>Notes</a></td>
                                     <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
                                         fields.map(field => [field, completion[field]])
                                     )}>Yes</a> : 'No'}</td>
                                     { !isLoading && isAuthenticated &&
                                     <td>
-                                        {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams([
-                                            ...fields.map(field => [field, completion[field]]), ["map", completion.map]
-                                        ])}>Edit{!!completion.pending && " or Verify"}</a>}
+                                        {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams(
+                                            fields.concat(altFields).map(field => [field, completion[field]])
+                                        )}>Edit{!!completion.pending && " or Verify"}</a>}
                                     </td>
                                     }
                                 </tr>;

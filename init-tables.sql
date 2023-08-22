@@ -104,6 +104,22 @@ CREATE TABLE "fttc_completion_notes" (
 CREATE TABLE "fttc_filekeys" (
     map, towerset, filekey UNIQUE, PRIMARY KEY (map, towerset)
 );
+
+CREATE VIRTUAL TABLE "fttc_completions_fts" USING fts5(
+    map, towerset, person, link, og, pending UNINDEXED, content='fttc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+);
+CREATE TRIGGER "fttc_completions_ai" AFTER INSERT ON 'fttc_completions' BEGIN 
+    INSERT INTO "fttc_completions_fts" (rowid, map, towerset, person, link, og, pending) VALUES (new.rowid, new.map, new.towerset, new.person, new.link, new.og, new.pending);
+END;
+CREATE TRIGGER "fttc_completions_ad" AFTER DELETE ON 'fttc_completions' BEGIN 
+    INSERT INTO "fttc_completions_fts" ('fttc_completions_fts', rowid, map, towerset, person, link, og, pending) VALUES ('delete', old.rowid, old.map, old.towerset, old.person, old.link, old.og, old.pending);
+END;
+CREATE TRIGGER "fttc_completions_au" AFTER UPDATE ON 'fttc_completions' BEGIN 
+    INSERT INTO "fttc_completions_fts" ('fttc_completions_fts', rowid, map, towerset, person, link, og, pending) VALUES ('delete', old.rowid, old.map, old.towerset, old.person, old.link, old.og, old.pending);
+
+    INSERT INTO "fttc_completions_fts" (rowid, map, towerset, person, link, og, pending) VALUES (new.rowid, new.map, new.towerset, new.person, new.link, new.og, new.pending);
+END;
+
 /*
 CREATE TABLE "ltc_completions" (
     towerset, map PRIMARY KEY, person, link, upgradeset, version, date, notes, filekey UNIQUE

@@ -68,7 +68,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             <br />
             <span className="formLine">
                 <label htmlFor="person">Person</label>
-                <input name="person" type="text" placeholder="Person" style={{width: '14ch'}} defaultValue={existingInfo?.[0]?.person} required />
+                <input name="person" type="text" placeholder="Person" style={{width: '20ch'}} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
             <FormLinkEntry existingInfo={existingInfo} />
@@ -94,22 +94,22 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade1">Tower 1 Upgrade</label>
-                        <input name="upgrade1" type="text" placeholder="Upgrade 1" style={{width: '14ch'}} defaultValue={ogInfo?.upgrade1} required />
+                        <input name="upgrade1" type="text" placeholder="Upgrade 1" style={{width: '20ch'}} defaultValue={ogInfo?.upgrade1} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="upgrade2">Tower 2 Upgrade</label>
-                        <input name="upgrade2" type="text" placeholder="Upgrade 2" style={{width: '14ch'}} defaultValue={ogInfo?.upgrade2} required />
+                        <input name="upgrade2" type="text" placeholder="Upgrade 2" style={{width: '20ch'}} defaultValue={ogInfo?.upgrade2} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="version">Update</label>
-                        <input name="version" type="text" placeholder="Update" style={{width: '14ch'}} defaultValue={ogInfo?.version} required />
+                        <input name="version" type="text" placeholder="Update" style={{width: '20ch'}} defaultValue={ogInfo?.version} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{width: '14ch'}} defaultValue={ogInfo?.date} required />
+                        <input name="date" type="date" placeholder="Completion Date" style={{width: '20ch'}} defaultValue={ogInfo?.date} required />
                     </span>
                     <br />
                 </>

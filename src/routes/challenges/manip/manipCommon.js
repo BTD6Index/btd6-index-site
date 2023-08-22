@@ -46,7 +46,9 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
     }, [getToken, challenge, formRef, oldLink, setEditParams, forceReload]);
 }
 
-function useFetchExistingInfo({editParams, fields, challenge}) {
+const DEFAULT_ALT_FIELDS = ['map'];
+
+function useFetchExistingInfo({editParams, fields, altFields = DEFAULT_ALT_FIELDS, challenge}) {
     const [existingInfo, setExistingInfo] = useState(null);
     const [ogInfo, setOGInfo] = useState(null);
     const [noteInfo, setNoteInfo] = useState(null);
@@ -58,7 +60,7 @@ function useFetchExistingInfo({editParams, fields, challenge}) {
     useEffect(() => {
         if (doEdit) {
             fetch(`/fetch-${challenge}?` + new URLSearchParams(
-                fields.concat(['map']).map(field => [field, editParams.get(field)])
+                fields.concat(altFields).map(field => [field, editParams.get(field)])
                 ))
             .then(async (res) => {
                 let json = await res.json();
@@ -80,7 +82,7 @@ function useFetchExistingInfo({editParams, fields, challenge}) {
                         }
                     }
                     let notesRes = await fetch(`/fetch-${challenge}-notes?` + new URLSearchParams(
-                        fields.concat(['map']).map(field => [field, editParams.get(field)])
+                        fields.concat(altFields).map(field => [field, editParams.get(field)])
                     ));
                     let notesJson = await notesRes.json();
                     if ('error' in notesJson) {
@@ -96,7 +98,7 @@ function useFetchExistingInfo({editParams, fields, challenge}) {
                 }
             });
         }
-    }, [editParams, doEdit, challenge, fields, _reloadVar]);
+    }, [editParams, doEdit, challenge, fields, altFields, _reloadVar]);
 
     const forceReload = useCallback(() => {
         _setReloadVar(state => !state);
@@ -110,7 +112,7 @@ const IMAGE_FORMATS = "image/jpeg, image/png, image/gif, image/webp, image/apng,
 function FormLinkEntry({existingInfo}) {
     return <span className="formLine">
                 <label htmlFor="link">Link (leave blank to use potentially already-uploaded image/video)</label>
-                <input name="link" type="text" placeholder="Link" style={{ width: '14ch' }} defaultValue={existingInfo?.[0]?.link} />
+                <input name="link" type="text" placeholder="Link" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.link} />
             </span>;
 }
 

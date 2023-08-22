@@ -8,9 +8,14 @@ const towerToOptions = new Map(
         .map(entry => [entry, {value: entry, label: entry}])
 );
 
+const towerTypeToOptions = new Map(
+    Object.keys(towerNames)
+    .map(key => [key, {value: key, label: key}])
+);
+
 const mapToOptions = new Map(
     Object.entries(maps)
         .map(entry => [entry[0], {value: entry[0], label: entry[0]}])
 );
 
-export {towerToOptions, mapToOptions};
+export {towerToOptions, mapToOptions, towerTypeToOptions};
