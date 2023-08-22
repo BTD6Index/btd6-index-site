@@ -24,28 +24,34 @@ with open('src/util/maps.json', 'rb') as mapsJson:
     fullNameToAbbrev = json.load(mapsJson)
 abbrevToFullName = {v: k for k, v in fullNameToAbbrev.items()}
 
-with open('2tcc-migrate.sql', 'wb') as f: 
-    for row in res:
-        tower1 = mu.sql_escape(mu.standardize_entity(row['values'][1]['formattedValue']))
-        tower2 = mu.sql_escape(mu.standardize_entity(row['values'][3]['formattedValue']))
-        upgrade1, upgrade2 = [mu.sql_escape(v) for v in re.split(r'\s*\|\s*', row['values'][5]['formattedValue'])]
-        ogMap = mu.sql_escape(row['values'][7]['formattedValue'])
-        altMapNotes = row['values'][7].get('note', None)
-        version = mu.sql_escape(row['values'][8]['formattedValue'])
-        date = mu.date_to_sql(row['values'][9]['formattedValue'])
-        ogPerson1 = mu.sql_escape(row['values'][10]['formattedValue'])
-        ogPerson2 = mu.sql_escape(row['values'][11]['formattedValue'])
-        link = mu.sql_escape(row['values'][12]['hyperlink'])
-        money = row['values'][13]['formattedValue']
-        money = int(re.sub('[$,]', '', money)) if money != '-' else 1800
-        f.write(f'INSERT INTO "2tcc_extra_info" VALUES ({tower1}, {tower2}, {upgrade1}, {upgrade2}, {version}, {date}, {money});\n'.encode())
-        f.write(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {ogMap}, {ogPerson1}, {ogPerson2}, {link}, TRUE, NULL);\n'.encode())
-        f.write(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {ogMap}, {mu.sql_escape(str(uuid.uuid4()))});\n'.encode())
-        for altMapNote in altMapNotes.split('\n') if altMapNotes else []:
-            match = re.match(ALT_MAPS_REGEX, altMapNote)
-            altMap = mu.sql_escape(abbrevToFullName[match.group("map")])
-            f.write(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(match.group("person1"))}, {mu.sql_escape(match.group("person2"))}, {mu.sql_escape(match.group("link"))}, FALSE, NULL);\n'.encode())
-            f.write(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(str(uuid.uuid4()))});\n'.encode())
+sql_statements = []
 
+for row in res:
+    tower1 = mu.sql_escape(mu.standardize_entity(row['values'][1]['formattedValue']))
+    tower2 = mu.sql_escape(mu.standardize_entity(row['values'][3]['formattedValue']))
+    upgrade1, upgrade2 = [mu.sql_escape(v) for v in re.split(r'\s*\|\s*', row['values'][5]['formattedValue'])]
+    ogMap = mu.sql_escape(row['values'][7]['formattedValue'])
+    altMapNotes = row['values'][7].get('note', None)
+    version = mu.sql_escape(row['values'][8]['formattedValue'])
+    date = mu.date_to_sql(row['values'][9]['formattedValue'])
+    ogPerson1 = mu.sql_escape(row['values'][10]['formattedValue'])
+    ogPerson2 = mu.sql_escape(row['values'][11]['formattedValue'])
+    link = mu.sql_escape(row['values'][12]['hyperlink'])
+    money = row['values'][13]['formattedValue']
+    money = int(re.sub('[$,]', '', money)) if money != '-' else 1800
+
+    sql_statements.append(f'INSERT INTO "2tcc_extra_info" VALUES ({tower1}, {tower2}, {upgrade1}, {upgrade2}, {version}, {date}, {money});')
+    sql_statements.append(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {ogMap}, {ogPerson1}, {ogPerson2}, {link}, TRUE, NULL);')
+    sql_statements.append(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {ogMap}, {mu.sql_escape(str(uuid.uuid4()))});')
+
+    for altMapNote in altMapNotes.split('\n') if altMapNotes else []:
+        match = re.match(ALT_MAPS_REGEX, altMapNote)
+        altMap = mu.sql_escape(abbrevToFullName[match.group("map")])
+        sql_statements.append(f'INSERT INTO "2tcc_completions" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(match.group("person1"))}, {mu.sql_escape(match.group("person2"))}, {mu.sql_escape(match.group("link"))}, FALSE, NULL);')
+        sql_statements.append(f'INSERT INTO "2tcc_filekeys" VALUES ({tower1}, {tower2}, {altMap}, {mu.sql_escape(str(uuid.uuid4()))});')
+
+with open('2tcc-migrate.sql', 'wb') as f:
+    f.write('\n'.join(sql_statements).encode())
+    
 #with open('out.json', 'w') as f:
 #    json.dump(res, f, indent='\t')
