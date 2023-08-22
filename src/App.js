@@ -28,6 +28,7 @@ import FTTC from './routes/challenges/FTTC';
 import FTTCExtraInfo from './routes/challenges/info/FTTCExtraInfo';
 import FTTCNotes from './routes/challenges/notes/FTTCNotes';
 import { AddFTTC, EditFTTC } from './routes/challenges/manip/ManipFTTC';
+import FTTCRules from './routes/challenges/rules/FTTCRules';
 
 
 const router = createBrowserRouter([
@@ -126,6 +127,10 @@ const router = createBrowserRouter([
       {
         path: "2tc/rules",
         element: <TwoTCRules />
+      },
+      {
+        path: "fttc/rules",
+        element: <FTTCRules />
       },
       {
         path: "2tcc/rules",
