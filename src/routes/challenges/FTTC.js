@@ -3,8 +3,19 @@ import ChallengePage from "./ChallengePage"
 
 export default function FTTC() {
     const fieldDisplayFunc = useCallback((fieldName, fieldValue) => {
-        if (fieldName === 'towerset') {
-            return JSON.parse(fieldValue).join(', ')
+        try {
+            if (fieldName === 'towerset') {
+                return JSON.parse(fieldValue).join(', ')
+            }
+        } catch (e) {
+            if (e instanceof SyntaxError) {
+                // don't break the program on invalid towerset format
+                // but instead log an error
+                console.error(e);
+            } else {
+                // throw for everything else
+                throw e;
+            }
         }
         return fieldValue;
     }, []);
