@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import useNotesAndAttachments from "../../../util/useNotesAndAttachments";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function TwoTCCNotes() {
     const [params, ] = useSearchParams();
@@ -18,7 +20,7 @@ export default function TwoTCCNotes() {
 
     return <>
         <h1>Notes for {params.get('tower1')} and {params.get('tower2')} 2TC</h1>
-        <p>{notes || 'No notes for this completion'}</p>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
         {
             attachmentKeys?.length ? <ul>{attachmentKeys.map(key => {

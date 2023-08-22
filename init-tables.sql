@@ -125,6 +125,47 @@ CREATE TABLE "ltc_completions" (
     map, towerset, person, link, completiontype, pending,
     upgradeset, version, date, notes, filekey UNIQUE, PRIMARY KEY (map, towerset, completiontype)
 );
+CREATE VIRTUAL TABLE "ltc_completions_fts" USING fts5(
+    map, towerset, person, link, completiontype, pending UNINDEXED,
+    upgradeset, version, date, notes UNINDEXED, filekey UNINDEXED,
+    content='ltc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+);
+CREATE TRIGGER "ltc_completions_ai" AFTER INSERT ON "ltc_completions" BEGIN 
+    INSERT INTO "ltc_completions_fts" (
+        rowid, map, towerset, person, link, completiontype, pending,
+        upgradeset, version, date, notes, filekey
+    ) VALUES (
+        new.rowid, new.map, new.towerset, new.person, new.link, new.completiontype, new.pending,
+        new.upgradeset, new.version, new.date, new.notes, new.filekey
+    );
+END;
+CREATE TRIGGER "ltc_completions_ad" AFTER DELETE ON "ltc_completions" BEGIN 
+    INSERT INTO "ltc_completions_fts" (
+        "ltc_completions_fts", rowid, map, towerset, person, link, completiontype, pending,
+        upgradeset, version, date, notes, filekey
+    ) VALUES (
+        'delete', old.rowid, old.map, old.towerset, old.person, old.link, old.completiontype, old.pending,
+        old.upgradeset, old.version, old.date, old.notes, old.filekey
+    );
+END;
+CREATE TRIGGER "ltc_completions_au" AFTER UPDATE ON "ltc_completions" BEGIN 
+    INSERT INTO "ltc_completions_fts" (
+        "ltc_completions_fts", rowid, map, towerset, person, link, completiontype, pending,
+        upgradeset, version, date, notes, filekey
+    ) VALUES (
+        'delete', old.rowid, old.map, old.towerset, old.person, old.link, old.completiontype, old.pending,
+        old.upgradeset, old.version, old.date, old.notes, old.filekey
+    );
+
+    INSERT INTO "ltc_completions_fts" (
+        rowid, map, towerset, person, link, completiontype, pending,
+        upgradeset, version, date, notes, filekey
+    ) VALUES (
+        new.rowid, new.map, new.towerset, new.person, new.link, new.completiontype, new.pending,
+        new.upgradeset, new.version, new.date, new.notes, new.filekey
+    );
+END;
+
 
 /*
 CREATE TABLE "ltc_completions" (
