@@ -111,7 +111,7 @@ const IMAGE_FORMATS = "image/jpeg, image/png, image/gif, image/webp, image/apng,
 
 function FormLinkEntry({existingInfo}) {
     return <span className="formLine">
-                <label htmlFor="link">Link (leave blank to use potentially already-uploaded image/video)</label>
+                <label htmlFor="link">Link</label>
                 <input name="link" type="text" placeholder="Link" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.link} />
             </span>;
 }
