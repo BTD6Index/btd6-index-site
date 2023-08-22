@@ -164,7 +164,7 @@ thead tr:last-child th, thead tr:last-child {
   border: none;
 }
 
-input[type="checkbox"] {
+input[type="checkbox"], input[type="radio"] {
   width: calc(1vw + 1.5vh);
   height: calc(1vw + 1.5vh);
 }
@@ -175,12 +175,21 @@ input[type="file"] {
 
 .formLine {
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1vh;
+  align-items: flex-start;
+}
+
+.formSubLine {
+  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   flex-wrap: wrap;
-  gap: 1.3vw;
+  gap: 0.8ch;
   align-items: center;
-}
+};
 
 .searchUiGroup {
   display: flex;

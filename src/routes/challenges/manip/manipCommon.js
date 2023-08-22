@@ -116,6 +116,40 @@ function FormLinkEntry({existingInfo}) {
             </span>;
 }
 
+function FormImageEntry() {
+    return <span className="formLine">
+        <label htmlFor="image">Upload Image/Video</label>
+        <input type="file" name="image" accept={IMAGE_FORMATS} />
+    </span>;
+}
+
+function FormLinkImageEntry({existingInfo}) {
+    const [linkType, setLinkType] = useState('image');
+
+    useEffect(() => {
+        setLinkType(existingInfo?.[0]?.link ? 'link' : 'image');
+    }, [existingInfo]);
+
+    const optionChange = useCallback(e => {
+        setLinkType(e.target.value);
+    }, []);
+
+    return <>
+        <span className="formLine">
+            <label htmlFor="linktype">Submission Type</label>
+            <span className="formSubLine"><input type="radio" id="linktype-image" value="image"
+            onChange={optionChange} checked={linkType === 'image'} />
+            <label htmlFor="linktype-image">Image/Video</label></span>
+            <span className="formSubLine"><input type="radio" id="linktype-link" value="link"
+            onChange={optionChange} checked={linkType === 'link'} />
+            <label htmlFor="linktype-link">Link</label></span>
+        </span>
+        <br />
+        {linkType === 'image' && <FormImageEntry />}
+        {linkType === 'link' && <FormLinkEntry existingInfo={existingInfo} />}
+    </>;
+}
+
 function AttachmentsWidget({existingAttachments, attachmentsLabel = null}) {
     return <>
         <span className="formLine">
@@ -137,4 +171,4 @@ function AttachmentsWidget({existingAttachments, attachmentsLabel = null}) {
     </>;
 }
 
-export { useSubmitCallback, useFetchExistingInfo, IMAGE_FORMATS, FormLinkEntry, AttachmentsWidget };
+export { useSubmitCallback, useFetchExistingInfo, IMAGE_FORMATS, FormLinkImageEntry, AttachmentsWidget };

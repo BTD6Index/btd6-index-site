@@ -120,6 +120,12 @@ CREATE TRIGGER "fttc_completions_au" AFTER UPDATE ON 'fttc_completions' BEGIN
     INSERT INTO "fttc_completions_fts" (rowid, map, towerset, person, link, og, pending) VALUES (new.rowid, new.map, new.towerset, new.person, new.link, new.og, new.pending);
 END;
 
+-- Least Towers CHIMPS
+CREATE TABLE "ltc_completions" (
+    map, towerset, person, link, completiontype, pending,
+    upgradeset, version, date, notes, filekey UNIQUE, PRIMARY KEY (map, towerset, completiontype)
+);
+
 /*
 CREATE TABLE "ltc_completions" (
     towerset, map PRIMARY KEY, person, link, upgradeset, version, date, notes, filekey UNIQUE

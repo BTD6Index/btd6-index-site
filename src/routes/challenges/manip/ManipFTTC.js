@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerTypeToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
-import { AttachmentsWidget, FormLinkEntry, IMAGE_FORMATS, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
+import { AttachmentsWidget, FormLinkImageEntry, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
 
 const FIELDS = ['map']; // needs to be outside so react doesn't treat value as changed every re-render
 const ALT_FIELDS = ['towerset'];
@@ -73,12 +73,7 @@ function ManipFTTC({ editParams = null, setEditParams = null }) {
                 <input name="person" type="text" placeholder="Person" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
-            <FormLinkEntry existingInfo={existingInfo} />
-            <br />
-            <span className="formLine">
-                <label htmlFor="image">Or Upload Image/Video</label>
-                <input type="file" name="image" accept={IMAGE_FORMATS} />
-            </span>
+            <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
                 <label htmlFor="notes">Completion Notes/Proof</label>

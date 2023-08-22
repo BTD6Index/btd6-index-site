@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
-import { IMAGE_FORMATS, useFetchExistingInfo, useSubmitCallback, FormLinkEntry, AttachmentsWidget} from "./manipCommon";
+import { useFetchExistingInfo, useSubmitCallback, FormLinkImageEntry, AttachmentsWidget} from "./manipCommon";
 
 const FIELDS = ['tower1', 'tower2']; // needs to be outside so react doesn't treat value as changed every re-render
 
@@ -77,12 +77,7 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
                 <input name="person2" type="text" placeholder="Person 2" style={{width: '20ch'}} defaultValue={existingInfo?.[0]?.person2} required />
             </span>
             <br />
-            <FormLinkEntry existingInfo={existingInfo} />
-            <br />
-            <span className="formLine">
-                <label htmlFor="image">Or Upload Image/Video</label>
-                <input type="file" name="image" accept={IMAGE_FORMATS} />
-            </span>
+            <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
                 <label htmlFor="notes">Completion Notes/Proof</label>
