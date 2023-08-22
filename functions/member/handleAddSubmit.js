@@ -23,8 +23,6 @@ async function handleAddSubmit({
     const jwt_result = context.data.jwt_result;
     const is_helper = jwt_result.payload.permissions.includes('write:admin');
 
-    const webhookUrls = typeof context.env.WEBHOOKS === 'string' ? JSON.parse(context.env.WEBHOOKS) : (context.env.WEBHOOKS ?? []);
-
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
     };
@@ -34,6 +32,10 @@ async function handleAddSubmit({
     }
 
     let form_data = await context.request.formData();
+
+    const verify = form_data.has('verify') && is_helper;
+    const webhookVar = context.env[verify ? 'WEBHOOKS' : 'WEBHOOKS_PENDING'];
+    const webhookUrls = typeof webhookVar === 'string' ? JSON.parse(webhookVar) : (webhookVar ?? []);
 
     const edit_mode = ['true', '1'].includes(form_data.get('edit'));
 
@@ -111,7 +113,7 @@ async function handleAddSubmit({
             JSON.stringify(personFields.map(field => form_data.get(field))),
             link,
             form_data.has('og') ? 1 : 0,
-            form_data.has('verify') && is_helper ? null : jwt_result.payload.sub, // user id
+            verify ? null : jwt_result.payload.sub, // user id
         ));
 
     if (form_data.has('og')) {
@@ -181,9 +183,12 @@ async function handleAddSubmit({
             media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
                 await fetch(webhookUrl, {
                     body: JSON.stringify(genEmbedFunction({
-                        link, formData: form_data, edit: edit_mode, filekey: imageKey,
+                        link,
+                        formData: form_data,
+                        edit: edit_mode,
+                        filekey: imageKey,
                         attachmentKeys: listRes.objects.map(object => object.key),
-                        verify: form_data.has('verify') && is_helper
+                        verify
                     })),
                     method: "post",
                     headers: {
