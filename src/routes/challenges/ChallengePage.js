@@ -12,10 +12,10 @@ export default function ChallengePage({
     description,
     fields,
     altFields = ['map'],
-    personFields = ['person'],
+    auxFields = ['person'],
     fieldHeaders,
     altFieldHeaders = ['Map'],
-    personFieldHeaders = ['Player'],
+    auxFieldHeaders = ['Player'],
     fieldDisplayFunc = (_fieldName, fieldValue) => fieldValue
 }) {
     const {
@@ -86,7 +86,7 @@ export default function ChallengePage({
                     <tr>
                         { !isLoading && isAuthenticated && <th>Select</th> }
                         {fieldHeaders.concat(altFieldHeaders).map(fh => <th key={fh}>{fh}</th>)}
-                        { personFieldHeaders.map(header => <th key={header}>{header}</th>) }
+                        { auxFieldHeaders.map(header => <th key={header}>{header}</th>) }
                         <th>Info</th>
                         <th>OG?</th>
                         { !isLoading && isAuthenticated && <th>Edit</th> }
@@ -113,7 +113,7 @@ export default function ChallengePage({
                                     </td> }
                                     { fields.concat(altFields).map(field => <td key={field}>{fieldDisplayFunc(field, completion[field])}</td>) }
                                     {
-                                        personFields.map(field => <td key={field}>{completion[field]}{completion.pending ? ' (Pending)' : ''}</td>)
+                                        auxFields.map(field => <td key={field}>{completion[field]}{completion.pending ? ' (Pending)' : ''}</td>)
                                     }
                                     <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
                                         fields.concat(altFields).map(field => [field, completion[field]])

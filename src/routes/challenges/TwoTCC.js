@@ -12,7 +12,7 @@ export default function TwoTCC() {
     }
     fieldHeaders={['Tower 1', 'Tower 2']}
     fields={['tower1', 'tower2']}
-    personFields={['person1', 'person2']}
-    personFieldHeaders={['Player 1', 'Player 2']}
+    auxFields={['person1', 'person2']}
+    auxFieldHeaders={['Player 1', 'Player 2']}
     />
 };

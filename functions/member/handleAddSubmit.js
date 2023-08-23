@@ -6,8 +6,10 @@ function expandSQLArray(paramNo, arrayLen) {
     return buf.join(',');
 }
 
-function sqlArrayCondition(paramNo, fields) {
-    return fields.map((field, i) => `${field} = json_extract(?${paramNo}, '$[${i}]')`).join(' AND ');
+function sqlArrayCondition(paramNo, fields, altFieldIndexOrder = null) {
+    return fields.map(
+        (field, i) => `${field} = json_extract(?${paramNo}, '$[${altFieldIndexOrder ? altFieldIndexOrder[i] : i}]')`
+    ).join(' AND ');
 }
 
 async function handleAddSubmit({
@@ -16,7 +18,8 @@ async function handleAddSubmit({
     fields,
     extraInfoFields,
     genEmbedFunction,
-    personFields = ['person']
+    auxFields = ['person'],
+    altFieldIndexOrder = null
 }) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
@@ -45,7 +48,7 @@ async function handleAddSubmit({
         }
     }
 
-    for (let key of personFields) {
+    for (let key of auxFields) {
         if (!form_data.has(key)) {
             return respondError(`Missing required key: ${key}`);
         }
@@ -74,7 +77,7 @@ async function handleAddSubmit({
     + `WHERE ${sqlArrayCondition(2, fields)} RETURNING filekey`;
     const insert_filekeys_stmt = `INSERT INTO "${challenge}_filekeys" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
     const add_completion_stmt = `INSERT INTO "${challenge}_completions" VALUES `
-    + `(${expandSQLArray(1, fields.length)}, ${expandSQLArray(2, personFields.length)}, ?3, ?4, ?5)`;
+    + `(${expandSQLArray(1, fields.length)}, ${expandSQLArray(2, auxFields.length)}, ?3, ?4, ?5)`;
     const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${expandSQLArray(1, extraInfoFields.length)})`;
     const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
 
@@ -110,7 +113,7 @@ async function handleAddSubmit({
     batched_stmts.push(db.prepare(add_completion_stmt)
         .bind(
             JSON.stringify(fields.map(field => form_data.get(field))),
-            JSON.stringify(personFields.map(field => form_data.get(field))),
+            JSON.stringify(auxFields.map(field => form_data.get(field))),
             link,
             form_data.has('og') ? 1 : 0,
             verify ? null : jwt_result.payload.sub, // user id

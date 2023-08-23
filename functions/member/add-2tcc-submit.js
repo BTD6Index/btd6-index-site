@@ -5,7 +5,7 @@ export async function onRequest(context) {
         context, challenge: '2tcc',
         fields: ['tower1', 'tower2', 'map'],
         extraInfoFields: ['tower1', 'tower2', 'upgrade1', 'upgrade2', 'version', 'date', 'money'],
-        personFields: ['person1', 'person2'],
+        auxFields: ['person1', 'person2'],
         genEmbedFunction: ({ link, formData, edit, filekey, verify }) => ({
             "content": `**${formData.get('tower1')} and ${formData.get('tower2')} 2TCC on ${formData.get('map')} ${
                 edit ? 'Edited' : 'Submitted'

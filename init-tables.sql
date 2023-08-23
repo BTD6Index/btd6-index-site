@@ -18,6 +18,19 @@ CREATE TRIGGER "2tc_completions_au" AFTER UPDATE ON '2tc_completions' BEGIN
     INSERT INTO "2tc_completions_fts" (rowid, tower1, tower2, map, person, link, og, pending) VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person, new.link, new.og, new.pending);
 END;
 
+CREATE TRIGGER "2tc_completions_bi" BEFORE INSERT ON "2tc_completions" BEGIN 
+    SELECT RAISE(ABORT, '2tc completion already exists') FROM "2tc_completions" AS cmp
+    WHERE (cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)
+    OR (cmp.tower1, cmp.tower2, cmp.map) = (new.tower2, new.tower1, new.map);
+END;
+CREATE TRIGGER "2tc_completions_bu" BEFORE UPDATE ON "2tc_completions" BEGIN 
+    SELECT RAISE(ABORT, '2tc completion already exists') FROM "2tc_completions" AS cmp
+    WHERE NOT ( (new.tower1, new.tower2, new.map) = (old.tower1, old.tower2, old.map)
+    OR (new.tower1, new.tower2, new.map) = (old.tower2, old.tower1, old.map) )
+    AND ((cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)
+    OR (cmp.tower1, cmp.tower2, cmp.map) = (new.tower2, new.tower1, new.map));
+END;
+
 CREATE TABLE "2tc_extra_info" (
     tower1, tower2, upgrade1, upgrade2, version, date, PRIMARY KEY (tower1, tower2)
 );
@@ -90,6 +103,19 @@ CREATE TABLE "2tcc_completion_notes" (
 CREATE TABLE "2tcc_filekeys" (
     tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map)
 );
+
+CREATE TRIGGER "2tcc_completions_bi" BEFORE INSERT ON "2tcc_completions" BEGIN 
+    SELECT RAISE(ABORT, '2tcc completion already exists') FROM "2tcc_completions" AS cmp
+    WHERE (cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)
+    OR (cmp.tower1, cmp.tower2, cmp.map) = (new.tower2, new.tower1, new.map);
+END;
+CREATE TRIGGER "2tcc_completions_bu" BEFORE UPDATE ON "2tcc_completions" BEGIN 
+    SELECT RAISE(ABORT, '2tcc completion already exists') FROM "2tcc_completions" AS cmp
+    WHERE NOT ( (new.tower1, new.tower2, new.map) = (old.tower1, old.tower2, old.map)
+    OR (new.tower1, new.tower2, new.map) = (old.tower2, old.tower1, old.map) )
+    AND ((cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)
+    OR (cmp.tower1, cmp.tower2, cmp.map) = (new.tower2, new.tower1, new.map));
+END;
 
 -- Fewest Type of Towers CHIMPS
 CREATE TABLE "fttc_completions" (
