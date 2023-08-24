@@ -1,3 +1,10 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /add-2tc-form
+Disallow: /add-2mp-form
+Disallow: /add-fttc-form
+Disallow: /add-2tcc-form
+Disallow: /edit-2tc-form
+Disallow: /edit-2mp-form
+Disallow: /edit-fttc-form
+Disallow: /edit-2tcc-form
