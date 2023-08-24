@@ -18,8 +18,7 @@ async function handleAddSubmit({
     fields,
     extraInfoFields,
     genEmbedFunction,
-    auxFields = ['person'],
-    altFieldIndexOrder = null
+    auxFields = ['person']
 }) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;

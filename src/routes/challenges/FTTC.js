@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import ChallengePage from "./ChallengePage"
 
 export default function FTTC() {
-    const fieldDisplayFunc = useCallback((fieldName, fieldValue) => {
+    const fieldDisplayFunc = useCallback(({fieldName, fieldValue}) => {
         try {
             if (fieldName === 'towerset') {
                 return JSON.parse(fieldValue).join(', ')

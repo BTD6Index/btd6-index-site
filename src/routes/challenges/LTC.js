@@ -1,21 +1,14 @@
-import useIndexSearch from "../../util/useIndexSearch";
-import { useAuth0 } from "@auth0/auth0-react";
-import useToggleList from "../../util/useToggleList";
-import useAccessToken from "../../util/useAccessToken";
-import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import ChallengePage from "./ChallengePage";
 
 export default function LTC() {
-    // TODO do shit with this
-    const {
-        completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
-    } = useIndexSearch(`/fetch-ltc`);
-
-    const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
-
-    const { isAuthenticated, isLoading, user } = useAuth0();
-    const getToken = useAccessToken();
-
-    const isAdmin = useCheckIfAdmin();
-
-    
+    return <ChallengePage
+        challenge="ltc"
+        header="Least Towers CHIMPS"
+        description="In this challenge, win a game of CHIMPS with the fewest amount of towers (including heroes)."
+        fieldHeaders={['Map']}
+        fields={['map']}
+        altFields={['towerset']}
+        altFieldHeaders={['Towers']}
+        auxFieldHeaders={['Upgrades', 'Version', 'Date']}
+    />
 }
