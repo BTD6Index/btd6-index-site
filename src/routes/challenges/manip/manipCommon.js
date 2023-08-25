@@ -1,8 +1,9 @@
 import { useCallback, useState, useEffect, Fragment } from "react";
 import { imageObjectRegex } from "../../../util/imageObjectRegex";
 import useAccessToken from "../../../util/useAccessToken";
+import useForceReload from "../../../util/useForceReload";
 
-function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceReload}) {
+function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceReload: forceReloadVar}) {
     const getToken = useAccessToken();
 
     return useCallback((e) => {
@@ -36,14 +37,14 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
                             newParams[dataKey.substring(7)] = formData.get(dataKey.substring(7));
                         }
                     }
-                    forceReload();
+                    forceReloadVar();
                     setEditParams(newParams, {replace: true});
                 }
             }
         }).catch(error => {
             window.alert(`Error adding ${challenge}: ${error.message}`);
         });
-    }, [getToken, challenge, formRef, oldLink, setEditParams, forceReload]);
+    }, [getToken, challenge, formRef, oldLink, setEditParams, forceReloadVar]);
 }
 
 const DEFAULT_ALT_FIELDS = ['map'];
@@ -53,7 +54,7 @@ function useFetchExistingInfo({editParams, fields, altFields = DEFAULT_ALT_FIELD
     const [ogInfo, setOGInfo] = useState(null);
     const [noteInfo, setNoteInfo] = useState(null);
     const [existingAttachments, setExistingAttachments] = useState(null);
-    const [_reloadVar, _setReloadVar] = useState(false);
+    const {reloadVar, forceReload} = useForceReload();
 
     const doEdit = editParams !== null;
 
@@ -98,11 +99,7 @@ function useFetchExistingInfo({editParams, fields, altFields = DEFAULT_ALT_FIELD
                 }
             });
         }
-    }, [editParams, doEdit, challenge, fields, altFields, _reloadVar]);
-
-    const forceReload = useCallback(() => {
-        _setReloadVar(state => !state);
-    }, []);
+    }, [editParams, doEdit, challenge, fields, altFields, reloadVar]);
 
     return {existingInfo, ogInfo, noteInfo, existingAttachments, forceReload};
 }

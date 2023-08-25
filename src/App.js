@@ -29,6 +29,10 @@ import FTTCExtraInfo from './routes/challenges/info/FTTCExtraInfo';
 import FTTCNotes from './routes/challenges/notes/FTTCNotes';
 import { AddFTTC, EditFTTC } from './routes/challenges/manip/ManipFTTC';
 import FTTCRules from './routes/challenges/rules/FTTCRules';
+import LTC from './routes/challenges/LTC';
+import LTCRules from './routes/challenges/rules/LTCRules';
+import LTCNotes from './routes/challenges/notes/LTCNotes';
+import { AddLTC, EditLTC } from './routes/challenges/manip/ManipLTC';
 
 
 const router = createBrowserRouter([
@@ -53,6 +57,10 @@ const router = createBrowserRouter([
         element: <FTTC />
       },
       {
+        path: "ltc",
+        element: <LTC />
+      },
+      {
         path: "2tcc",
         element: <TwoTCC />
       },
@@ -73,6 +81,10 @@ const router = createBrowserRouter([
         element: <AddTwoTCC />
       },
       {
+        path: "add-ltc-form",
+        element: <AddLTC />
+      },
+      {
         path: "edit-2mp-form",
         element: <EditTwoMP />
       },
@@ -87,6 +99,10 @@ const router = createBrowserRouter([
       {
         path: "edit-2tcc-form",
         element: <EditTwoTCC />
+      },
+      {
+        path: "edit-ltc-form",
+        element: <EditLTC />
       },
       {
         path: "2tc/extra-info",
@@ -121,6 +137,10 @@ const router = createBrowserRouter([
         element: <TwoTCCNotes />
       },
       {
+        path: "ltc/notes",
+        element: <LTCNotes />
+      },
+      {
         path: "2mp/rules",
         element: <TwoMPRules />
       },
@@ -135,6 +155,10 @@ const router = createBrowserRouter([
       {
         path: "2tcc/rules",
         element: <TwoTCCRules />
+      },
+      {
+        path: "ltc/rules",
+        element: <LTCRules />
       },
       {
         path: "*",
@@ -173,6 +197,7 @@ function AppImplImpl() {
               <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
               <li><a className='nolinkstyle' href='/fttc'>FTTC</a></li>
               <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
+              <li><a className='nolinkstyle' href='/ltc'>LTC</a></li>
             </ul>
           </li>
           <li>

@@ -12,6 +12,43 @@ function sqlArrayCondition(paramNo, fields, altFieldIndexOrder = null) {
     ).join(' AND ');
 }
 
+async function processImages({imageKey, editMode, formData, media, context, link, hasImage}) {
+    if (editMode) {
+        if (link) {
+            // delete image if replaced with link
+            context.waitUntil(media.delete(imageKey));
+        }
+    }
+
+    if (hasImage) {
+        // in add mode, upload only when uuid doesn't exist
+        let r2Obj = await media.put(
+            imageKey, formData.get('image').stream(), editMode ? {} : { onlyIf: { etagDoesNotMatch: '*' } }
+        );
+        if (r2Obj === null) {
+            return respondError('Failed to upload image object');
+        }
+    }
+
+    for (let attachment of formData.getAll('attachments')) {
+        if (attachment instanceof File) {
+            let r2Obj = await media.put(
+                `${imageKey}/attach/${crypto.randomUUID()}`,
+                attachment.stream(), { onlyIf: { etagDoesNotMatch: '*' } }
+            );
+            if (r2Obj === null) {
+                return respondError('Failed to upload an attachment');
+            }
+        }
+    }
+
+    context.waitUntil(media.delete(
+        formData
+        .getAll('delete-attachments')
+        .filter(key => key.startsWith(`${imageKey}/attach`)) // for security reasons
+    ));
+}
+
 async function handleAddSubmit({
     context,
     challenge,
@@ -33,37 +70,37 @@ async function handleAddSubmit({
         return respondError(`Request method should be POST, got ${context.request.method}`);
     }
 
-    let form_data = await context.request.formData();
+    let formData = await context.request.formData();
 
-    const verify = form_data.has('verify') && is_helper;
+    const verify = formData.has('verify') && is_helper;
     const webhookVar = context.env[verify ? 'WEBHOOKS' : 'WEBHOOKS_PENDING'];
     const webhookUrls = typeof webhookVar === 'string' ? JSON.parse(webhookVar) : (webhookVar ?? []);
 
-    const edit_mode = ['true', '1'].includes(form_data.get('edit'));
+    const editMode = ['true', '1'].includes(formData.get('edit'));
 
-    for (let key of fields.concat(form_data.has('og') ? extraInfoFields : [])) {
-        if (!form_data.has(key)) {
+    for (let key of fields.concat(formData.has('og') ? extraInfoFields : [])) {
+        if (!formData.has(key)) {
             return respondError(`Missing required key: ${key}`);
         }
     }
 
     for (let key of auxFields) {
-        if (!form_data.has(key)) {
+        if (!formData.has(key)) {
             return respondError(`Missing required key: ${key}`);
         }
     }
 
-    if (!form_data.has('link') && !form_data.has('image')) {
+    if (!formData.has('link') && !formData.has('image')) {
         return respondError('Need one of link or image keys');
     }
 
     let link = null;
     let imageKey = crypto.randomUUID();
 
-    const hasImage = form_data.has('image') && form_data.get('image') instanceof File;
+    const hasImage = formData.has('image') && formData.get('image') instanceof File;
 
     if (!hasImage) {
-        link = form_data.get('link') || null;
+        link = formData.get('link') || null;
     }
 
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
@@ -82,56 +119,56 @@ async function handleAddSubmit({
 
     let update_filekeys_idx = -1;
     let batched_stmts = [];
-    if (edit_mode) {
+    if (editMode) {
         batched_stmts.push(db.prepare(delete_completion_statement).bind(
-            JSON.stringify(fields.map(field => form_data.get(`edited-${field}`))),
+            JSON.stringify(fields.map(field => formData.get(`edited-${field}`))),
             jwt_result.payload.sub // user id
         ));
-        if (form_data.has('og')) {
+        if (formData.has('og')) {
             batched_stmts.push(db.prepare(delete_info_stmt).bind(
-                JSON.stringify(shared_fields.map(field => form_data.get(`edited-${field}`)))
+                JSON.stringify(shared_fields.map(field => formData.get(`edited-${field}`)))
             ));
         }
-        if (form_data.has('notes')) {
+        if (formData.has('notes')) {
             batched_stmts.push(db.prepare(delete_notes_stmt).bind(
-                JSON.stringify(fields.map(field => form_data.get(`edited-${field}`)))
+                JSON.stringify(fields.map(field => formData.get(`edited-${field}`)))
             ));
         }
         update_filekeys_idx = batched_stmts.length;
         batched_stmts.push(db.prepare(update_filekeys_stmt).bind(
-            JSON.stringify(fields.map(field => form_data.get(`${field}`))),
-            JSON.stringify(fields.map(field => form_data.get(`edited-${field}`)))
+            JSON.stringify(fields.map(field => formData.get(`${field}`))),
+            JSON.stringify(fields.map(field => formData.get(`edited-${field}`)))
         ));
     } else {
         batched_stmts.push(db.prepare(insert_filekeys_stmt).bind(
-            JSON.stringify(fields.map(field => form_data.get(`${field}`))),
+            JSON.stringify(fields.map(field => formData.get(`${field}`))),
             imageKey
         ));
     }
 
     batched_stmts.push(db.prepare(add_completion_stmt)
         .bind(
-            JSON.stringify(fields.map(field => form_data.get(field))),
-            JSON.stringify(auxFields.map(field => form_data.get(field))),
+            JSON.stringify(fields.map(field => formData.get(field))),
+            JSON.stringify(auxFields.map(field => formData.get(field))),
             link,
-            form_data.has('og') ? 1 : 0,
+            formData.has('og') ? 1 : 0,
             verify ? null : jwt_result.payload.sub, // user id
         ));
 
-    if (form_data.has('og')) {
+    if (formData.has('og')) {
         batched_stmts.push(
             db.prepare(add_info_stmt)
                 .bind(
-                    JSON.stringify(extraInfoFields.map(field => form_data.get(field)))
+                    JSON.stringify(extraInfoFields.map(field => formData.get(field)))
                 )
         );
     }
-    if (form_data.has('notes')) {
+    if (formData.has('notes')) {
         batched_stmts.push(
             db.prepare(add_notes_stmt)
                 .bind(
-                    JSON.stringify(fields.map(field => form_data.get(field))),
-                    form_data.get('notes')
+                    JSON.stringify(fields.map(field => formData.get(field))),
+                    formData.get('notes')
                 )
         );
     }
@@ -143,42 +180,11 @@ async function handleAddSubmit({
         return respondError(e.message);
     }
 
-    if (edit_mode) {
+    if (editMode) {
         imageKey = batch_result[update_filekeys_idx].results[0].filekey;
-
-        if (link) {
-            // delete image if replaced with link
-            context.waitUntil(media.delete(imageKey));
-        }
     }
 
-    if (hasImage) {
-        // in add mode, upload only when uuid doesn't exist
-        let r2Obj = await media.put(
-            imageKey, form_data.get('image').stream(), edit_mode ? {} : { onlyIf: { etagDoesNotMatch: '*' } }
-        );
-        if (r2Obj === null) {
-            return respondError('Failed to upload image object');
-        }
-    }
-
-    for (let attachment of form_data.getAll('attachments')) {
-        if (attachment instanceof File) {
-            let r2Obj = await media.put(
-                `${imageKey}/attach/${crypto.randomUUID()}`,
-                attachment.stream(), { onlyIf: { etagDoesNotMatch: '*' } }
-            );
-            if (r2Obj === null) {
-                return respondError('Failed to upload an attachment');
-            }
-        }
-    }
-    
-    context.waitUntil(media.delete(
-        form_data
-        .getAll('delete-attachments')
-        .filter(key => key.startsWith(`${imageKey}/attach`)) // for security reasons
-        ));
+    await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
 
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(
@@ -186,8 +192,8 @@ async function handleAddSubmit({
                 await fetch(webhookUrl, {
                     body: JSON.stringify(genEmbedFunction({
                         link,
-                        formData: form_data,
-                        edit: edit_mode,
+                        formData: formData,
+                        edit: editMode,
                         filekey: imageKey,
                         attachmentKeys: listRes.objects.map(object => object.key),
                         verify
@@ -204,4 +210,4 @@ async function handleAddSubmit({
     return Response.json({ inserted: true });
 }
 
-export { handleAddSubmit };
+export { handleAddSubmit, processImages };

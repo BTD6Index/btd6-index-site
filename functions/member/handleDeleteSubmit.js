@@ -12,8 +12,8 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
         return respondError(`Request method should be POST, got ${context.request.method}`);
     }
 
-    let form_data = await context.request.formData();
-    if (!form_data.has('entries')) {
+    let formData = await context.request.formData();
+    if (!formData.has('entries')) {
         return respondError(`Need ${challenge} entries to delete passed in`);
     }
 
@@ -30,17 +30,17 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     
     let res = await db.batch([
         db.prepare(delete_info_stmt).bind(
-            form_data.get('entries')
+            formData.get('entries')
             ),
         db.prepare(delete_completion_stmt).bind(
-            form_data.get('entries'),
+            formData.get('entries'),
             jwt_result.payload.sub
             ),
         db.prepare(delete_notes_stmt).bind(
-            form_data.get('entries')
+            formData.get('entries')
             ),
         db.prepare(delete_filekey_stmt).bind(
-            form_data.get('entries')
+            formData.get('entries')
             )
     ]);
 

@@ -18,16 +18,20 @@ export default function ChallengePage({
     altFieldHeaders = ['Map'],
     personFieldHeaders = ['Player'],
     auxFieldHeaders = [],
-    fieldDisplayFunc = null
+    fieldDisplayFunc = null,
+    disableOG = false
 }) {
-    const defaultFieldDisplayFunc = useCallback(({fieldName: _dummy, fieldValue}) => fieldValue, []);
+    const defaultFieldDisplayFunc = useCallback(
+        ({ fieldName: _dummy, fieldValue, completion: _dummy1 }) => fieldValue || 'N/A',
+        []
+    );
     fieldDisplayFunc ??= defaultFieldDisplayFunc;
 
     const {
         completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
     } = useIndexSearch(`/fetch-${challenge}`);
 
-    const {list: selectedCompletions, toggleElement: toggleSelectedCompletions} = useToggleList();
+    const { list: selectedCompletions, toggleElement: toggleSelectedCompletions } = useToggleList();
 
     const deleteForm = useRef(null);
 
@@ -68,7 +72,7 @@ export default function ChallengePage({
         <h1>{header}</h1>
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
-        { !isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p> }
+        {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
         <div className="searchUiGroup">
             <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
             <input type="checkbox" name="pending" onChange={e => setPendingFilter(e.target.checked)} />
@@ -84,75 +88,79 @@ export default function ChallengePage({
                 </button>
             }
         </div>
-        { searchError ? <p>Error while searching: {searchError}</p> :
-        <div className="tableContainer">
-            <table>
-                <thead>
-                    <tr>
-                        { !isLoading && isAuthenticated && <th>Select</th> }
-                        {fieldHeaders.concat(altFieldHeaders).map(fh => <th key={fh}>{fh}</th>)}
-                        { personFieldHeaders.map(header => <th key={header}>{header}</th>) }
-                        {auxFieldHeaders.map(header => <th key={header}>{header}</th>)}
-                        <th>Info</th>
-                        <th>OG?</th>
-                        { !isLoading && isAuthenticated && <th>Edit</th> }
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        completions.map(
-                            completion => {
-                                const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
-                                const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
-                                const link = !completion.link || imageObjectRegex.exec(completion.link) ? `https://media.btd6index.win/${completion.filekey}` : completion.link
-                                
-                                return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
-                                    { !isLoading && isAuthenticated && <td>
-                                        {hasWritePerms && <input
-                                            type="checkbox"
-                                            style={{verticalAlign: "middle"}}
-                                            checked={selectedCompletions.includes(key)}
-                                            onChange={() => {
-                                                toggleSelectedCompletions(key);
-                                            }}
-                                        /> }
-                                    </td> }
-                                    {
-                                        fields.concat(altFields)
-                                        .map(field => <td key={field}>{fieldDisplayFunc({fieldName: field, fieldValue: completion[field]})}</td>)
-                                    }
-                                    {
-                                        personFields.map(field => <td key={field}>{completion[field]}{completion.pending ? ' (Pending)' : ''}</td>)
-                                    }
-                                    {
-                                        auxFields
-                                        .map(field => <td key={field}>{fieldDisplayFunc({fieldName: field, fieldValue: completion[field]})}</td>)
-                                    }
-                                    <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
-                                        fields.concat(altFields).map(field => [field, completion[field]])
-                                    )}>Notes</a></td>
-                                    <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
-                                        fields.map(field => [field, completion[field]])
-                                    )}>Yes</a> : 'No'}</td>
-                                    { !isLoading && isAuthenticated &&
-                                    <td>
-                                        {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams(
+        {searchError ? <p>Error while searching: {searchError}</p> :
+            <div className="tableContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            {!isLoading && isAuthenticated && <th>Select</th>}
+                            {fieldHeaders.concat(altFieldHeaders).map(fh => <th key={fh}>{fh}</th>)}
+                            {personFieldHeaders.map(header => <th key={header}>{header}</th>)}
+                            {auxFieldHeaders.map(header => <th key={header}>{header}</th>)}
+                            <th>Info</th>
+                            {!disableOG && <th>OG?</th>}
+                            {!isLoading && isAuthenticated && <th>Edit</th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            completions.map(
+                                completion => {
+                                    const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
+                                    const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
+                                    const link = !completion.link || imageObjectRegex.exec(completion.link) ? `https://media.btd6index.win/${completion.filekey}` : completion.link
+
+                                    return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
+                                        {!isLoading && isAuthenticated && <td>
+                                            {hasWritePerms && <input
+                                                type="checkbox"
+                                                style={{ verticalAlign: "middle" }}
+                                                checked={selectedCompletions.includes(key)}
+                                                onChange={() => {
+                                                    toggleSelectedCompletions(key);
+                                                }}
+                                            />}
+                                        </td>}
+                                        {
+                                            fields.concat(altFields)
+                                                .map(field => <td key={field}>{fieldDisplayFunc({
+                                                    fieldName: field, fieldValue: completion[field], completion
+                                                })}</td>)
+                                        }
+                                        {
+                                            personFields.map(field => <td key={field}>{completion[field]}{completion.pending ? ' (Pending)' : ''}</td>)
+                                        }
+                                        {
+                                            auxFields
+                                                .map(field => <td key={field}>{fieldDisplayFunc({
+                                                    fieldName: field, fieldValue: completion[field], completion
+                                                })}</td>)
+                                        }
+                                        <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
                                             fields.concat(altFields).map(field => [field, completion[field]])
-                                        )}>Edit{!!completion.pending && " or Verify"}</a>}
-                                    </td>
-                                    }
-                                </tr>;
-                            }
-                        )
-                    }
-                </tbody>
-            </table>
-        </div>
+                                        )}>Notes</a></td>
+                                        {!disableOG && <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
+                                            fields.map(field => [field, completion[field]])
+                                        )}>Yes</a> : 'No'}</td>}
+                                        {!isLoading && isAuthenticated &&
+                                            <td>
+                                                {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams(
+                                                    fields.concat(altFields).map(field => [field, completion[field]])
+                                                )}>Edit{!!completion.pending && " or Verify"}</a>}
+                                            </td>
+                                        }
+                                    </tr>;
+                                }
+                            )
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
-        <form ref={deleteForm} style={{display: 'none'}} action={`/member/delete-${challenge}-submit`} method="post">
+        <form ref={deleteForm} style={{ display: 'none' }} action={`/member/delete-${challenge}-submit`} method="post">
             <input type="hidden" name="entries" value={
                 JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
-                } />
+            } />
         </form>
     </>
 };

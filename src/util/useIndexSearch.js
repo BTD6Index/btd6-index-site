@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
+import useForceReload from "./useForceReload";
 
 export default function useIndexSearch(endpoint) {
     const [query, setQuery] = useState('');
     const [offset, setOffset] = useState(0);
     const [completions, setCompletions] = useState([]);
     const [hasNext, setHasNext] = useState(false);
-    const [_reloadVar, _setReloadVar] = useState(false);
+    const {reloadVar, forceReload} = useForceReload();
     const [error, setError] = useState(null);
     const [pendingFilter, setPendingFilter] = useState(false);
 
@@ -32,7 +33,7 @@ export default function useIndexSearch(endpoint) {
         .catch(err => {
             setError(err.message);
         });
-    }, [query, offset, endpoint, _reloadVar, pendingFilter]);
+    }, [query, offset, endpoint, reloadVar, pendingFilter]);
 
     const onSearch = useCallback((e) => {
         setOffset(0);
@@ -45,10 +46,6 @@ export default function useIndexSearch(endpoint) {
 
     const onNext = useCallback(() => {
         setOffset(state => state + 10);
-    }, []);
-
-    const forceReload = useCallback(() => {
-        _setReloadVar(state => !state);
     }, []);
 
     return {

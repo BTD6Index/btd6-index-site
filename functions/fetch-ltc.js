@@ -15,7 +15,7 @@ export async function onRequest(context) {
             if (!search_params.has(field)) {
                 return [];
             } else if (field === 'query') {
-                return [`'ltc_completions_fts' = json_extract(?${param_pos}, '$[${idx}]')`];
+                return search_params.get(field) ? [`ltc_completions_fts MATCH json_extract(?${param_pos}, '$[${idx}]')`] : [];
             } else if (field === 'pending') {
                 return [`(${field} IS NULL) != (json_extract(?${param_pos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
             } else {
@@ -24,10 +24,13 @@ export async function onRequest(context) {
         }).join(' AND ') || `?${param_pos} = ?${param_pos}`;
     }
     let field_values = field_keys.map(field => {
+        if (!search_params.has(field)) {
+            return '';
+        }
         if (field === 'query') {
             return processQuery(search_params.get(field), field_keys);
         }
-        return search_params.get(field) ?? '';
+        return search_params.get(field);
     });
     if (isNaN(offset)) {
         return Response.json({error: `invalid offset ${offset}`}, {status: 400});
@@ -37,7 +40,7 @@ export async function onRequest(context) {
     }
 
     try {
-        const res = await db.prepare(`SELECT * FROM "ltc_completions" WHERE ${sql_condition(1)} LIMIT ?2 OFFSET ?3`)
+        const res = await db.prepare(`SELECT * FROM "ltc_completions_fts" WHERE ${sql_condition(1)} ORDER BY map LIMIT ?2 OFFSET ?3`)
         .bind(JSON.stringify(field_values), count+1, offset)
         .all();
 

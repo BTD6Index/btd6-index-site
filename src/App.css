@@ -164,6 +164,10 @@ thead tr:last-child th, thead tr:last-child {
   border: none;
 }
 
+input[type="number"] {
+  padding-left: 0.35em;
+}
+
 input[type="checkbox"], input[type="radio"] {
   width: calc(1vw + 1.5vh);
   height: calc(1vw + 1.5vh);
