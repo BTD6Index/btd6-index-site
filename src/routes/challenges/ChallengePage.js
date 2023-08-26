@@ -75,8 +75,8 @@ export default function ChallengePage({
         {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
         <div className="searchUiGroup">
             <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
-            <input type="checkbox" name="pending" onChange={e => setPendingFilter(e.target.checked)} />
-            <label htmlFor="pending">Pending completions only</label>
+            <input type="checkbox" id="filter-pending" onChange={e => setPendingFilter(e.target.checked)} />
+            <label htmlFor="filter-pending">Pending completions only</label>
         </div>
         <div className="searchUiGroup">
             <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
