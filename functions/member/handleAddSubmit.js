@@ -202,7 +202,7 @@ async function handleAddSubmit({
                     headers: {
                         "Content-Type": "application/json"
                     }
-                })
+                });
             })
         );
     }

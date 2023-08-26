@@ -44,7 +44,7 @@
         "040": "Tech Terror",
         "004": "Dark Champion",
         "500": "True Sun God",
-        "050": "The Anti-bloon",
+        "050": "The Anti-Bloon",
         "005": "Legend Of The Night"
     },
     "Wizard": {
@@ -87,7 +87,7 @@
         "xyz": "Base Ace",
         "300": "Fighter Plane",
         "030": "Bomber Ace",
-        "003": "Neva-miss Targeting",
+        "003": "Neva-Miss Targeting",
         "400": "Operation: Dart Storm",
         "040": "Ground Zero",
         "004": "Spectre",
@@ -116,7 +116,7 @@
         "040": "First Strike Capability",
         "004": "Armor Piercing Darts",
         "500": "Energizer",
-        "050": "Pre-emptive Strike",
+        "050": "Pre-Emptive Strike",
         "005": "Sub Commander"
     },
     "Mortar": {
@@ -169,13 +169,13 @@
     },
     "Dart": {
         "xyz": "Base Dart",
-        "300": "Spike-o-pult",
+        "300": "Spike-O-Pult",
         "030": "Triple Shot",
         "003": "Crossbow",
         "400": "Juggernaut",
         "040": "Super Monkey Fan Club",
         "004": "Sharp Shooter",
-        "500": "Ultra-juggernaut",
+        "500": "Ultra-Juggernaut",
         "050": "Plasma Monkey Fan Club",
         "005": "Crossbow Master"
     },
@@ -224,7 +224,7 @@
         "040": "Imf Loan",
         "004": "Central Market",
         "500": "Banana Central",
-        "050": "Monkey-nomics",
+        "050": "Monkey-Nomics",
         "005": "Monkey Wall Street"
     },
     "Beast": {
@@ -273,6 +273,6 @@
         "004": "Deadly Spikes",
         "500": "Super Mines",
         "050": "Carpet Of Spikes",
-        "005": "Perma-spike"
+        "005": "Perma-Spike"
     }
 }
