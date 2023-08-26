@@ -98,7 +98,8 @@ export async function onRequest(context) {
                         + `Link: ${link || `https://media.btd6index.win/${filekey}`}\n`
                         + `Notes and Attachments: https://btd6index.win/ltc/notes?${new URLSearchParams({
                             towerset: formData.get('towerset'),
-                            map: formData.get('map')
+                            map: formData.get('map'),
+                            completiontype: formData.get('completiontype')
                         })}`,
                         "username": "Glue Rat",
                         "avatar_url": "https://btd6index.win/static/media/GlueGunnerPetRatIcon.949fcb9e188713ce4e4e.png",
