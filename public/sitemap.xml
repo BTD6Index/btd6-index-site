@@ -15,6 +15,9 @@
     <url>
 		<loc>https://btd6index.win/ftc</loc>
 	</url>
+	<url>
+		<loc>https://btd6index.win/ltc</loc>
+	</url>
     <url>
 		<loc>https://btd6index.win/2tc/rules</loc>
 	</url>
@@ -26,5 +29,8 @@
 	</url>
     <url>
 		<loc>https://btd6index.win/ftc/rules</loc>
+	</url>
+	<url>
+		<loc>https://btd6index.win/ltc/rules</loc>
 	</url>
 </urlset>
