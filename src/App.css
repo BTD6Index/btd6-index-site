@@ -193,7 +193,7 @@ input[type="file"] {
   flex-wrap: wrap;
   gap: 0.8ch;
   align-items: center;
-};
+}
 
 .searchUiGroup {
   display: flex;
