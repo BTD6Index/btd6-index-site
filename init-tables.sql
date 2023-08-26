@@ -192,12 +192,8 @@ CREATE TRIGGER "ltc_completions_au" AFTER UPDATE ON "ltc_completions" BEGIN
     );
 END;
 
-
 /*
-CREATE TABLE "ltc_completions" (
-    towerset, map PRIMARY KEY, person, link, upgradeset, version, date, notes, filekey UNIQUE
-);
 CREATE TABLE "lcc_completions" (
-    cost, map PRIMARY KEY, person, link, version, date, notes, filekey UNIQUE
+    cost INTEGER, map, person, link, version, date, notes, filekey PRIMARY KEY
 );
 */
