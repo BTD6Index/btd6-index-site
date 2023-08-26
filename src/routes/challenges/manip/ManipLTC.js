@@ -179,12 +179,12 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="version">Update</label>
-                <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} required />
+                <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="date">Completion Date</label>
-                <input name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} required />
+                <input name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} />
             </span>
             <br />
             {editParams && ['map', 'towerset', 'completiontype'].map(

@@ -32,7 +32,8 @@ export async function onRequest(context) {
     const editMode = ['true', '1'].includes(formData.get('edit'));
 
     const fieldKeys = ['map', 'towerset', 'person', 'completiontype', 'upgradeset', 'version', 'date', 'notes'];
-    for (let key of fieldKeys) {
+    const requiredFieldKeys = ['map', 'towerset', 'person', 'completiontype', 'upgradeset', 'notes'];
+    for (let key of requiredFieldKeys) {
         if (!formData.has(key)) {
             return respondError(`Missing required key: ${key}`);
         }
