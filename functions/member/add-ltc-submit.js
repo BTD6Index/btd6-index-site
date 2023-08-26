@@ -85,21 +85,32 @@ export async function onRequest(context) {
 
     await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
     
-    /*
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(
             media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
                 await fetch(webhookUrl, {
-                    body: JSON.stringify({}),
+                    body: JSON.stringify({
+                        "content": `**(${JSON.parse(formData.get('towerset')).join(', ')}) ${formData.get('completiontype').toUpperCase()} LTC on ${formData.get('map')} ${
+                            editMode ? 'Edited' : 'Submitted'
+                        }${verify ? ' and Verified' : ''}**\n`
+                        + `Person: ${formData.get('person')}\n`
+                        + `Link: ${link || `https://media.btd6index.win/${filekey}`}\n`
+                        + `Notes and Attachments: https://btd6index.win/ltc/notes?${new URLSearchParams({
+                            towerset: formData.get('towerset'),
+                            map: formData.get('map')
+                        })}`,
+                        "username": "Glue Rat",
+                        "avatar_url": "https://btd6index.win/static/media/GlueGunnerPetRatIcon.949fcb9e188713ce4e4e.png",
+                        "attachments": []
+                    }),
                     method: "post",
                     headers: {
                         "Content-Type": "application/json"
                     }
-                })
+                });
             })
         );
-    }*/
-    // TODO implement webhook
+    }
 
     return Response.json({ inserted: true });
 }
