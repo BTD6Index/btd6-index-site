@@ -28,7 +28,7 @@ export async function onRequest(context) {
             return '';
         }
         if (field === 'query') {
-            return processQuery(searchParams.get(field), fieldKeys);
+            return processQuery(searchParams.get(field), fieldKeys.filter(field => field != 'query'));
         }
         return searchParams.get(field);
     });

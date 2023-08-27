@@ -25,30 +25,27 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
     let offset = parseInt(searchParams.get('offset') ?? '0');
     let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
     
-    let fieldKeys = [...primaryFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending', 'difficulty'];
+    let fieldKeys = [...primaryFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending'];
+    let sqlFieldKeys = [...fieldKeys, 'difficulty'].filter(field => searchParams.has(field));
     let specific_field_conds = (paramPos) => {
-        return fieldKeys
+        return sqlFieldKeys
         .flatMap((field, idx) => {
-            if (searchParams.has(field)) {
-                if (field === 'pending') {
-                    return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
-                } else if (field === 'difficulty') {
-                    const filteredMaps = Object.entries(maps)
-                    .filter(([, mapInfo]) => mapInfo.difficulty === searchParams.get(field))
-                    .map(([mapName,]) => `'${mapName.replace("'", "''")}'`);
+            if (field === 'pending') {
+                return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
+            } else if (field === 'difficulty') {
+                const filteredMaps = Object.entries(maps)
+                .filter(([, mapInfo]) => mapInfo.difficulty === searchParams.get(field))
+                .map(([mapName,]) => `'${mapName.replace("'", "''")}'`);
 
-                    return [`map IN (${filteredMaps.join(',')})`];
-                }
-                return [
-                    customFieldQuery?.({field, idx, paramPos, searchParams})
-                    ?? `${field} = json_extract(?${paramPos}, '$[${idx}]') ${personKeys.includes(field) ? 'COLLATE NOCASE' : ''}`
-                ];
-            } else {
-                return [];
+                return [`map IN (${filteredMaps.join(',')})`];
             }
+            return [
+                customFieldQuery?.({field, idx, paramPos, searchParams})
+                ?? `${field} = json_extract(?${paramPos}, '$[${idx}]') ${personKeys.includes(field) ? 'COLLATE NOCASE' : ''}`
+            ];
         }).concat(`?${paramPos} = ?${paramPos}`).join(' AND ');
     };
-    let fieldValues = fieldKeys.map(field => searchParams.get(field) ?? '');
+    let fieldValues = sqlFieldKeys.map(field => searchParams.get(field) ?? '');
 
     if (isNaN(offset)) {
         return Response.json({error: `invalid offset ${offset}`}, {status: 400});
