@@ -46,7 +46,7 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
             } else {
                 return [];
             }
-        }).join(' AND ') || `?${paramPos} = ?${paramPos}`;
+        }).concat(`?${paramPos} = ?${paramPos}`).join(' AND ');
     };
     let field_values = field_keys.map(field => searchParams.get(field) ?? '');
 
