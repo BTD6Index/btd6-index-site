@@ -7,11 +7,11 @@ export async function onRequest(context) {
     let offset = parseInt(searchParams.get('offset') ?? '0');
     let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
 
-    let field_keys = [
+    let fieldKeys = [
         'query', 'map', 'towerset', 'person', 'link', 'completiontype', 'pending', 'upgradeset', 'version', 'date'
     ];
     let sql_condition = (paramPos) => {
-        return field_keys.flatMap((field, idx) => {
+        return fieldKeys.flatMap((field, idx) => {
             if (!searchParams.has(field)) {
                 return [];
             } else if (field === 'query') {
@@ -23,12 +23,12 @@ export async function onRequest(context) {
             }
         }).join(' AND ') || `?${paramPos} = ?${paramPos}`;
     }
-    let field_values = field_keys.map(field => {
+    let fieldValues = fieldKeys.map(field => {
         if (!searchParams.has(field)) {
             return '';
         }
         if (field === 'query') {
-            return processQuery(searchParams.get(field), field_keys);
+            return processQuery(searchParams.get(field), fieldKeys);
         }
         return searchParams.get(field);
     });
@@ -41,7 +41,7 @@ export async function onRequest(context) {
 
     try {
         const res = await db.prepare(`SELECT * FROM "ltc_completions_fts" WHERE ${sql_condition(1)} ORDER BY map LIMIT ?2 OFFSET ?3`)
-        .bind(JSON.stringify(field_values), count+1, offset)
+        .bind(JSON.stringify(fieldValues), count+1, offset)
         .all();
 
         return Response.json({results: res['results'].slice(0, count), more: res['results'].length > count});

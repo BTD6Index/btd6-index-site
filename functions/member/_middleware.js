@@ -6,7 +6,7 @@ async function auth(context) {
         const token = authHeader.substring(7);
         const jwks = createRemoteJWKSet(new URL('https://lordlandmaster.us.auth0.com/.well-known/jwks.json'));
         try {
-            context.data.jwt_result = await jwtVerify(token, jwks, {
+            context.data.jwtResult = await jwtVerify(token, jwks, {
                 issuer: 'https://lordlandmaster.us.auth0.com/',
                 audience: 'https://btd6index.win/'
             });

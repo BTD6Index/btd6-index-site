@@ -59,8 +59,8 @@ async function handleAddSubmit({
 }) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
-    const jwt_result = context.data.jwt_result;
-    const is_helper = jwt_result.payload.permissions.includes('write:admin');
+    const jwtResult = context.data.jwtResult;
+    const is_helper = jwtResult.payload.permissions.includes('write:admin');
 
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
@@ -122,7 +122,7 @@ async function handleAddSubmit({
     if (editMode) {
         batched_stmts.push(db.prepare(delete_completion_statement).bind(
             JSON.stringify(fields.map(field => formData.get(`edited-${field}`))),
-            jwt_result.payload.sub // user id
+            jwtResult.payload.sub // user id
         ));
         if (formData.has('og')) {
             batched_stmts.push(db.prepare(delete_info_stmt).bind(
@@ -152,7 +152,7 @@ async function handleAddSubmit({
             JSON.stringify(auxFields.map(field => formData.get(field))),
             link,
             formData.has('og') ? 1 : 0,
-            verify ? null : jwt_result.payload.sub, // user id
+            verify ? null : jwtResult.payload.sub, // user id
         ));
 
     if (formData.has('og')) {

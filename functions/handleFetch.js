@@ -25,9 +25,9 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
     let offset = parseInt(searchParams.get('offset') ?? '0');
     let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
     
-    let field_keys = [...primaryFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending', 'difficulty'];
+    let fieldKeys = [...primaryFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending', 'difficulty'];
     let specific_field_conds = (paramPos) => {
-        return field_keys
+        return fieldKeys
         .flatMap((field, idx) => {
             if (searchParams.has(field)) {
                 if (field === 'pending') {
@@ -48,7 +48,7 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
             }
         }).concat(`?${paramPos} = ?${paramPos}`).join(' AND ');
     };
-    let field_values = field_keys.map(field => searchParams.get(field) ?? '');
+    let fieldValues = fieldKeys.map(field => searchParams.get(field) ?? '');
 
     if (isNaN(offset)) {
         return Response.json({error: `invalid offset ${offset}`}, {status: 400});
@@ -61,12 +61,12 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
         query_stmt = db
         .prepare(`SELECT * FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
         + `WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?2 OFFSET ?3`)
-        .bind(processQuery(query, field_keys), count+1, offset, JSON.stringify(field_values));
+        .bind(processQuery(query, fieldKeys), count+1, offset, JSON.stringify(fieldValues));
     } else {
         query_stmt = db
         .prepare(`SELECT * FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
         + `WHERE ${specific_field_conds(3)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?1 OFFSET ?2`)
-        .bind(count+1, offset, JSON.stringify(field_values));
+        .bind(count+1, offset, JSON.stringify(fieldValues));
     }
 
     try {

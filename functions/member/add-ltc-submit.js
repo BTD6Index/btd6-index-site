@@ -12,8 +12,8 @@ function expandSQLArray(paramNo, arrayLen) {
 export async function onRequest(context) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
-    const jwt_result = context.data.jwt_result;
-    const is_helper = jwt_result.payload.permissions.includes('write:admin');
+    const jwtResult = context.data.jwtResult;
+    const is_helper = jwtResult.payload.permissions.includes('write:admin');
 
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
@@ -61,7 +61,7 @@ export async function onRequest(context) {
         ).bind(
             JSON.stringify(fieldValues),
             link,
-            verify ? null : jwt_result.payload.sub,
+            verify ? null : jwtResult.payload.sub,
             formData.get('edited-map'),
             formData.get('edited-towerset'),
             formData.get('edited-completiontype')
@@ -73,7 +73,7 @@ export async function onRequest(context) {
         ).bind(
             JSON.stringify(fieldValues),
             link,
-            verify ? null : jwt_result.payload.sub,
+            verify ? null : jwtResult.payload.sub,
             imageKey
         );
     }

@@ -1,8 +1,8 @@
 async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
-    const jwt_result = context.data.jwt_result;
-    const is_helper = jwt_result.payload.permissions.includes('write:admin');
+    const jwtResult = context.data.jwtResult;
+    const is_helper = jwtResult.payload.permissions.includes('write:admin');
 
     const respondError = (error) => {
         return Response.json({error}, {status: 400});
@@ -34,7 +34,7 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
             ),
         db.prepare(delete_completion_stmt).bind(
             formData.get('entries'),
-            jwt_result.payload.sub
+            jwtResult.payload.sub
             ),
         db.prepare(delete_notes_stmt).bind(
             formData.get('entries')
