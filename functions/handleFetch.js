@@ -54,19 +54,19 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
         return Response.json({results: [], more: false});
     }
     let query_stmt;
-    if (query) {
-        query_stmt = db
-        .prepare(`SELECT * FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
-        + `WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?2 OFFSET ?3`)
-        .bind(processQuery(query, fieldKeys), count+1, offset, JSON.stringify(fieldValues));
-    } else {
-        query_stmt = db
-        .prepare(`SELECT * FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
-        + `WHERE ${specific_field_conds(3)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?1 OFFSET ?2`)
-        .bind(count+1, offset, JSON.stringify(fieldValues));
-    }
-
     try {
+        if (query) {
+            query_stmt = db
+            .prepare(`SELECT * FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
+            + `WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?2 OFFSET ?3`)
+            .bind(processQuery(query, fieldKeys), count+1, offset, JSON.stringify(fieldValues));
+        } else {
+            query_stmt = db
+            .prepare(`SELECT * FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
+            + `WHERE ${specific_field_conds(3)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?1 OFFSET ?2`)
+            .bind(count+1, offset, JSON.stringify(fieldValues));
+        }
+
         let query_result = await query_stmt.all();
         return Response.json({results: query_result['results'].slice(0, count), more: query_result['results'].length > count});
     } catch (e) {
