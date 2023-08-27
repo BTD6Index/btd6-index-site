@@ -5,11 +5,11 @@ export async function onRequest(context) {
         context,
         primaryFieldKeys: ['map', 'towerset'],
         personKeys: ['person'],
-        extraKeys: ['tower'],
+        extraKeys: ['towerincludes'],
         challenge: 'fttc',
         customFieldQuery: ({field, idx, paramPos}) => {
-            if (field === 'tower') {
-                return `"fttc_completions_fts" = 'towerset:"' || REPLACE(json_extract(?${paramPos}, '$[${idx}]'), '"', '""') || '"'`;
+            if (field === 'towerincludes') {
+                return `"fttc_completions_fts" = (SELECT 'towerset:"' || group_concat(REPLACE(towers.value, '"', '""'), ' ') || '"' FROM json_each(json_extract(?${paramPos}, '$[${idx}]')) AS towers)`;
             }
             return null;
         }
