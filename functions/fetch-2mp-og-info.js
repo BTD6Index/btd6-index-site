@@ -1,6 +1,6 @@
 export async function onRequest(context) {
-    let search_params = new URL(context.request.url).searchParams;
-    let entity = search_params.get('entity');
+    let searchParams = new URL(context.request.url).searchParams;
+    let entity = searchParams.get('entity');
     if (entity === null) {
         return Response.json({error: `need entity specified`}, {status: 400});
     }

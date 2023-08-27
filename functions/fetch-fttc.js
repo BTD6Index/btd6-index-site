@@ -5,6 +5,13 @@ export async function onRequest(context) {
         context,
         primaryFieldKeys: ['map', 'towerset'],
         personKeys: ['person'],
-        challenge: 'fttc'
+        extraKeys: ['tower'],
+        challenge: 'fttc',
+        customFieldQuery: ({field, idx, paramPos}) => {
+            if (field === 'tower') {
+                return `"fttc_completions_fts" = 'towerset:"' || REPLACE(json_extract(?${paramPos}, '$[${idx}]'), '"', '""') || '"'`;
+            }
+            return null;
+        }
     });
 }

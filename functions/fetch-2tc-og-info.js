@@ -1,7 +1,7 @@
 export async function onRequest(context) {
-    let search_params = new URL(context.request.url).searchParams;
-    let tower1 = search_params.get('tower1');
-    let tower2 = search_params.get('tower2');
+    let searchParams = new URL(context.request.url).searchParams;
+    let tower1 = searchParams.get('tower1');
+    let tower2 = searchParams.get('tower2');
     if (tower1 === null || tower2 === null) {
         return Response.json({error: `need tower1 and tower2 specified`}, {status: 400});
     }

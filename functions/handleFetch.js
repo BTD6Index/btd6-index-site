@@ -1,35 +1,53 @@
 import { processQuery } from "./processQuery";
 import maps from './maps.json';
 
-async function handleFetch({ context, primaryFieldKeys, personKeys, challenge }) {
+/**
+ * @callback customFieldQuery
+ * @param {{field: string, idx: number, paramPos: number, searchParams: URLSearchParams}} args
+ * @returns {string?}
+ */
+
+/**
+ * @param {Object} args
+ * @param args.context
+ * @param {string[]} args.primaryFieldKeys
+ * @param {string[]} args.personKeys
+ * @param {string[]} args.extraKeys
+ * @param {string} args.challenge
+ * @param {customFieldQuery?} args.customFieldQuery
+ * @returns 
+ */
+async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = [], challenge, customFieldQuery = null }) {
     const db = context.env.BTD6_INDEX_DB;
 
-    let search_params = new URL(context.request.url).searchParams;
-    let query = search_params.get('query') ?? '';
-    let offset = parseInt(search_params.get('offset') ?? '0');
-    let count = Math.min(parseInt(search_params.get('count') ?? '10'), 100);
+    let searchParams = new URL(context.request.url).searchParams;
+    let query = searchParams.get('query') ?? '';
+    let offset = parseInt(searchParams.get('offset') ?? '0');
+    let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
     
-    let field_keys = [...primaryFieldKeys, ...personKeys, 'link', 'og', 'pending', 'difficulty'];
-    let specific_field_conds = (param_pos) => {
+    let field_keys = [...primaryFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending', 'difficulty'];
+    let specific_field_conds = (paramPos) => {
         return field_keys
         .flatMap((field, idx) => {
-            if (search_params.has(field)) {
+            if (searchParams.has(field)) {
                 if (field === 'pending') {
-                    return [`(${field} IS NULL) != (json_extract(?${param_pos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
+                    return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
                 } else if (field === 'difficulty') {
                     const filteredMaps = Object.entries(maps)
-                    .filter(([, mapInfo]) => mapInfo.difficulty === search_params.get(field))
+                    .filter(([, mapInfo]) => mapInfo.difficulty === searchParams.get(field))
                     .map(([mapName,]) => `'${mapName.replace("'", "''")}'`);
 
                     return [`map IN (${filteredMaps.join(',')})`];
                 }
-                return [`${field} = json_extract(?${param_pos}, '$[${idx}]')`];
+                return [
+                    customFieldQuery?.({field, idx, paramPos, searchParams}) ?? `${field} = json_extract(?${paramPos}, '$[${idx}]')`
+                ];
             } else {
                 return [];
             }
-        }).join(' AND ') || `?${param_pos} = ?${param_pos}`;
+        }).join(' AND ') || `?${paramPos} = ?${paramPos}`;
     };
-    let field_values = field_keys.map(field => search_params.get(field) ?? '');
+    let field_values = field_keys.map(field => searchParams.get(field) ?? '');
 
     if (isNaN(offset)) {
         return Response.json({error: `invalid offset ${offset}`}, {status: 400});

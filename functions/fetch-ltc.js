@@ -3,34 +3,34 @@ import { processQuery } from "./processQuery";
 export async function onRequest(context) {
     const db = context.env.BTD6_INDEX_DB;
 
-    let search_params = new URL(context.request.url).searchParams;
-    let offset = parseInt(search_params.get('offset') ?? '0');
-    let count = Math.min(parseInt(search_params.get('count') ?? '10'), 100);
+    let searchParams = new URL(context.request.url).searchParams;
+    let offset = parseInt(searchParams.get('offset') ?? '0');
+    let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
 
     let field_keys = [
         'query', 'map', 'towerset', 'person', 'link', 'completiontype', 'pending', 'upgradeset', 'version', 'date'
     ];
-    let sql_condition = (param_pos) => {
+    let sql_condition = (paramPos) => {
         return field_keys.flatMap((field, idx) => {
-            if (!search_params.has(field)) {
+            if (!searchParams.has(field)) {
                 return [];
             } else if (field === 'query') {
-                return search_params.get(field) ? [`ltc_completions_fts MATCH json_extract(?${param_pos}, '$[${idx}]')`] : [];
+                return searchParams.get(field) ? [`ltc_completions_fts MATCH json_extract(?${paramPos}, '$[${idx}]')`] : [];
             } else if (field === 'pending') {
-                return [`(${field} IS NULL) != (json_extract(?${param_pos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
+                return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
             } else {
-                return [`${field} = json_extract(?${param_pos}, '$[${idx}]')`];
+                return [`${field} = json_extract(?${paramPos}, '$[${idx}]')`];
             }
-        }).join(' AND ') || `?${param_pos} = ?${param_pos}`;
+        }).join(' AND ') || `?${paramPos} = ?${paramPos}`;
     }
     let field_values = field_keys.map(field => {
-        if (!search_params.has(field)) {
+        if (!searchParams.has(field)) {
             return '';
         }
         if (field === 'query') {
-            return processQuery(search_params.get(field), field_keys);
+            return processQuery(searchParams.get(field), field_keys);
         }
-        return search_params.get(field);
+        return searchParams.get(field);
     });
     if (isNaN(offset)) {
         return Response.json({error: `invalid offset ${offset}`}, {status: 400});

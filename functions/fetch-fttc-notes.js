@@ -1,7 +1,7 @@
 export async function onRequest(context) {
-    let search_params = new URL(context.request.url).searchParams;
-    let towerset = search_params.get('towerset');
-    let map = search_params.get('map');
+    let searchParams = new URL(context.request.url).searchParams;
+    let towerset = searchParams.get('towerset');
+    let map = searchParams.get('map');
     if (towerset === null || map == null) {
         return Response.json({error: `need map and towerset specified`}, {status: 400});
     }

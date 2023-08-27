@@ -1,6 +1,6 @@
 export async function onRequest(context) {
-    let search_params = new URL(context.request.url).searchParams;
-    let obj = await context.env.BTD6_INDEX_MEDIA.get(search_params.get('key') ?? '');
+    let searchParams = new URL(context.request.url).searchParams;
+    let obj = await context.env.BTD6_INDEX_MEDIA.get(searchParams.get('key') ?? '');
     if (!obj) {
         return Response.json({error: "Media object not found"}, {status: 404});
     }
