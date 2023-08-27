@@ -1,4 +1,5 @@
 import { processQuery } from "./processQuery";
+import maps from './maps.json';
 
 async function handleFetch({ context, primaryFieldKeys, personKeys, challenge }) {
     const db = context.env.BTD6_INDEX_DB;
@@ -8,13 +9,19 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, challenge })
     let offset = parseInt(search_params.get('offset') ?? '0');
     let count = Math.min(parseInt(search_params.get('count') ?? '10'), 100);
     
-    let field_keys = [...primaryFieldKeys, ...personKeys, 'link', 'og', 'pending'];
+    let field_keys = [...primaryFieldKeys, ...personKeys, 'link', 'og', 'pending', 'difficulty'];
     let specific_field_conds = (param_pos) => {
         return field_keys
         .flatMap((field, idx) => {
             if (search_params.has(field)) {
                 if (field === 'pending') {
                     return [`(${field} IS NULL) != (json_extract(?${param_pos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
+                } else if (field === 'difficulty') {
+                    const filteredMaps = Object.entries(maps)
+                    .filter(([, mapInfo]) => mapInfo.difficulty === search_params.get(field))
+                    .map(([mapName,]) => `'${mapName.replace("'", "''")}'`);
+
+                    return [`map IN (${filteredMaps.join(',')})`];
                 }
                 return [`${field} = json_extract(?${param_pos}, '$[${idx}]')`];
             } else {
