@@ -19,7 +19,7 @@ export async function onRequest(context) {
             } else if (field === 'pending') {
                 return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
             } else {
-                return [`${field} = json_extract(?${paramPos}, '$[${idx}]')`];
+                return [`${field} = json_extract(?${paramPos}, '$[${idx}]') ${field === 'person' ? 'COLLATE NOCASE' : ''}`];
             }
         }).join(' AND ') || `?${paramPos} = ?${paramPos}`;
     }

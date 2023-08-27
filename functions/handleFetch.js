@@ -40,7 +40,8 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
                     return [`map IN (${filteredMaps.join(',')})`];
                 }
                 return [
-                    customFieldQuery?.({field, idx, paramPos, searchParams}) ?? `${field} = json_extract(?${paramPos}, '$[${idx}]')`
+                    customFieldQuery?.({field, idx, paramPos, searchParams})
+                    ?? `${field} = json_extract(?${paramPos}, '$[${idx}]') ${personKeys.includes(field) ? 'COLLATE NOCASE' : ''}`
                 ];
             } else {
                 return [];
