@@ -4,7 +4,7 @@ import towerNames from "./tower-names.json";
 function convTowerSubquery(query, queryIdx, paramPos, idx) {
     const subquery = query[queryIdx];
     if (subquery in towerNames) {
-        const searchList = Object.values(towerNames[subquery]).map(v => `'${v}'`).join(',');
+        const searchList = Object.values(towerNames[subquery]).map(v => `'${v.replace("'", "''")}'`).join(',');
         return `IN (${searchList})`;
     } else {
         return `= json_extract(json_extract(?${paramPos}, '$[${idx}]'), '$[${queryIdx}]')`;

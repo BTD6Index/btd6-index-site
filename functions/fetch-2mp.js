@@ -16,7 +16,7 @@ export async function onRequest(context) {
                 } else if (query.length === 1) {
                     if (query[0] in towerNames) {
                         return `entity IN (${
-                            Object.values(towerNames[query[0]]).map(v => `'${v}'`).join(',')
+                            Object.values(towerNames[query[0]]).map(v => `'${v.replace("'", "''")}'`).join(',')
                         })`;
                     } else {
                         return `entity = json_extract(json_extract(?${paramPos}, '$[${idx}]'), '$[0]')`;
