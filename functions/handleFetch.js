@@ -32,6 +32,8 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
         .flatMap((field, idx) => {
             if (field === 'pending') {
                 return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
+            } else if (field === 'og') {
+                return [`(${field} = 0) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
             } else if (field === 'difficulty') {
                 const filteredMaps = Object.entries(maps)
                 .filter(([, mapInfo]) => mapInfo.difficulty === searchParams.get(field))

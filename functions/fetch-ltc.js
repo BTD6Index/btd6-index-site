@@ -18,6 +18,8 @@ export async function onRequest(context) {
                 return searchParams.get(field) ? [`ltc_completions_fts MATCH json_extract(?${paramPos}, '$[${idx}]')`] : [];
             } else if (field === 'pending') {
                 return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
+            } else if (field === 'og') {
+                return [`(${field} = 0) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
             } else {
                 return [`${field} = json_extract(?${paramPos}, '$[${idx}]') ${field === 'person' ? 'COLLATE NOCASE' : ''}`];
             }
