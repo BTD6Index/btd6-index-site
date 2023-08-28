@@ -1,5 +1,5 @@
 {
-    "Alch": {
+    "Alchemist": {
         "xyz": "Base Alch",
         "300": "Berserker Brew",
         "030": "Unstable Concoction",
@@ -11,7 +11,7 @@
         "050": "Total Transformation",
         "005": "Bloon Master Alchemist"
     },
-    "Druid": {
+    "Druid Monkey": {
         "xyz": "Base Druid",
         "300": "Druid Of The Storm",
         "030": "Druid Of The Jungle",
@@ -23,7 +23,7 @@
         "050": "Spirit Of The Forest",
         "005": "Avatar Of Wrath"
     },
-    "Ninja": {
+    "Ninja Monkey": {
         "xyz": "Base Ninja",
         "300": "Double Shot",
         "030": "Shinobi Tactics",
@@ -35,7 +35,7 @@
         "050": "Grand Saboteur",
         "005": "Master Bomber"
     },
-    "Super": {
+    "Super Monkey": {
         "xyz": "Base Super",
         "300": "Sun Avatar",
         "030": "Robo Monkey",
@@ -47,7 +47,7 @@
         "050": "The Anti-Bloon",
         "005": "Legend Of The Night"
     },
-    "Wizard": {
+    "Wizard Monkey": {
         "xyz": "Base Wizard",
         "300": "Arcane Mastery",
         "030": "Dragon's Breath",
@@ -59,7 +59,7 @@
         "050": "Wizard Lord Phoenix",
         "005": "Prince Of Darkness"
     },
-    "Dartling": {
+    "Dartling Gunner": {
         "xyz": "Base Dartling",
         "300": "Laser Cannon",
         "030": "Hydra Rocket Pods",
@@ -71,7 +71,7 @@
         "050": "M.a.d",
         "005": "Bloon Exclusion Zone"
     },
-    "Heli": {
+    "Heli Pilot": {
         "xyz": "Base Heli",
         "300": "Razor Rotors",
         "030": "Downdraft",
@@ -83,7 +83,7 @@
         "050": "Special Poperations",
         "005": "Comanche Commander"
     },
-    "Ace": {
+    "Monkey Ace": {
         "xyz": "Base Ace",
         "300": "Fighter Plane",
         "030": "Bomber Ace",
@@ -95,7 +95,7 @@
         "050": "Tsar Bomba",
         "005": "Flying Fortress"
     },
-    "Bucc": {
+    "Monkey Buccaneer": {
         "xyz": "Base Bucc",
         "300": "Destroyer",
         "030": "Cannon Ship",
@@ -107,7 +107,7 @@
         "050": "Pirate Lord",
         "005": "Trade Empire"
     },
-    "Sub": {
+    "Monkey Sub": {
         "xyz": "Base Sub",
         "300": "Submerge And Support",
         "030": "Ballistic Missile",
@@ -119,7 +119,7 @@
         "050": "Pre-Emptive Strike",
         "005": "Sub Commander"
     },
-    "Mortar": {
+    "Mortar Monkey": {
         "xyz": "Base Mortar",
         "300": "Shell Shock",
         "030": "Heavy Shells",
@@ -131,7 +131,7 @@
         "050": "Pop And Awe",
         "005": "Blooncineration"
     },
-    "Sniper": {
+    "Sniper Monkey": {
         "xyz": "Base Sniper",
         "300": "Deadly Precision",
         "030": "Bouncing Bullet",
@@ -143,7 +143,7 @@
         "050": "Elite Sniper",
         "005": "Elite Defender"
     },
-    "Bomb": {
+    "Bomb Shooter": {
         "xyz": "Base Bomb",
         "300": "Really Big Bombs",
         "030": "Moab Mauler",
@@ -155,7 +155,7 @@
         "050": "Moab Eliminator",
         "005": "Bomb Blitz"
     },
-    "Boomer": {
+    "Boomerang Monkey": {
         "xyz": "Base Boomer",
         "300": "Glaive Ricochet",
         "030": "Bionic Boomerang",
@@ -167,7 +167,7 @@
         "050": "Perma Charge",
         "005": "Moab Domination"
     },
-    "Dart": {
+    "Dart Monkey": {
         "xyz": "Base Dart",
         "300": "Spike-O-Pult",
         "030": "Triple Shot",
@@ -179,7 +179,7 @@
         "050": "Plasma Monkey Fan Club",
         "005": "Crossbow Master"
     },
-    "Glue": {
+    "Glue Gunner": {
         "xyz": "Base Glue",
         "300": "Bloon Dissolver",
         "030": "Glue Hose",
@@ -191,7 +191,7 @@
         "050": "Glue Storm",
         "005": "Super Glue"
     },
-    "Ice": {
+    "Ice Monkey": {
         "xyz": "Base Ice",
         "300": "Ice Shards",
         "030": "Arctic Wind",
@@ -203,7 +203,7 @@
         "050": "Absolute Zero",
         "005": "Icicle Impale"
     },
-    "Tack": {
+    "Tack Shooter": {
         "xyz": "Base Tack",
         "300": "Hot Shots",
         "030": "Blade Shooter",
@@ -215,8 +215,8 @@
         "050": "Super Maelstrom",
         "005": "The Tack Zone"
     },
-    "Monkey Farm": {
-        "xyz": "Base Monkey Farm",
+    "Banana Farm": {
+        "xyz": "Base Farm",
         "300": "Banana Plantation",
         "030": "Monkey Bank",
         "003": "Marketplace",
@@ -227,7 +227,7 @@
         "050": "Monkey-Nomics",
         "005": "Monkey Wall Street"
     },
-    "Beast": {
+    "Beast Handler": {
         "xyz": "Base Beast",
         "300": "Great White",
         "030": "Velociraptor",
@@ -239,7 +239,7 @@
         "050": "Giganotosaurus",
         "005": "Pou\u0101kai"
     },
-    "Engi": {
+    "Engineer": {
         "xyz": "Base Engi",
         "300": "Sprockets",
         "030": "Cleansing Foam",
@@ -251,7 +251,7 @@
         "050": "Ultraboost",
         "005": "Xxxl Trap"
     },
-    "Village": {
+    "Monkey Village": {
         "xyz": "Base Village",
         "300": "Primary Training",
         "030": "Monkey Intelligence Bureau",
@@ -263,7 +263,7 @@
         "050": "Homeland Defense",
         "005": "Monkeyopolis"
     },
-    "Spact": {
+    "Spike Factory": {
         "xyz": "Base Spact",
         "300": "Spiked Balls",
         "030": "Moab Shredr",
