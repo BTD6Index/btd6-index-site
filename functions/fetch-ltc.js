@@ -40,11 +40,18 @@ export async function onRequest(context) {
     }
 
     try {
-        const res = await db.prepare(`SELECT * FROM "ltc_completions_fts" WHERE ${sql_condition(1)} ORDER BY map LIMIT ?2 OFFSET ?3`)
-        .bind(JSON.stringify(fieldValues), count+1, offset)
-        .all();
+        const res = await db.batch([
+            db.prepare(`SELECT * FROM "ltc_completions_fts" WHERE ${sql_condition(1)} ORDER BY map LIMIT ?2 OFFSET ?3`)
+            .bind(JSON.stringify(fieldValues), count+1, offset),
+            db.prepare(`SELECT COUNT(*) FROM "ltc_completions_fts" WHERE ${sql_condition(1)} ORDER BY map`)
+            .bind(JSON.stringify(fieldValues))
+        ]);
 
-        return Response.json({results: res['results'].slice(0, count), more: res['results'].length > count});
+        return Response.json({
+            results: res[0]['results'].slice(0, count),
+            more: res[0]['results'].length > count,
+            count: res[1]['results'][0]['COUNT(*)']
+        });
     } catch (e) {
         return Response.json({error: e.message}, {status: 400});
     }
