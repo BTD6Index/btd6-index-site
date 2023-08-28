@@ -56,18 +56,23 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
     let query_stmt_fn;
     try {
         if (query) {
-            query_stmt_fn = (select) => db
-            .prepare(`SELECT ${select} FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
-            + `WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?2 OFFSET ?3`)
-            .bind(processQuery(query, fieldKeys), count+1, offset, JSON.stringify(fieldValues));
+            query_stmt_fn = (select, limit, offset) => {
+                return db.prepare(`
+                    SELECT ${select} FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
+                    WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?2 OFFSET ?3
+                `).bind(processQuery(query, fieldKeys), limit, offset, JSON.stringify(fieldValues));
+            };
         } else {
-            query_stmt_fn = (select) => db
-            .prepare(`SELECT ${select} FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')}) `
-            + `WHERE ${specific_field_conds(3)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?1 OFFSET ?2`)
-            .bind(count+1, offset, JSON.stringify(fieldValues));
+            query_stmt_fn = (select, limit, offset) => {
+                return db.prepare(`
+                    SELECT ${select} FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
+                    WHERE ${specific_field_conds(3)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?1 OFFSET ?2
+                `)
+                .bind(limit, offset, JSON.stringify(fieldValues));
+            };
         }
 
-        let query_result = await db.batch([query_stmt_fn('*'), query_stmt_fn('COUNT(*)')]);
+        let query_result = await db.batch([query_stmt_fn('*', count+1, offset), query_stmt_fn('COUNT(*)', (1 << 31) - 1, 0)]);
         return Response.json({
             results: query_result[0]['results'].slice(0, count),
             more: query_result[0]['results'].length > count,
