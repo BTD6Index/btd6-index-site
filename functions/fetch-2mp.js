@@ -12,7 +12,7 @@ export async function onRequest(context) {
             if (field === 'towerquery') {
                 let query = JSON.parse(searchParams.get('towerquery'));
                 if (query.length === 0) {
-                    return null;
+                    return 'TRUE';
                 } else if (query.length === 1) {
                     if (query[0] in towerNames) {
                         return `entity IN (${
