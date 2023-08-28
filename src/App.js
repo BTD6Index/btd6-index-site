@@ -187,7 +187,7 @@ function AppImplImpl() {
                     <li onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Logout</li>
                   </ul>
                 </li>
-              : <li onClick={() => loginWithRedirect({appState: { returnTo: window.location.href }})}>Login</li>
+              : <li onClick={() => loginWithRedirect({appState: { returnTo: `${window.location.pathname}${window.location.search}${window.location.hash}` }})}>Login</li>
             )
           }
           <li>
@@ -225,7 +225,7 @@ function AppImpl() {
       audience: 'https://btd6index.win/'
     }}
     onRedirectCallback={(state) => {
-      navigate(state?.returnTo ?? window.location.href);
+      navigate(state?.returnTo ?? `${window.location.pathname}${window.location.search}${window.location.hash}`);
     }}
     >
     <AppImplImpl />
