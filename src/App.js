@@ -220,10 +220,13 @@ function AppImpl() {
 
   return <Auth0Provider
     domain='lordlandmaster.us.auth0.com'
-    clientId='wyzIQ763QxIMn9UD6dVptW4jtK9dlq2c' authorizationParams={{
+    clientId='wyzIQ763QxIMn9UD6dVptW4jtK9dlq2c'
+    authorizationParams={{
       redirect_uri: window.location.origin,
       audience: 'https://btd6index.win/'
     }}
+    useRefreshTokens
+    cacheLocation='localstorage'
     onRedirectCallback={(state) => {
       navigate(state?.returnTo ?? `${window.location.pathname}${window.location.search}${window.location.hash}`);
     }}
