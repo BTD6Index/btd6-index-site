@@ -34,11 +34,11 @@ export async function onRequest(context) {
         }
         return searchParams.get(field);
     });
-    if (isNaN(offset)) {
+    if (isNaN(offset) || offset < 0) {
         return Response.json({error: `invalid offset ${offset}`}, {status: 400});
     }
-    if (offset < 0 || count <= 0) {
-        return Response.json({results: [], more: false});
+    if (isNaN(count) || count < 0) {
+        return Response.json({error: `invalid count ${count}`}, {status: 400});
     }
 
     try {
