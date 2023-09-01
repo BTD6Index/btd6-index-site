@@ -34,7 +34,7 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
                     let newParams = {};
                     for (let dataKey of formData.keys()) {
                         if (dataKey.startsWith('edited-')) {
-                            newParams[dataKey.substring(7)] = formData.get(dataKey.substring(7));
+                            newParams[dataKey.substring(7)] = formData.get(dataKey.substring(7)) ?? formData.get(dataKey);
                         }
                     }
                     forceReloadVar();

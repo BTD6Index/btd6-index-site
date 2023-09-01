@@ -12,6 +12,12 @@ function sqlArrayCondition(paramNo, fields, altFieldIndexOrder = null) {
     ).join(' AND ');
 }
 
+function getWebhookUrls(context, verify) {
+    const webhookVar = context.env[verify ? 'WEBHOOKS' : 'WEBHOOKS_PENDING'];
+    const webhookUrls = typeof webhookVar === 'string' ? JSON.parse(webhookVar) : (webhookVar ?? []);
+    return webhookUrls;
+}
+
 async function processImages({imageKey, editMode, formData, media, context, link, hasImage}) {
     if (editMode) {
         if (link) {
@@ -60,7 +66,7 @@ async function handleAddSubmit({
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
-    const is_helper = jwtResult.payload.permissions.includes('write:admin');
+    const isHelper = jwtResult.payload.permissions.includes('write:admin');
 
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
@@ -72,9 +78,8 @@ async function handleAddSubmit({
 
     let formData = await context.request.formData();
 
-    const verify = formData.has('verify') && is_helper;
-    const webhookVar = context.env[verify ? 'WEBHOOKS' : 'WEBHOOKS_PENDING'];
-    const webhookUrls = typeof webhookVar === 'string' ? JSON.parse(webhookVar) : (webhookVar ?? []);
+    const verify = formData.has('verify') && isHelper;
+    const webhookUrls = getWebhookUrls(context, verify);
 
     const editMode = ['true', '1'].includes(formData.get('edit'));
 
@@ -106,7 +111,7 @@ async function handleAddSubmit({
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
 
     const delete_completion_statement = `DELETE FROM "${challenge}_completions" WHERE ${sqlArrayCondition(1, fields)} `
-        + `AND ${is_helper ? `?2 = ?2` : `pending = ?2`} RETURNING *`;
+        + `AND ${isHelper ? `?2 = ?2` : `pending = ?2`} RETURNING *`;
     const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${sqlArrayCondition(1, shared_fields)}`;
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${sqlArrayCondition(1, fields)}`;
     const update_filekeys_stmt = `UPDATE "${challenge}_filekeys" SET (${fields.join(',')}) = (${expandSQLArray(1, fields.length)}) `
@@ -210,4 +215,4 @@ async function handleAddSubmit({
     return Response.json({ inserted: true });
 }
 
-export { handleAddSubmit, processImages };
+export { handleAddSubmit, processImages, getWebhookUrls };

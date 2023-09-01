@@ -191,3 +191,31 @@ CREATE TRIGGER "ltc_completions_au" AFTER UPDATE ON "ltc_completions" BEGIN
         new.upgradeset, new.version, new.date, new.notes, new.filekey
     );
 END;
+
+-- Least Cost CHIMPS
+CREATE TABLE "lcc_completions" (
+    map, money INTEGER, person, link, pending,
+    version, date, notes, filekey PRIMARY KEY
+);
+CREATE VIRTUAL TABLE "lcc_completions_fts" USING fts5(
+    map, money, person, link, pending UNINDEXED,
+    version, date, notes UNINDEXED, filekey UNINDEXED,
+    content='lcc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+);
+
+CREATE TRIGGER "lcc_completions_ai" AFTER INSERT ON "lcc_completions" BEGIN 
+    INSERT INTO "lcc_completions_fts" (rowid, map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
+END;
+
+CREATE TRIGGER "lcc_completions_ad" AFTER DELETE ON "lcc_completions" BEGIN 
+    INSERT INTO "lcc_completions_fts" (rowid, "lcc_completions_fts", map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (old.rowid, 'delete', old.map, old.money, old.person, old.link, old.pending, old.version, old.date, old.notes, old.filekey);
+END;
+
+CREATE TRIGGER "lcc_completions_au" AFTER UPDATE ON "lcc_completions" BEGIN 
+    INSERT INTO "lcc_completions_fts" (rowid, "lcc_completions_fts", map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (old.rowid, 'delete', old.map, old.money, old.person, old.link, old.pending, old.version, old.date, old.notes, old.filekey);
+    INSERT INTO "lcc_completions_fts" (rowid, map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
+END;

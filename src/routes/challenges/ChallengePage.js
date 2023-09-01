@@ -19,7 +19,8 @@ export default function ChallengePage({
     personFieldHeaders = ['Player'],
     auxFieldHeaders = [],
     fieldDisplayFunc = null,
-    disableOG = false
+    disableOG = false,
+    fieldsInvisible = false
 }) {
     const defaultFieldDisplayFunc = useCallback(
         ({ fieldName: _dummy, fieldValue, completion: _dummy1 }) => fieldValue || 'N/A',
@@ -94,7 +95,7 @@ export default function ChallengePage({
                     <thead>
                         <tr>
                             {!isLoading && isAuthenticated && <th>Select</th>}
-                            {fieldHeaders.concat(altFieldHeaders).map(fh => <th key={fh}>{fh}</th>)}
+                            {!fieldsInvisible && fieldHeaders.concat(altFieldHeaders).map(fh => <th key={fh}>{fh}</th>)}
                             {personFieldHeaders.map(header => <th key={header}>{header}</th>)}
                             {auxFieldHeaders.map(header => <th key={header}>{header}</th>)}
                             <th>Info</th>
@@ -122,7 +123,7 @@ export default function ChallengePage({
                                             />}
                                         </td>}
                                         {
-                                            fields.concat(altFields)
+                                            !fieldsInvisible && fields.concat(altFields)
                                                 .map(field => <td key={field}>{fieldDisplayFunc({
                                                     fieldName: field, fieldValue: completion[field], completion
                                                 })}</td>)

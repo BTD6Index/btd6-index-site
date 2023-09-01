@@ -85,4 +85,61 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
     }
 }
 
-export {handleFetch};
+async function handleFetchFlat({context, databaseTable, fields, personFields}) {
+    const db = context.env.BTD6_INDEX_DB;
+
+    let searchParams = new URL(context.request.url).searchParams;
+    let offset = parseInt(searchParams.get('offset') ?? '0');
+    let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
+
+    let fieldKeys = [
+        'query', ...fields, ...personFields
+    ];
+    let sql_condition = (paramPos) => {
+        return fieldKeys.flatMap((field, idx) => {
+            if (!searchParams.has(field)) {
+                return [];
+            } else if (field === 'query') {
+                return searchParams.get(field) ? [`"${databaseTable}" MATCH json_extract(?${paramPos}, '$[${idx}]')`] : [];
+            } else if (field === 'pending') {
+                return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
+            } else {
+                return [`${field} = json_extract(?${paramPos}, '$[${idx}]') ${personFields.includes(field) ? 'COLLATE NOCASE' : ''}`];
+            }
+        }).join(' AND ') || `?${paramPos} = ?${paramPos}`;
+    }
+    let fieldValues = fieldKeys.map(field => {
+        if (!searchParams.has(field)) {
+            return '';
+        }
+        if (field === 'query') {
+            return processQuery(searchParams.get(field), fieldKeys.filter(field => field != 'query'));
+        }
+        return searchParams.get(field);
+    });
+    if (isNaN(offset) || offset < 0) {
+        return Response.json({error: `invalid offset ${offset}`}, {status: 400});
+    }
+    if (isNaN(count) || count < 0) {
+        return Response.json({error: `invalid count ${count}`}, {status: 400});
+    }
+
+    try {
+        const res = await db.batch([
+            db.prepare(`SELECT * FROM "${databaseTable}" WHERE ${sql_condition(1)} ORDER BY map LIMIT ?2 OFFSET ?3`)
+            .bind(JSON.stringify(fieldValues), count+1, offset),
+            db.prepare(`SELECT COUNT(*) FROM "${databaseTable}" WHERE ${sql_condition(1)} ORDER BY map`)
+            .bind(JSON.stringify(fieldValues))
+        ]);
+
+        return Response.json({
+            results: res[0]['results'].slice(0, count),
+            more: res[0]['results'].length > count,
+            count: res[1]['results'][0]['COUNT(*)']
+        });
+    } catch (e) {
+        return Response.json({error: e.message}, {status: 400});
+    }
+}
+
+export {handleFetch, handleFetchFlat};

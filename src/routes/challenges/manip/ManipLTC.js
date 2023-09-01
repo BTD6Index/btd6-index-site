@@ -52,7 +52,6 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             )).then(async (res) => {
                 let json = await res.json();
                 setExistingInfo(json.results);
-                console.log(json.results[0].filekey);
                 let attachRes = await fetch('/list-attachments?' + new URLSearchParams({key: json.results[0].filekey}));
                 attachRes = await attachRes.json();
                 setExistingAttachments(attachRes.files);

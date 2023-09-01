@@ -1,4 +1,4 @@
-import { processImages, getWebhookUrls } from "./handleAddSubmit";
+import { getWebhookUrls, processImages } from "./handleAddSubmit";
 
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
@@ -7,7 +7,6 @@ function expandSQLArray(paramNo, arrayLen) {
     }
     return buf.join(',');
 }
-
 
 export async function onRequest(context) {
     const db = context.env.BTD6_INDEX_DB;
@@ -30,8 +29,8 @@ export async function onRequest(context) {
 
     const editMode = ['true', '1'].includes(formData.get('edit'));
 
-    const fieldKeys = ['map', 'towerset', 'person', 'completiontype', 'upgradeset', 'version', 'date', 'notes'];
-    const requiredFieldKeys = ['map', 'towerset', 'person', 'completiontype', 'upgradeset', 'notes'];
+    const fieldKeys = ['map', 'money', 'person', 'version', 'date', 'notes'];
+    const requiredFieldKeys = [...fieldKeys];
     for (let key of requiredFieldKeys) {
         if (!formData.has(key)) {
             return respondError(`Missing required key: ${key}`);
@@ -54,22 +53,20 @@ export async function onRequest(context) {
 
     let query;
     if (editMode) {
-        query = db.prepare(
-            `UPDATE "ltc_completions" SET (${fieldKeys.join(',')}, link, pending) = (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3) `
-            + `WHERE (map, towerset, completiontype) = (?4, ?5, ?6) AND ${isHelper ? 'TRUE' : 'pending = ?3'} RETURNING filekey`
-        ).bind(
+        query = db.prepare(`
+            UPDATE "lcc_completions" SET (${fieldKeys.join(',')}, link, pending) = (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3)
+            WHERE filekey = ?4 AND ${isHelper ? 'TRUE' : 'pending = ?3'} RETURNING filekey
+        `).bind(
             JSON.stringify(fieldValues),
             link,
             verify ? null : jwtResult.payload.sub,
-            formData.get('edited-map'),
-            formData.get('edited-towerset'),
-            formData.get('edited-completiontype')
-            );
+            formData.get('edited-filekey')
+        );
     } else {
-        query = db.prepare(
-            `INSERT INTO "ltc_completions" (${fieldKeys.join(',')}, link, pending, filekey) `
-            + `VALUES (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3, ?4) RETURNING filekey`
-        ).bind(
+        query = db.prepare(`
+            INSERT INTO "lcc_completions" (${fieldKeys.join(',')}, link, pending, filekey)
+            VALUES (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3, ?4) RETURNING filekey
+        `).bind(
             JSON.stringify(fieldValues),
             link,
             verify ? null : jwtResult.payload.sub,
@@ -83,22 +80,20 @@ export async function onRequest(context) {
         return respondError(e.message);
     }
 
-    await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
+    await processImages({imageKey, context, editMode, formData, media, link, hasImage});
     
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(
             media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
                 await fetch(webhookUrl, {
                     body: JSON.stringify({
-                        "content": `**(${JSON.parse(formData.get('towerset')).join(', ')}) ${formData.get('completiontype').toUpperCase()} LTC on ${formData.get('map')} ${
+                        "content": `**${formData.get('map')} LCC ($${formData.get('money')}) on ${formData.get('map')} ${
                             editMode ? 'Edited' : 'Submitted'
                         }${verify ? ' and Verified' : ''}**\n`
                         + `Person: ${formData.get('person')}\n`
                         + `Link: ${link || `https://media.btd6index.win/${imageKey}`}\n`
-                        + `Notes and Attachments: https://btd6index.win/ltc/notes?${new URLSearchParams({
-                            towerset: formData.get('towerset'),
-                            map: formData.get('map'),
-                            completiontype: formData.get('completiontype')
+                        + `Notes and Attachments: https://btd6index.win/lcc/notes?${new URLSearchParams({
+                            filekey: formData.get('edited-filekey')
                         })}`,
                         "username": "Glue Rat",
                         "avatar_url": "https://btd6index.win/static/media/GlueGunnerPetRatIcon.949fcb9e188713ce4e4e.png",

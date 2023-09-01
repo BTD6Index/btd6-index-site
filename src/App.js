@@ -33,6 +33,10 @@ import LTC from './routes/challenges/LTC';
 import LTCRules from './routes/challenges/rules/LTCRules';
 import LTCNotes from './routes/challenges/notes/LTCNotes';
 import { AddLTC, EditLTC } from './routes/challenges/manip/ManipLTC';
+import LCC from './routes/challenges/LCC';
+import { AddLCC, EditLCC } from './routes/challenges/manip/ManipLCC';
+import LCCNotes from './routes/challenges/notes/LCCNotes';
+import LCCRules from './routes/challenges/rules/LCCRules';
 
 
 const router = createBrowserRouter([
@@ -61,6 +65,10 @@ const router = createBrowserRouter([
         element: <LTC />
       },
       {
+        path: "lcc",
+        element: <LCC />
+      },
+      {
         path: "2tcc",
         element: <TwoTCC />
       },
@@ -85,6 +93,10 @@ const router = createBrowserRouter([
         element: <AddLTC />
       },
       {
+        path: "add-lcc-form",
+        element: <AddLCC />
+      },
+      {
         path: "edit-2mp-form",
         element: <EditTwoMP />
       },
@@ -103,6 +115,10 @@ const router = createBrowserRouter([
       {
         path: "edit-ltc-form",
         element: <EditLTC />
+      },
+      {
+        path: "edit-lcc-form",
+        element: <EditLCC />
       },
       {
         path: "2tc/extra-info",
@@ -141,6 +157,10 @@ const router = createBrowserRouter([
         element: <LTCNotes />
       },
       {
+        path: "lcc/notes",
+        element: <LCCNotes />
+      },
+      {
         path: "2mp/rules",
         element: <TwoMPRules />
       },
@@ -159,6 +179,10 @@ const router = createBrowserRouter([
       {
         path: "ltc/rules",
         element: <LTCRules />
+      },
+      {
+        path: "lcc/rules",
+        element: <LCCRules />
       },
       {
         path: "*",
@@ -198,6 +222,7 @@ function AppImplImpl() {
               <li><a className='nolinkstyle' href='/fttc'>FTTC</a></li>
               <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
               <li><a className='nolinkstyle' href='/ltc'>LTC</a></li>
+              <li><a className='nolinkstyle' href='/lcc'>LCC</a></li>
             </ul>
           </li>
           <li>

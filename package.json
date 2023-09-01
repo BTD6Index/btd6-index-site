@@ -21,8 +21,8 @@
   },
   "scripts": {
     "start": "concurrently -k true 'npm:start-react' 'npm:start-wrangler'",
-    "start-react": "cross-env BROWSER=none react-scripts start",
-    "start-wrangler": "wrangler pages dev --proxy 3000",
+    "start-react": "npx cross-env BROWSER=none react-scripts start",
+    "start-wrangler": "node --dns-result-order=ipv4first node_modules/wrangler/bin/wrangler.js pages dev --proxy 3000",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
