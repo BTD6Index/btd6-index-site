@@ -87,7 +87,7 @@ export async function onRequest(context) {
             media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
                 await fetch(webhookUrl, {
                     body: JSON.stringify({
-                        "content": `**${formData.get('map')} LCC ($${formData.get('money')}) on ${formData.get('map')} ${
+                        "content": `**${formData.get('map')} LCC ($${formData.get('money')}) on Version ${formData.get('version')} ${
                             editMode ? 'Edited' : 'Submitted'
                         }${verify ? ' and Verified' : ''}**\n`
                         + `Person: ${formData.get('person')}\n`
