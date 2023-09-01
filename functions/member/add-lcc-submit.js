@@ -93,7 +93,7 @@ export async function onRequest(context) {
                         + `Person: ${formData.get('person')}\n`
                         + `Link: ${link || `https://media.btd6index.win/${imageKey}`}\n`
                         + `Notes and Attachments: https://btd6index.win/lcc/notes?${new URLSearchParams({
-                            filekey: formData.get('edited-filekey')
+                            filekey: imageKey
                         })}`,
                         "username": "Glue Rat",
                         "avatar_url": "https://btd6index.win/static/media/GlueGunnerPetRatIcon.949fcb9e188713ce4e4e.png",
