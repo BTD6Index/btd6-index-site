@@ -215,7 +215,7 @@ async function handleAddSubmit({
     return Response.json({ inserted: true });
 }
 
-export async function handleAddSubmitLCCLike({context, challenge}) {
+async function handleAddSubmitLCCLike({context, challenge}) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
