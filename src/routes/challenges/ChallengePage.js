@@ -32,7 +32,7 @@ export default function ChallengePage({
         completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
     } = useIndexSearch(`/fetch-${challenge}`);
 
-    const { list: selectedCompletions, toggleElement: toggleSelectedCompletions } = useToggleList();
+    const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
 
     const deleteForm = useRef(null);
 
@@ -62,6 +62,7 @@ export default function ChallengePage({
                     throw new Error(result.error);
                 } else {
                     window.alert(`Successfully deleted ${challenge}.`);
+                    setSelectedCompletions([]);
                     forceReload();
                 }
             } catch (error) {
