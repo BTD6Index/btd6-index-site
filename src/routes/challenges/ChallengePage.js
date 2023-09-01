@@ -69,7 +69,7 @@ export default function ChallengePage({
                 window.alert(`Error deleting ${challenge}: ${error.message}`);
             }
         }
-    }, [selectedCompletions, deleteForm, getToken, forceReload, challenge]);
+    }, [selectedCompletions, deleteForm, getToken, forceReload, challenge, setSelectedCompletions]);
 
     return <>
         <h1>{header}</h1>
