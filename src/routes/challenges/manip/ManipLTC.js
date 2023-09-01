@@ -168,7 +168,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
-                <label htmlFor="notes">Completion Notes/Proof</label>
+                <label htmlFor="notes">Completion Notes/Proof (include challenge code here)</label>
                 <textarea name="notes" rows="5" cols="40" defaultValue={existingInfo?.[0]?.notes}></textarea>
             </span>
             <br />
