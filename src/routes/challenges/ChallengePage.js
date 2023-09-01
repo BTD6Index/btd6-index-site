@@ -46,7 +46,8 @@ export default function ChallengePage({
             try {
                 const token = await getToken({
                     authorizationParams: {
-                        audience: 'https://btd6index.win/'
+                        audience: 'https://btd6index.win/',
+                        scope: 'openid email profile offline_access'
                     }
                 });
                 let result = await fetch(deleteForm.current.action, {

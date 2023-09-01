@@ -15,7 +15,8 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
         }
         getToken({
             authorizationParams: {
-                audience: 'https://btd6index.win/'
+                audience: 'https://btd6index.win/',
+                scope: 'openid email profile offline_access'
             }
         }).then(async (token) => {
             let result = await fetch(formRef.current.action, {

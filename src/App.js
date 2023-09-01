@@ -248,7 +248,8 @@ function AppImpl() {
     clientId='wyzIQ763QxIMn9UD6dVptW4jtK9dlq2c'
     authorizationParams={{
       redirect_uri: window.location.origin,
-      audience: 'https://btd6index.win/'
+      audience: 'https://btd6index.win/',
+      scope: 'openid email profile offline_access'
     }}
     useRefreshTokens
     cacheLocation='localstorage'
