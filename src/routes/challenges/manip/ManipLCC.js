@@ -78,12 +78,12 @@ function ManipLCC({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="version">Update</label>
-                <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} />
+                <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="date">Completion Date</label>
-                <input name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} />
+                <input name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} required />
             </span>
             <br />
             {editParams && <input type="hidden" name='edited-filekey' value={editParams.get('filekey') ?? undefined} />}
