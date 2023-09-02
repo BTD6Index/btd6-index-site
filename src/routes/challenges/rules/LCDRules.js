@@ -10,7 +10,7 @@ export default function LCDRules() {
             The "Least Cash" condition should initially be set to "No Score Set".
             <strong>Unlike most other Index challenges, setting the condition to 99999999 cash is not allowed, as the challenge code needs to incorporate the cash spent.</strong>
             All sliders must be set to 100%.
-            Monkey Knowledge is allowed, but no powers or continues are allowed.
+            Monkey Knowledge is allowed, but no powers, continues, or <strong>selling</strong> are allowed.
         </p>
         <h2>Version-Related Requirements</h2>
         <p>
