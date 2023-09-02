@@ -42,6 +42,12 @@ nav > ul, .dropdown {
   z-index: 2;
 }
 
+.dropdown {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 h1, h2, h3, h4, h5, h6, p {
   margin: 0.3em 0;
 }
@@ -63,16 +69,20 @@ h1, h2, h3, h4, h5, h6, p {
     border: 1px solid white;
     top: 100%;
     right: 0;
-    padding: 0.1em;
+    padding: 0.3em;
   }
 
   nav > ul:hover, nav:hover > ul {
-    display: initial;
+    display: flex;
+    flex-direction: row;
+    width: 85vw;
+    flex-wrap: wrap;
+    gap: 0.5em;
   }
 
   .dropdown {
     font-size: 75%;
-    padding-left: 1em;
+    padding-left: 0;
   }
 }
 
@@ -89,11 +99,15 @@ h1, h2, h3, h4, h5, h6, p {
     display: none;
     position: absolute;
     top: 100%;
-    width: 100%;
+    min-width: 100%;
     border: 1px solid white;
     border-radius: 0.15em;
     padding: 0.2em;
     font-size: 75%;
+  }
+
+  li:last-child > .dropdown {
+    right: 0;
   }
 
   li:hover .dropdown, .dropdown:hover {

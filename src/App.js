@@ -230,8 +230,9 @@ function AppImplImpl() {
             !isLoading && (
               isAuthenticated
               ? <li>
-                  {user.email}
+                  Account
                   <ul className='dropdown'>
+                    <strong>{user.email}</strong>
                     <li onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Logout</li>
                   </ul>
                 </li>
