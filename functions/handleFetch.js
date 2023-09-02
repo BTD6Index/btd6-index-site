@@ -142,4 +142,26 @@ async function handleFetchFlat({context, databaseTable, fields, personFields}) {
     }
 }
 
-export {handleFetch, handleFetchFlat};
+async function handleFetchOgInfo({context, challenge, joinFields, altJoinFields}) {
+    let searchParams = new URL(context.request.url).searchParams;
+    let joinFieldVals = joinFields.map(field => searchParams.get(field));
+    if (joinFieldVals.some(val => val === null)) {
+        return Response.json({error: `need ${joinFieldVals.join(', ')} specified`}, {status: 400});
+    }
+    let res = await context.env.BTD6_INDEX_DB
+    .prepare(`
+        SELECT * FROM "${challenge}_extra_info" AS a INNER JOIN "${challenge}_completions" AS b
+        ON ${joinFields.map(field => `a.${field} = b.${field}`).join(' AND ')} AND b.og = 1
+        INNER JOIN "${challenge}_filekeys" AS c
+        ON ${joinFields.concat(altJoinFields).map(field => `b.${field} = c.${field}`).join(' AND ')}
+        WHERE ${joinFields.map((field, idx) => `b.${field} = ?${idx+1}`).join(' AND ')}
+    `)
+    .bind(...joinFieldVals)
+    .first();
+    if (res === null) {
+        return Response.json({error: 'specified completion doesn\'t exist'}, {status: 400});
+    }
+    return Response.json({result: res});
+}
+
+export {handleFetch, handleFetchFlat, handleFetchOgInfo};
