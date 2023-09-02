@@ -30,7 +30,7 @@ export default function TwoMPExtraInfo() {
         <h2>Tower: {info.entity} ({info.upgrade})</h2>
         <p>Update: {info.version}</p>
         <p>Date of completion (yyyy-mm-dd): {info.date}</p>
-        <p><a href={info.link}>Link to completion</a></p>
+        <p><a href={info.link ?? `https://media.btd6index.win/${info.filekey}`}>Link to completion</a></p>
         <p><a href="/2mp">Back to 2MPs</a></p>
     </>
 };

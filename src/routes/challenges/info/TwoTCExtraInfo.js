@@ -30,7 +30,7 @@ export default function TwoTCExtraInfo() {
         <h2>{info.tower1} ({info.upgrade1}) and {info.tower2} ({info.upgrade2})</h2>
         <p>Update: {info.version}</p>
         <p>Date of completion (yyyy-mm-dd): {info.date}</p>
-        <p><a href={info.link}>Link to completion</a></p>
+        <p><a href={info.link ?? `https://media.btd6index.win/${info.filekey}`}>Link to completion</a></p>
         <p><a href="/2tc">Back to 2TCs</a></p>
     </>
 };

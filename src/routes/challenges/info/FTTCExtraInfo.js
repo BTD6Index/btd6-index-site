@@ -29,7 +29,7 @@ export default function FTTCExtraInfo() {
         <h1>Additional Info for OG FTTC</h1>
         <p>Update: {info.version}</p>
         <p>Date of completion (yyyy-mm-dd): {info.date}</p>
-        <p><a href={info.link}>Link to completion</a></p>
+        <p><a href={info.link ?? `https://media.btd6index.win/${info.filekey}`}>Link to completion</a></p>
         <p><a href="/fttc">Back to FTTCs</a></p>
     </>
 };
