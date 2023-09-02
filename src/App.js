@@ -256,6 +256,7 @@ function AppImpl() {
     onRedirectCallback={(state) => {
       navigate(state?.returnTo ?? `${window.location.pathname}${window.location.search}${window.location.hash}`);
     }}
+    useRefreshTokensFallback 
     >
     <AppImplImpl />
   </Auth0Provider>;
