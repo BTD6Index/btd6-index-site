@@ -219,3 +219,31 @@ CREATE TRIGGER "lcc_completions_au" AFTER UPDATE ON "lcc_completions" BEGIN
     INSERT INTO "lcc_completions_fts" (rowid, map, money, person, link, pending, version, date, notes, filekey)
     VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
 END;
+
+-- Least Cost Deflation
+CREATE TABLE "lcd_completions" (
+    map, money INTEGER, person, link, pending,
+    version, date, notes, filekey PRIMARY KEY
+);
+CREATE VIRTUAL TABLE "lcd_completions_fts" USING fts5(
+    map, money, person, link, pending UNINDEXED,
+    version, date, notes UNINDEXED, filekey UNINDEXED,
+    content='lcd_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+);
+
+CREATE TRIGGER "lcd_completions_ai" AFTER INSERT ON "lcd_completions" BEGIN 
+    INSERT INTO "lcd_completions_fts" (rowid, map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
+END;
+
+CREATE TRIGGER "lcd_completions_ad" AFTER DELETE ON "lcd_completions" BEGIN 
+    INSERT INTO "lcd_completions_fts" (rowid, "lcd_completions_fts", map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (old.rowid, 'delete', old.map, old.money, old.person, old.link, old.pending, old.version, old.date, old.notes, old.filekey);
+END;
+
+CREATE TRIGGER "lcd_completions_au" AFTER UPDATE ON "lcd_completions" BEGIN 
+    INSERT INTO "lcd_completions_fts" (rowid, "lcd_completions_fts", map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (old.rowid, 'delete', old.map, old.money, old.person, old.link, old.pending, old.version, old.date, old.notes, old.filekey);
+    INSERT INTO "lcd_completions_fts" (rowid, map, money, person, link, pending, version, date, notes, filekey)
+    VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
+END;
