@@ -59,7 +59,7 @@ function ManipLCD({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="money">Cash Spent</label>
-                <input name="money" type="number" style={{ width: '20ch' }} min={0} max={20000} defaultValue={existingInfo?.[0]?.money} required />
+                <input name="money" type="number" style={{ width: '20ch' }} min={0} max={20200} defaultValue={existingInfo?.[0]?.money} required />
             </span>
             <br />
             <span className="formLine">
