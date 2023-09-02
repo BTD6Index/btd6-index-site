@@ -37,6 +37,10 @@ import LCC from './routes/challenges/LCC';
 import { AddLCC, EditLCC } from './routes/challenges/manip/ManipLCC';
 import LCCNotes from './routes/challenges/notes/LCCNotes';
 import LCCRules from './routes/challenges/rules/LCCRules';
+import LCD from './routes/challenges/LCD';
+import { AddLCD, EditLCD } from './routes/challenges/manip/ManipLCD';
+import LCDNotes from './routes/challenges/notes/LCDNotes';
+import LCDRules from './routes/challenges/rules/LCDRules';
 
 
 const router = createBrowserRouter([
@@ -69,6 +73,10 @@ const router = createBrowserRouter([
         element: <LCC />
       },
       {
+        path: "lcd",
+        element: <LCD />
+      },
+      {
         path: "2tcc",
         element: <TwoTCC />
       },
@@ -97,6 +105,10 @@ const router = createBrowserRouter([
         element: <AddLCC />
       },
       {
+        path: "add-lcd-form",
+        element: <AddLCD />
+      },
+      {
         path: "edit-2mp-form",
         element: <EditTwoMP />
       },
@@ -119,6 +131,10 @@ const router = createBrowserRouter([
       {
         path: "edit-lcc-form",
         element: <EditLCC />
+      },
+      {
+        path: "edit-lcd-form",
+        element: <EditLCD />
       },
       {
         path: "2tc/extra-info",
@@ -161,6 +177,10 @@ const router = createBrowserRouter([
         element: <LCCNotes />
       },
       {
+        path: "lcd/notes",
+        element: <LCDNotes />
+      },
+      {
         path: "2mp/rules",
         element: <TwoMPRules />
       },
@@ -183,6 +203,10 @@ const router = createBrowserRouter([
       {
         path: "lcc/rules",
         element: <LCCRules />
+      },
+      {
+        path: "lcd/rules",
+        element: <LCDRules />
       },
       {
         path: "*",
@@ -223,6 +247,7 @@ function AppImplImpl() {
               <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
               <li><a className='nolinkstyle' href='/ltc'>LTC</a></li>
               <li><a className='nolinkstyle' href='/lcc'>LCC</a></li>
+              <li><a className='nolinkstyle' href='/lcd'>LCD</a></li>
             </ul>
           </li>
           <li>

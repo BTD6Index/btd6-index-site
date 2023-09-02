@@ -18,6 +18,12 @@
 	<url>
 		<loc>https://btd6index.win/ltc</loc>
 	</url>
+	<url>
+		<loc>https://btd6index.win/lcc</loc>
+	</url>
+	<url>
+		<loc>https://btd6index.win/lcd</loc>
+	</url>
     <url>
 		<loc>https://btd6index.win/2tc/rules</loc>
 	</url>
@@ -32,5 +38,11 @@
 	</url>
 	<url>
 		<loc>https://btd6index.win/ltc/rules</loc>
+	</url>
+	<url>
+		<loc>https://btd6index.win/lcc/rules</loc>
+	</url>
+	<url>
+		<loc>https://btd6index.win/lcd/rules</loc>
 	</url>
 </urlset>
