@@ -8,7 +8,7 @@ export default function LCDRules() {
             Starting Cash, Starting Lives, Max Lives, Start Round, and End Round must be set to their default values.
             The end round must strictly be set to Round 60.
             The "Least Cash" condition should initially be set to "No Score Set".
-            <strong>Unlike most other Index challenges, setting the condition to 99999999 cash is not allowed, as the challenge code needs to incorporate the cash spent.</strong>
+            <strong> Unlike most other Index challenges, setting the condition to 99999999 cash is not allowed, as the challenge code needs to incorporate the cash spent. </strong>
             All sliders must be set to 100%.
             Monkey Knowledge is allowed, but no powers, continues, or <strong>selling</strong> are allowed.
         </p>
