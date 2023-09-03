@@ -4,28 +4,22 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "jose": "^4.14.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.7",
     "react-router-dom": "^6.14.2",
-    "react-scripts": "^5.0.1",
     "react-select": "^5.7.4",
     "remark-gfm": "^3.0.1",
+    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
-    "wrangler": "^3.4.0",
-    "typescript": "^4.9.5"
+    "wrangler": "^3.4.0"
   },
   "scripts": {
     "start": "concurrently -k true 'npm:start-react' 'npm:start-wrangler'",
-    "start-react": "npx cross-env BROWSER=none react-scripts start",
-    "start-wrangler": "node --dns-result-order=ipv4first node_modules/wrangler/bin/wrangler.js pages dev --proxy 3000",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start-react": "npx cross-env BROWSER=none vite dev",
+    "start-wrangler": "npx wrangler pages dev --proxy 5173",
+    "build": "vite build"
   },
   "eslintConfig": {
     "extends": [
@@ -47,7 +41,12 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@vitejs/plugin-react": "^4.0.4",
     "concurrently": "^8.2.0",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "vite": "^4.4.9"
   }
 }
