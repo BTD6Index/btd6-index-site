@@ -27,4 +27,5 @@ body::before {
 #root {
   position: absolute;
   width: 100vw;
+  padding-bottom: 7.5vh;
 }
