@@ -101,7 +101,7 @@ export async function onRequest(context) {
                             completiontype: formData.get('completiontype')
                         })}`,
                         "username": "Glue Rat",
-                        "avatar_url": "https://btd6index.win/assets/GlueGunnerPetRatIcon-71c523e8.png",
+                        "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
                         "attachments": []
                     }),
                     method: "post",

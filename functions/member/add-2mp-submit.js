@@ -17,7 +17,7 @@ export async function onRequest(context) {
                     map: formData.get('map')
                 })}`,
                 "username": "Glue Rat",
-                "avatar_url": "https://btd6index.win/assets/GlueGunnerPetRatIcon-71c523e8.png",
+                "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
                 "attachments": []
             };
         }

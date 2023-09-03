@@ -1,4 +1,3 @@
-import glueRat from './GlueGunnerPetRatIcon.png';
 import './App.css';
 import HomePage from './routes/HomePage';
 import {
@@ -221,7 +220,7 @@ function AppImplImpl() {
   return <div>
     <header>
       <a className='nolinkstyle' href='/'>
-        <img className='glueRat' alt='glue rat' src={glueRat} />
+        <img className='glueRat' alt='glue rat' src='/GlueGunnerPetRatIcon.png' />
         <span className='websiteTopLeftTitle'>BTD6 Index</span>
       </a>
       <nav>
