@@ -221,3 +221,15 @@ input[type="file"] {
 .attachment {
   max-width: 20em;
 }
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 0.35em;
+}
+
+.multiline {
+  white-space: pre-line;
+}

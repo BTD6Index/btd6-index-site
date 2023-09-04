@@ -34,6 +34,7 @@ google_service_creds/*.json
 __pycache__
 
 /out.json
+/out.yml
 
 drive-migrate.py
 assign-mime-types.py

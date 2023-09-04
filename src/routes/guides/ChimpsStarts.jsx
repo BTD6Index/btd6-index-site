@@ -9,8 +9,6 @@ import selectStyle from "../../util/selectStyle";
 export default function ChimpsStarts() {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    console.log(CHIMPS_STARTS[searchParams.get('map')] ?? `No CHIMPS starts for ${searchParams.get('map')} found`);
-
     return <>
         <h1>CHIMPS Starts</h1>
         <p>Select a map in the dropdown below to view useful CHIMPS earlygames. (WIP)</p>
