@@ -41,6 +41,7 @@ import { AddLCD, EditLCD } from './routes/challenges/manip/ManipLCD';
 import LCDNotes from './routes/challenges/notes/LCDNotes';
 import LCDRules from './routes/challenges/rules/LCDRules';
 import ChimpsStarts from './routes/guides/ChimpsStarts';
+import Maps from './routes/reference/Maps';
 
 
 const router = createBrowserRouter([
@@ -209,6 +210,10 @@ const router = createBrowserRouter([
         element: <LCDRules />
       },
       {
+        path: "maps",
+        element: <Maps />
+      },
+      {
         path: "chimps-starts",
         element: <ChimpsStarts />
       },
@@ -256,9 +261,15 @@ function AppImplImpl() {
             </ul>
           </li>
           <li>
+            Reference
+            <ul className='dropdown'>
+              <li><a className='nolinkstyle' href='/maps'>Maps</a></li>
+            </ul>
+          </li>
+          <li>
             Guides
             <ul className='dropdown'>
-            <li><a className='nolinkstyle' href='/chimps-starts'>CHIMPS Starts</a></li>
+              <li><a className='nolinkstyle' href='/chimps-starts'>CHIMPS Starts</a></li>
             </ul>
           </li>
         </ul>

@@ -1,6 +1,6 @@
 import towerNames from './tower-names.json';
 import heroNames from './heroes.json';
-import maps from './maps.json';
+import { useEffect, useState } from 'react';
 
 const towerToOptions = new Map(
     Object.values(towerNames)
@@ -13,9 +13,20 @@ const towerTypeToOptions = new Map(
     .map(key => [key, {value: key, label: key}])
 );
 
-const mapToOptions = new Map(
-    Object.entries(maps)
-        .map(entry => [entry[0], {value: entry[0], label: entry[0]}])
-);
+function useMapToOptions() {
+    const [mapToOptions, setMapToOptions] = useState(new Map());
 
-export {towerToOptions, mapToOptions, towerTypeToOptions};
+    useEffect(() => {
+        fetch('/list-maps')
+        .then(async (res) => {
+            let mapsList = await res.json();
+            setMapToOptions(
+                new Map(mapsList.results.map(mapName => [mapName, {value: mapName, label: mapName}]))
+            );
+        });
+    }, []);
+    
+    return mapToOptions;
+}
+
+export {towerToOptions, useMapToOptions, towerTypeToOptions};

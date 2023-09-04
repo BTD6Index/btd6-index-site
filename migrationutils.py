@@ -1,6 +1,7 @@
 import re
 
-def sql_escape(s: str):
+def sql_escape(s: str | None):
+    if s is None: return 'NULL'
     return "'" + s.replace("'", "''") + "'"
 
 def date_to_sql(d: str):

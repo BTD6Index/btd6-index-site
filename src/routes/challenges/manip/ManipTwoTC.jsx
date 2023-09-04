@@ -2,10 +2,11 @@ import Select from "react-select";
 import selectStyle from "../../../util/selectStyle";
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
+import { towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useFetchExistingInfo, useSubmitCallback, AttachmentsWidget, FormLinkImageEntry} from "./manipCommon";
+import MapSelect from "../../../util/MapSelect";
 
 const FIELDS = ['tower1', 'tower2']; // needs to be outside so react doesn't treat value as changed every re-render
 
@@ -61,9 +62,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} defaultValue={
-                    mapToOptions.get(editParams?.get('map')) ?? undefined
-                    } required />
+                <MapSelect name="map" mapValue={editParams?.get('map')} required />
             </span>
             <br />
             <span className="formLine">
