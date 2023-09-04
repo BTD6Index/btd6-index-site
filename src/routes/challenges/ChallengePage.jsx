@@ -3,7 +3,6 @@ import useIndexSearch from "../../util/useIndexSearch";
 import useToggleList from "../../util/useToggleList";
 import { useRef, useCallback } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
-import { imageObjectRegex } from "../../util/imageObjectRegex";
 import useAccessToken from "../../util/useAccessToken";
 
 export default function ChallengePage({
@@ -111,7 +110,7 @@ export default function ChallengePage({
                                 completion => {
                                     const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
                                     const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
-                                    const link = !completion.link || imageObjectRegex.exec(completion.link) ? `https://media.btd6index.win/${completion.filekey}` : completion.link
+                                    const link = completion.link || `https://media.btd6index.win/${completion.filekey}`;
 
                                     return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
                                         {!isLoading && isAuthenticated && <td>
