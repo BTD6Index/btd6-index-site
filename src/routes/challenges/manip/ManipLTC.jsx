@@ -107,6 +107,11 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
         });
     }, [numTowers]);
 
+    const [map, setMap] = useState(null);
+    useEffect(() => {
+        setMap(existingInfo?.[0]?.map)
+    }, [existingInfo]);
+
     return <>
         <p><a href="/ltc">Back to LTCs</a></p>
         <h1>{doEdit ? `Edit (${initialTowersetList.join(', ')}) LTC on ${editParams.get('map')}` : "Add an LTC Completion"}</h1>
@@ -156,7 +161,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <MapSelect name="map" mapValue={editParams?.get('map')} required />
+                <MapSelect name="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
             </span>
             <br />
             <span className="formLine">

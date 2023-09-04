@@ -35,6 +35,11 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
 
     const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo'].includes(value));
 
+    const [map, setMap] = useState(null);
+    useEffect(() => {
+        setMap(existingInfo?.[0]?.map)
+    }, [existingInfo]);
+
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>
         <h1>{
@@ -62,7 +67,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <MapSelect name="map" mapValue={editParams?.get('map')} required />
+                <MapSelect name="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
             </span>
             <br />
             <span className="formLine">

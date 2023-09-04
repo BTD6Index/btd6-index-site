@@ -33,6 +33,11 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
         formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
     });
 
+    const [map, setMap] = useState(null);
+    useEffect(() => {
+        setMap(existingInfo?.[0]?.map)
+    }, [existingInfo]);
+
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>
         <h1>{doEdit ? `Edit ${editParams.get('entity')} 2MP on ${editParams.get('map')}` : "Add a 2MP Completion"}</h1>
@@ -50,7 +55,7 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <MapSelect name="map" mapValue={editParams?.get('map')} required />
+                <MapSelect name="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
             </span>
             <br />
             <span className="formLine">

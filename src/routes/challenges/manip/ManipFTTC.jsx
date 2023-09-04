@@ -39,6 +39,11 @@ function ManipFTTC({ editParams = null, setEditParams = null }) {
 
     const [towersetValue, setTowersetValue] = useState(JSON.stringify(towersetList));
 
+    const [map, setMap] = useState(null);
+    useEffect(() => {
+        setMap(existingInfo?.[0]?.map)
+    }, [existingInfo]);
+
     return <>
         <p><a href="/fttc">Back to FTTCs</a></p>
         <h1>{doEdit ? `Edit (${towersetList.join(', ')}) FTTC on ${editParams.get('map')}` : "Add an FTTC Completion"}</h1>
@@ -49,7 +54,7 @@ function ManipFTTC({ editParams = null, setEditParams = null }) {
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <MapSelect name="map" mapValue={editParams?.get('map')} required />
+                <MapSelect name="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
             </span>
             <br />
             <span className="formLine">

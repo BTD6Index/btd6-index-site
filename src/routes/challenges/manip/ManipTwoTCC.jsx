@@ -33,8 +33,12 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
         formRef: theForm, challenge: '2tcc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
     });
 
-    const filteredTowerOptions = [...towerToOptions.values()]
-    /*.filter(({value}) => !['Sauda', 'Geraldo'].includes(value))*/;
+    const filteredTowerOptions = [...towerToOptions.values()];
+
+    const [map, setMap] = useState(null);
+    useEffect(() => {
+        setMap(existingInfo?.[0]?.map)
+    }, [existingInfo]);
 
     return <>
         <p><a href="/2tcc">Back to 2TCCs</a></p>
@@ -63,7 +67,7 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <MapSelect name="map" mapValue={editParams?.get('map')} required />
+                <MapSelect name="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
             </span>
             <br />
             <span className="formLine">
