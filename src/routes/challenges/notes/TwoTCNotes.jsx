@@ -2,7 +2,6 @@ import { useSearchParams } from "react-router-dom";
 import { AttachmentsList, useNotesAndAttachments } from "./notesCommon";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
-import ImageOrVideo from "../../../util/ImageOrVideo";
 
 export default function TwoTCNotes() {
     const [params, ] = useSearchParams();

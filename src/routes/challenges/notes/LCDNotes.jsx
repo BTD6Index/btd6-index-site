@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
-import ImageOrVideo from "../../../util/ImageOrVideo";
 import { AttachmentsList } from "./notesCommon";
 
 export default function LCDNotes() {
