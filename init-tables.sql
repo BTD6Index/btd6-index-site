@@ -247,3 +247,20 @@ CREATE TRIGGER "lcd_completions_au" AFTER UPDATE ON "lcd_completions" BEGIN
     INSERT INTO "lcd_completions_fts" (rowid, map, money, person, link, pending, version, date, notes, filekey)
     VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
 END;
+
+CREATE TABLE map_information(
+    map PRIMARY KEY,
+    abbreviation,
+    difficulty,
+    hasLOS,
+    hasWater,
+    length REAL,
+    lengthNotes,
+    miscNotes,
+    numEntrances INTEGER,
+    numExits INTEGER,
+    numObjects INTEGER,
+    removalCost,
+    removalCostNotes,
+    version
+);

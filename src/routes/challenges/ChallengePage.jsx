@@ -74,7 +74,7 @@ export default function ChallengePage({
         <h1>{header}</h1>
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
-        {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
+        <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>
         <div className="searchUiGroup">
             <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
             <input type="checkbox" id="filter-pending" onChange={e => setPendingFilter(e.target.checked)} />

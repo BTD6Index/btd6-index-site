@@ -245,7 +245,11 @@ function AppImplImpl() {
                     <li onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>Logout</li>
                   </ul>
                 </li>
-              : <li onClick={() => loginWithRedirect({appState: { returnTo: `${window.location.pathname}${window.location.search}${window.location.hash}` }})}>Login</li>
+              : <li onClick={() => loginWithRedirect({
+                  appState: {
+                    returnTo: `${window.location.pathname}${window.location.search}${window.location.hash}` }
+                  }
+                )}>Login</li>
             )
           }
           <li>
