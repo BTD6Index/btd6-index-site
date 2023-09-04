@@ -2,10 +2,11 @@ import Select from "react-select";
 import selectStyle from "../../../util/selectStyle";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions, towerTypeToOptions } from "../../../util/selectOptions";
+import { towerTypeToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
+import MapSelect from "../../../util/MapSelect";
 
 const FIELDS = ['map']; // needs to be outside so react doesn't treat value as changed every re-render
 const ALT_FIELDS = ['towerset'];
@@ -48,9 +49,7 @@ function ManipFTTC({ editParams = null, setEditParams = null }) {
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} defaultValue={
-                    mapToOptions.get(editParams?.get('map')) ?? undefined
-                } required />
+                <MapSelect name="map" mapValue={editParams?.get('map')} required />
             </span>
             <br />
             <span className="formLine">

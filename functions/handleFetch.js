@@ -1,5 +1,4 @@
 import { processQuery } from "./processQuery";
-import maps from './maps.json';
 
 /**
  * @callback customFieldQuery
@@ -34,12 +33,6 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
                 return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
             } else if (field === 'og') {
                 return [`(${field} = 0) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
-            } else if (field === 'difficulty') {
-                const filteredMaps = Object.entries(maps)
-                .filter(([, mapInfo]) => mapInfo.difficulty === searchParams.get(field))
-                .map(([mapName,]) => `'${mapName.replace("'", "''")}'`);
-
-                return [`map IN (${filteredMaps.join(',')})`];
             }
             return [
                 customFieldQuery?.({field, idx, paramPos, searchParams})
@@ -60,14 +53,18 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
         if (query) {
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
-                    SELECT ${select} FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
+                    SELECT ${select} FROM "${challenge}_completions_fts"
+                    INNER JOIN map_information USING (map)
+                    INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
                     WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?2 OFFSET ?3
                 `).bind(processQuery(query, fieldKeys), limit, offset, JSON.stringify(fieldValues));
             };
         } else {
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
-                    SELECT ${select} FROM "${challenge}_completions_fts" INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
+                    SELECT ${select} FROM "${challenge}_completions_fts"
+                    INNER JOIN map_information USING (map)
+                    INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
                     WHERE ${specific_field_conds(3)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?1 OFFSET ?2
                 `)
                 .bind(limit, offset, JSON.stringify(fieldValues));

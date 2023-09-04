@@ -1,12 +1,11 @@
-import Select from "react-select";
-import selectStyle from "../../../util/selectStyle";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions } from "../../../util/selectOptions";
+import { useMapToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useSubmitCallback } from "./manipCommon";
 import useForceReload from "../../../util/useForceReload";
+import MapSelect from "../../../util/MapSelect";
 
 function ManipLCC({ editParams = null, setEditParams = null }) {
     const [existingInfo, setExistingInfo] = useState(null);
@@ -52,9 +51,7 @@ function ManipLCC({ editParams = null, setEditParams = null }) {
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} value={
-                    mapToOptions.get(map) ?? undefined
-                } required onChange={(val) => setMap(val.value)} />
+                <MapSelect name="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
             </span>
             <br />
             <span className="formLine">

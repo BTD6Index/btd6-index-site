@@ -1,8 +1,6 @@
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions } from "../../util/selectOptions";
 import { useEffect, useState } from "react";
-import Select from 'react-select';
-import selectStyle from "../../util/selectStyle";
+import MapSelect from "../../util/MapSelect";
 
 export default function Maps() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -22,11 +20,9 @@ export default function Maps() {
     return <>
         <h1>Maps</h1>
         <p>Select a map in the dropdown below to view information about that map.</p>
-        <Select
-            options={[...mapToOptions.values()]}
-            value={mapToOptions.get(searchParams.get('map')) ?? null}
+        <MapSelect
+            mapValue={searchParams.get('map')}
             onChange={val => setSearchParams({map: val.value})}
-            styles={selectStyle}
         />
         {
             mapInfo && <>

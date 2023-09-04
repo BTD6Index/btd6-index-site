@@ -2,11 +2,12 @@ import Select from "react-select";
 import selectStyle from "../../../util/selectStyle";
 import { useEffect, useRef, useState, useCallback, Fragment } from "react";
 import { useSearchParams } from "react-router-dom";
-import { mapToOptions, towerToOptions } from "../../../util/selectOptions";
+import { towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useSubmitCallback } from "./manipCommon";
 import useForceReload from "../../../util/useForceReload";
+import MapSelect from "../../../util/MapSelect";
 
 function CompletionTypeWidget({existingInfo}) {
     const [completionType, setCompletionType] = useState();
@@ -155,9 +156,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <Select name="map" options={[...mapToOptions.values()]} styles={selectStyle} defaultValue={
-                    mapToOptions.get(editParams?.get('map')) ?? undefined
-                } required />
+                <MapSelect name="map" mapValue={editParams?.get('map')} required />
             </span>
             <br />
             <span className="formLine">
