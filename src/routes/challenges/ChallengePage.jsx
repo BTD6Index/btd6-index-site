@@ -28,7 +28,7 @@ export default function ChallengePage({
     fieldDisplayFunc ??= defaultFieldDisplayFunc;
 
     const {
-        completions, offset, hasNext, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
+        completions, offset, hasNext, totalCompletions, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
     } = useIndexSearch(`/fetch-${challenge}`);
 
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
@@ -88,6 +88,9 @@ export default function ChallengePage({
                 && <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
                     Delete Selected
                 </button>
+            }
+            {
+                !!(!searchError && totalCompletions) && <span>Results {offset+1} to {offset+completions.length} of {totalCompletions}</span>
             }
         </div>
         {searchError ? <p>Error while searching: {searchError}</p> :

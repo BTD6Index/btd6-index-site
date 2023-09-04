@@ -4,6 +4,7 @@ import useForceReload from "./useForceReload";
 export default function useIndexSearch(endpoint) {
     const [query, setQuery] = useState('');
     const [offset, setOffset] = useState(0);
+    const [totalCompletions, setTotalCompletions] = useState(0);
     const [completions, setCompletions] = useState([]);
     const [hasNext, setHasNext] = useState(false);
     const {reloadVar, forceReload} = useForceReload();
@@ -25,6 +26,7 @@ export default function useIndexSearch(endpoint) {
                 throw new Error(`HTTP ${response.status}`);
             } else if (data !== null) {
                 setCompletions(data.results);
+                setTotalCompletions(data.count);
                 setHasNext(data.more);
             } else {
                 setHasNext(false);
@@ -54,6 +56,7 @@ export default function useIndexSearch(endpoint) {
         offset,
         hasNext,
         error,
+        totalCompletions,
         onSearch,
         onPrev,
         onNext,
