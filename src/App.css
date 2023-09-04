@@ -217,3 +217,7 @@ input[type="file"] {
   gap: 0.5vw;
   margin: 0.2em 0;
 }
+
+.attachment {
+  max-width: 40em;
+}

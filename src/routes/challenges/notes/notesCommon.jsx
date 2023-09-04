@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function useNotesAndAttachments({ challenge, params }) {
+export function useNotesAndAttachments({ challenge, params }) {
     const [error, setError] = useState(null);
     const [notes, setNotes] = useState(null);
     const [attachmentKeys, setAttachmentKeys] = useState(null);
@@ -27,4 +27,11 @@ export default function useNotesAndAttachments({ challenge, params }) {
     }, [challenge, params]);
 
     return {notes, error, attachmentKeys};
+}
+
+export function AttachmentsList({attachmentKeys}) {
+    return attachmentKeys?.length ? attachmentKeys.map(key => {
+            const link = `https://media.btd6index.win/${key}`;
+            return <ImageOrVideo url={link} className={'attachment'} />;
+        }) : <p>No attachments</p>;
 }

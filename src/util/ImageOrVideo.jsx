@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function ImageOrVideo({url}) {
+export default function ImageOrVideo({url, ...rest}) {
     const [isVideo, setIsVideo] = useState(null);
 
     useEffect(() => {
@@ -13,7 +13,7 @@ export default function ImageOrVideo({url}) {
     return <>
         {
             isVideo !== null && (
-                isVideo ? <video controls src={url} /> : <img src={url} />
+                isVideo ? <video controls src={url} {...rest} /> : <img src={url} {...rest} />
             )
         }
     </>

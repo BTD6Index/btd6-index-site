@@ -3,6 +3,7 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import ImageOrVideo from "../../../util/ImageOrVideo";
+import { AttachmentsList } from "./notesCommon";
 
 export default function LCCNotes() {
     const [params, ] = useSearchParams();
@@ -44,12 +45,7 @@ export default function LCCNotes() {
         <h1>Notes for LCC</h1>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
-        {
-            attachments?.length ? attachments.map(key => {
-                const link = `https://media.btd6index.win/${key}`;
-                return <ImageOrVideo url={link} />;
-            }) : <p>No attachments</p>
-        }
+        <AttachmentsList attachmentKeys={attachments} />
         <p><a href='/lcc'>Back to LCCs</a></p>
     </>;
 }
