@@ -29,8 +29,8 @@ export default function Maps() {
                     throw new Error(resJson.error);
                 } else {
                     setLccs(resJson.results.toSorted((a, b) => {
-                        let aInt = parseInt(a.split('.')[0].trim());
-                        let bInt = parseInt(b.split('.')[0].trim());
+                        let aInt = parseInt(a.version.split('.')[0].trim());
+                        let bInt = parseInt(b.version.split('.')[0].trim());
                         return bInt - aInt; // sort by descending major version order
                     }));
                 }
