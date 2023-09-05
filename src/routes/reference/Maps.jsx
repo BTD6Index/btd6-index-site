@@ -1,12 +1,16 @@
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MapSelect from "../../util/MapSelect";
+import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import useAccessToken from "../../util/useAccessToken";
 
 export default function Maps() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [mapInfo, setMapInfo] = useState(null);
     const [lccs, setLccs] = useState(null);
     const [lccError, setLccError] = useState(null);
+    const isAdmin = useCheckIfAdmin();
+    const getToken = useAccessToken();
 
     useEffect(() => {
         const map = searchParams.get('map');
@@ -41,16 +45,49 @@ export default function Maps() {
         }
     }, [searchParams]);
 
+    const deleteCallback = useCallback(async () => {
+        if (confirm(`Delete map ${searchParams.get('map')}?`)) {
+            try {
+                const formData = new FormData();
+                formData.set('map', searchParams.get('map'));
+                const token = await getToken({
+                    authorizationParams: {
+                        audience: 'https://btd6index.win/',
+                        scope: 'openid email profile offline_access'
+                    }
+                });
+                const res = await fetch('/admin/delete-map', {
+                    body: formData,
+                    method: 'post',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                const resJson = await res.json();
+                if ('error' in resJson) {
+                    throw new Error(resJson.error);
+                }
+                alert('Successfully deleted map.');
+                setSearchParams({});
+            } catch (e) {
+                alert(`Error deleting map: ${e.message}`);
+            }
+        }
+    }, [searchParams, getToken]);
+
     return <>
         <h1>Maps</h1>
         <p>Select a map in the dropdown below to view information about that map.</p>
+        {isAdmin && <p><a href='/add-map'>Add Map</a></p>}
         <MapSelect
             mapValue={searchParams.get('map')}
             onChange={val => setSearchParams({map: val.value})}
+            reloadVar={searchParams.get('map')}
         />
         {
             searchParams.get('map') && mapInfo && <>
                 <h2>Map Information for {mapInfo.map}</h2>
+                { isAdmin && <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Map</button> }
                 <dl>
                     <dt>Abbreviation</dt>
                     <dd>{mapInfo.abbreviation}</dd>

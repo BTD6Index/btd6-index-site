@@ -13,7 +13,7 @@ const towerTypeToOptions = new Map(
     .map(key => [key, {value: key, label: key}])
 );
 
-function useMapToOptions() {
+function useMapToOptions(reloadVar = false) {
     const [mapToOptions, setMapToOptions] = useState(new Map());
 
     useEffect(() => {
@@ -24,7 +24,7 @@ function useMapToOptions() {
                 new Map(mapsList.results.map(mapName => [mapName, {value: mapName, label: mapName}]))
             );
         });
-    }, []);
+    }, [reloadVar]);
     
     return mapToOptions;
 }
