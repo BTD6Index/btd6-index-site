@@ -5,6 +5,7 @@ export async function onRequest(context) {
         context,
         databaseTable: "lcc_completions_fts",
         fields: ['map', 'money', 'link', 'pending', 'version', 'date', 'filekey'],
-        personFields: ['person']
+        personFields: ['person'],
+        customOrder: "map, CAST(version AS INTEGER) DESC" // sort first by map, then by newest version first
     });
 }

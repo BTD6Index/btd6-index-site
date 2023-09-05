@@ -82,7 +82,7 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
     }
 }
 
-async function handleFetchFlat({context, databaseTable, fields, personFields}) {
+async function handleFetchFlat({context, databaseTable, fields, personFields, customOrder = null}) {
     const db = context.env.BTD6_INDEX_DB;
 
     let searchParams = new URL(context.request.url).searchParams;
@@ -123,9 +123,9 @@ async function handleFetchFlat({context, databaseTable, fields, personFields}) {
 
     try {
         const res = await db.batch([
-            db.prepare(`SELECT * FROM "${databaseTable}" WHERE ${sql_condition(1)} ORDER BY map LIMIT ?2 OFFSET ?3`)
+            db.prepare(`SELECT * FROM "${databaseTable}" WHERE ${sql_condition(1)} ORDER BY ${customOrder ?? 'map'} LIMIT ?2 OFFSET ?3`)
             .bind(JSON.stringify(fieldValues), count+1, offset),
-            db.prepare(`SELECT COUNT(*) FROM "${databaseTable}" WHERE ${sql_condition(1)} ORDER BY map`)
+            db.prepare(`SELECT COUNT(*) FROM "${databaseTable}" WHERE ${sql_condition(1)}`)
             .bind(JSON.stringify(fieldValues))
         ]);
 
