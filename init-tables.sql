@@ -264,3 +264,6 @@ CREATE TABLE map_information(
     removalCostNotes,
     version
 );
+
+CREATE TABLE chimps_starts(map, title, link, uuid PRIMARY KEY);
+CREATE INDEX chimps_starts_map_idx ON chimps_starts(map);
