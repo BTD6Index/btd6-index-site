@@ -43,6 +43,7 @@ import LCDRules from './routes/challenges/rules/LCDRules';
 import ChimpsStarts from './routes/guides/ChimpsStarts';
 import Maps from './routes/reference/Maps';
 import { AddMap } from './routes/reference/manip/ManipMap';
+import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
 
 
 const router = createBrowserRouter([
@@ -221,6 +222,10 @@ const router = createBrowserRouter([
       {
         path: "chimps-starts",
         element: <ChimpsStarts />
+      },
+      {
+        path: 'add-chimps-start',
+        element: <AddChimpsStart />
       },
       {
         path: "*",
