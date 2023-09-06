@@ -13,12 +13,20 @@ header {
   border-bottom: 1px solid white;
   align-items: center;
   background-color: #111;
+  position: sticky;
+  top: 0;
 }
 
-main {
+#mainContainer {
   overflow-x: auto;
   flex-grow: 1;
+  text-align: left;
+  font-size: calc(1vw + 1.5vh);
+  padding: 0 4vw;
   padding-bottom: 7.5em;
+}
+main {
+  width: fit-content;
 }
 
 .glueRat {
@@ -125,12 +133,6 @@ h1, h2, h3, h4, h5, h6, p {
   li:hover .dropdown, .dropdown:hover {
     display: block;
   }
-}
-
-main {
-  text-align: left;
-  font-size: calc(1vw + 1.5vh);
-  padding: 0 4vw;
 }
 
 a {

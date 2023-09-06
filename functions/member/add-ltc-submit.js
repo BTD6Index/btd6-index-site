@@ -9,7 +9,7 @@ function expandSQLArray(paramNo, arrayLen) {
 }
 
 
-export async function onRequest(context) {
+export async function onRequestPost(context) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
@@ -18,10 +18,6 @@ export async function onRequest(context) {
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
     };
-
-    if (context.request.method !== "POST") {
-        return respondError(`Request method should be POST, got ${context.request.method}`);
-    }
 
     let formData = await context.request.formData();
 

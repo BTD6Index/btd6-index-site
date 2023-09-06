@@ -1,5 +1,5 @@
 import { handleDeleteSubmitLCCLike } from "./handleDeleteSubmit";
 
-export async function onRequest(context) {
+export async function onRequestPost(context) {
     return handleDeleteSubmitLCCLike({context, challenge: 'lcc'});
 }

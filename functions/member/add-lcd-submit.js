@@ -1,5 +1,5 @@
 import { handleAddSubmitLCCLike } from "./handleAddSubmit";
 
-export async function onRequest(context) {
+export async function onRequestPost(context) {
     return handleAddSubmitLCCLike({context, challenge: 'lcd'});
 }

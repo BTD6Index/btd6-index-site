@@ -4,6 +4,8 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useSubmitCallback } from "./manipCommon";
 import useForceReload from "../../../util/useForceReload";
+import PageTitle from "../../../util/PageTitle";
+import MapSelect from "../../../util/MapSelect";
 
 function ManipLCD({ editParams = null, setEditParams = null }) {
     const [existingInfo, setExistingInfo] = useState(null);
@@ -41,7 +43,7 @@ function ManipLCD({ editParams = null, setEditParams = null }) {
 
     return <>
         <p><a href="/lcd">Back to LCDs</a></p>
-        <h1>{doEdit ? `Edit LCD` : "Add an LCD Completion"}</h1>
+        <PageTitle>{doEdit ? `Edit LCD` : "Add an LCD Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-lcd-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -95,7 +97,7 @@ const AddLCD = withAuthenticationRequired(() => {
 const EditLCD = withAuthenticationRequired(() => {
     const [params, setParams] = useSearchParams();
     if (!params.has('filekey')) {
-        return <h1>Need to specify filekey</h1>;
+        return <PageTitle>Need to specify filekey</PageTitle>;
     }
     return <ManipLCD editParams={params} setEditParams={setParams} />
 });

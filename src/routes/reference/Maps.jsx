@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import MapSelect from "../../util/MapSelect";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
+import PageTitle from "../../util/PageTitle";
 
 export default function Maps() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -76,7 +77,7 @@ export default function Maps() {
     }, [searchParams, getToken]);
 
     return <>
-        <h1>Maps</h1>
+        <PageTitle>Maps</PageTitle>
         <p>Select a map in the dropdown below to view information about that map.</p>
         {isAdmin && <p><a href='/add-map'>Add Map</a></p>}
         <MapSelect

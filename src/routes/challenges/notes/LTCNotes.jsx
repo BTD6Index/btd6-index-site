@@ -3,6 +3,7 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { useSearchParams } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import { AttachmentsList } from "./notesCommon";
+import PageTitle from "../../../util/PageTitle";
 
 export default function LTCNotes() {
     const [params, ] = useSearchParams();
@@ -35,7 +36,7 @@ export default function LTCNotes() {
 
     if (error) {
         return <>
-            <h1>Error retrieving completion notes: {error}</h1>
+            <PageTitle>Error retrieving completion notes: {error}</PageTitle>
             <p><a href='/ltc'>Back to LTCs</a></p>
         </>; 
     } else if (notes === null) {
@@ -43,7 +44,7 @@ export default function LTCNotes() {
     }
 
     return <>
-        <h1>Notes for {params.get('map')} LTC</h1>
+        <PageTitle>Notes for {params.get('map')} LTC</PageTitle>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
         <AttachmentsList attachmentKeys={attachments} />

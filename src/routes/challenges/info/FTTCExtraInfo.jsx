@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import PageTitle from "../../../util/PageTitle";
 
 export default function FTTCExtraInfo() {
     const [params, ] = useSearchParams();
@@ -18,7 +19,7 @@ export default function FTTCExtraInfo() {
     }, [params]);
     if (error !== null) {
         return <>
-            <h1>Error getting OG FTTC info</h1>
+            <PageTitle>Error getting OG FTTC info</PageTitle>
             <p>{error}</p>
             <p><a href="/fttc">Back to FTTCs</a></p>
         </>;
@@ -26,7 +27,7 @@ export default function FTTCExtraInfo() {
         return <></>;
     }
     return <>
-        <h1>Additional Info for OG FTTC</h1>
+        <PageTitle>Additional Info for OG FTTC</PageTitle>
         <p>Update: {info.version}</p>
         <p>Date of completion (yyyy-mm-dd): {info.date}</p>
         <p><a href={info.link ?? `https://media.btd6index.win/${info.filekey}`}>Link to completion</a></p>

@@ -7,6 +7,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
 import MapSelect from "../../../util/MapSelect";
+import PageTitle from "../../../util/PageTitle";
 
 const FIELDS = ['map']; // needs to be outside so react doesn't treat value as changed every re-render
 const ALT_FIELDS = ['towerset'];
@@ -46,7 +47,7 @@ function ManipFTTC({ editParams = null, setEditParams = null }) {
 
     return <>
         <p><a href="/fttc">Back to FTTCs</a></p>
-        <h1>{doEdit ? `Edit (${towersetList.join(', ')}) FTTC on ${editParams.get('map')}` : "Add an FTTC Completion"}</h1>
+        <PageTitle>{doEdit ? `Edit (${towersetList.join(', ')}) FTTC on ${editParams.get('map')}` : "Add an FTTC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-fttc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -120,7 +121,7 @@ const AddFTTC = withAuthenticationRequired(() => {
 const EditFTTC = withAuthenticationRequired(() => {
     const [params, setParams] = useSearchParams();
     if (!params.has('towerset') || !params.has('map')) {
-        return <h1>Need to specify map and towerset</h1>;
+        return <PageTitle>Need to specify map and towerset</PageTitle>;
     }
     return <ManipFTTC editParams={params} setEditParams={setParams} />
 });

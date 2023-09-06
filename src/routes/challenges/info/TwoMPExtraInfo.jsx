@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import PageTitle from "../../../util/PageTitle";
 
 export default function TwoMPExtraInfo() {
     const [params, ] = useSearchParams();
@@ -18,7 +19,7 @@ export default function TwoMPExtraInfo() {
     }, [params]);
     if (error !== null) {
         return <>
-            <h1>Error getting OG 2MP info</h1>
+            <PageTitle>Error getting OG 2MP info</PageTitle>
             <p>{error}</p>
             <p><a href="/2mp">Back to 2MPs</a></p>
         </>;
@@ -26,7 +27,7 @@ export default function TwoMPExtraInfo() {
         return <></>;
     }
     return <>
-        <h1>Additional Info for OG 2MP</h1>
+        <PageTitle>Additional Info for OG 2MP</PageTitle>
         <h2>Tower: {info.entity} ({info.upgrade})</h2>
         <p>Update: {info.version}</p>
         <p>Date of completion (yyyy-mm-dd): {info.date}</p>

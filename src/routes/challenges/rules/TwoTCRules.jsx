@@ -1,7 +1,9 @@
+import PageTitle from "../../../util/PageTitle";
+
 export default function TwoTCRules() {
     return <>
         <p><a href="/2tc">Back to 2TCs</a></p>
-        <h1>Rules for 2TC</h1>
+        <PageTitle>Rules for 2TC</PageTitle>
         <h2>Tower Limitations</h2>
         <p>Towers that have successfully soloed CHIMPS mode in the past or currently are <strong>not</strong> allowed. As of now, this includes <strong>Sauda</strong> and <strong>Geraldo</strong>.</p>
         <h2>Challenge Settings</h2>

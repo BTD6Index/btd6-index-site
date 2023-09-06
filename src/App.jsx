@@ -44,6 +44,7 @@ import ChimpsStarts from './routes/guides/ChimpsStarts';
 import Maps from './routes/reference/Maps';
 import { AddMap } from './routes/reference/manip/ManipMap';
 import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
+import LoginRedirect from './routes/LoginRedirect';
 
 
 const router = createBrowserRouter([
@@ -228,6 +229,10 @@ const router = createBrowserRouter([
         element: <AddChimpsStart />
       },
       {
+        path: 'login-redirect',
+        element: <LoginRedirect />
+      },
+      {
         path: "*",
         element: <NotFound />
       }
@@ -289,9 +294,11 @@ function AppImplImpl() {
         </ul>
       </nav>
     </header>
-    <main>
-      <Outlet />
-    </main>
+    <div id="mainContainer">
+      <main>
+        <Outlet />
+      </main>
+    </div>
   </div>;
 }
 
@@ -302,14 +309,14 @@ function AppImpl() {
     domain='lordlandmaster.us.auth0.com'
     clientId='wyzIQ763QxIMn9UD6dVptW4jtK9dlq2c'
     authorizationParams={{
-      redirect_uri: window.location.origin,
+      redirect_uri: window.location.origin + '/login-redirect',
       audience: 'https://btd6index.win/',
       scope: 'openid email profile offline_access'
     }}
     useRefreshTokens
     cacheLocation='localstorage'
     onRedirectCallback={(state) => {
-      navigate(state?.returnTo ?? `${window.location.pathname}${window.location.search}${window.location.hash}`);
+      navigate(state?.returnTo ?? window.location.origin);
     }}
     useRefreshTokensFallback 
     >

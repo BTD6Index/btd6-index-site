@@ -1,6 +1,6 @@
 import { handleAddSubmit } from "./handleAddSubmit";
 
-export async function onRequest(context) {
+export async function onRequestPost(context) {
     return handleAddSubmit({
         context,
         challenge: 'fttc',

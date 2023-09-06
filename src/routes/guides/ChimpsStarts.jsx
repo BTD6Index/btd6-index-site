@@ -4,6 +4,7 @@ import { Fragment, useEffect, useState } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import useForceReload from "../../util/useForceReload";
+import PageTitle from "../../util/PageTitle";
 
 export default function ChimpsStarts() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -28,7 +29,7 @@ export default function ChimpsStarts() {
     }, [searchParams, reloadVar]);
 
     return <>
-        <h1>CHIMPS Starts</h1>
+        <PageTitle>CHIMPS Starts</PageTitle>
         <p>Select a map in the dropdown below to view useful CHIMPS earlygames.</p>
         {isAdmin && <p><a href="/add-chimps-start">Add CHIMPS Start</a></p>}
         <MapSelect

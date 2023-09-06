@@ -8,6 +8,7 @@ import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useSubmitCallback } from "./manipCommon";
 import useForceReload from "../../../util/useForceReload";
 import MapSelect from "../../../util/MapSelect";
+import PageTitle from "../../../util/PageTitle";
 
 function CompletionTypeWidget({existingInfo}) {
     const [completionType, setCompletionType] = useState();
@@ -114,7 +115,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
 
     return <>
         <p><a href="/ltc">Back to LTCs</a></p>
-        <h1>{doEdit ? `Edit (${initialTowersetList.join(', ')}) LTC on ${editParams.get('map')}` : "Add an LTC Completion"}</h1>
+        <PageTitle>{doEdit ? `Edit (${initialTowersetList.join(', ')}) LTC on ${editParams.get('map')}` : "Add an LTC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-ltc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -205,7 +206,7 @@ const AddLTC = withAuthenticationRequired(() => {
 const EditLTC = withAuthenticationRequired(() => {
     const [params, setParams] = useSearchParams();
     if (!params.has('towerset') || !params.has('map')) {
-        return <h1>Need to specify map and towerset</h1>;
+        return <PageTitle>Need to specify map and towerset</PageTitle>;
     }
     return <ManipLTC editParams={params} setEditParams={setParams} />
 });

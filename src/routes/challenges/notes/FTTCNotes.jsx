@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { AttachmentsList, useNotesAndAttachments } from "./notesCommon";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
+import PageTitle from "../../../util/PageTitle";
 
 export default function FTTCNotes() {
     const [params, ] = useSearchParams();
@@ -11,7 +12,7 @@ export default function FTTCNotes() {
 
     if (error) {
         return <>
-            <h1>Error retrieving completion notes: {error}</h1>
+            <PageTitle>Error retrieving completion notes: {error}</PageTitle>
             <p><a href='/fttc'>Back to FTTCs</a></p>
         </>; 
     } else if (notes === null) {
@@ -19,7 +20,7 @@ export default function FTTCNotes() {
     }
 
     return <>
-        <h1>Notes for {params.get('map')} FTTC</h1>
+        <PageTitle>Notes for {params.get('map')} FTTC</PageTitle>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
         <AttachmentsList attachmentKeys={attachmentKeys} />

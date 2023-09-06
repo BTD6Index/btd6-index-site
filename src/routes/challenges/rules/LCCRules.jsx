@@ -1,7 +1,9 @@
+import PageTitle from "../../../util/PageTitle";
+
 export default function LCCRules() {
     return <>
         <p><a href="/lcc">Back to LCCs</a></p>
-        <h1>Rules for LCC</h1>
+        <PageTitle>Rules for LCC</PageTitle>
         <h2>Challenge Settings</h2>
         <p>
             The Challenge Editor should be set to the hard difficulty and CHIMPS mode.

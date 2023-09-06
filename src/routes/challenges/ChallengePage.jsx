@@ -4,6 +4,7 @@ import useToggleList from "../../util/useToggleList";
 import { useRef, useCallback } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
+import PageTitle from "../../util/PageTitle";
 
 export default function ChallengePage({
     challenge,
@@ -71,7 +72,7 @@ export default function ChallengePage({
     }, [selectedCompletions, deleteForm, getToken, forceReload, challenge, setSelectedCompletions]);
 
     return <>
-        <h1>{header}</h1>
+        <PageTitle>{header}</PageTitle>
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
         <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>

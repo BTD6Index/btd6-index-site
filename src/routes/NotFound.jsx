@@ -1,3 +1,5 @@
+import PageTitle from "../util/PageTitle";
+
 export default function NotFound() {
-    return <h1>Couldn't find that page.</h1>;
+    return <PageTitle>Couldn't find that page.</PageTitle>;
 };

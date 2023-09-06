@@ -1,7 +1,9 @@
+import PageTitle from "../../../util/PageTitle";
+
 export default function TwoTCCRules() {
     return <>
         <p><a href="/2tcc">Back to 2TCCs</a></p>
-        <h1>Rules for 2TCC</h1>
+        <PageTitle>Rules for 2TCC</PageTitle>
         <h2>Tower Limitations</h2>
         <p>
             Pairs of towers that already beat single-player 2TC do <strong>not</strong> count as 2TCC.

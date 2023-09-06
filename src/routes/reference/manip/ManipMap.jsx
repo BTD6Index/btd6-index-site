@@ -2,6 +2,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useCallback, useRef } from "react";
 import useAccessToken from "../../../util/useAccessToken";
+import PageTitle from "../../../util/PageTitle";
 
 // TODO add edit ability
 
@@ -38,11 +39,11 @@ function ManipMap({oldMap = null}) {
     }, [formRef]);
 
     if (!isAdmin) {
-        return <h1>You are not authorized to view this page.</h1>;
+        return <PageTitle>You are not authorized to view this page.</PageTitle>;
     }
 
     return <>
-        <h1>{oldMap ? 'Edit Map' : 'Add Map'}</h1>
+        <PageTitle>{oldMap ? 'Edit Map' : 'Add Map'}</PageTitle>
         <p><a href='/maps'>Back to Maps</a></p>
         <form action="/admin/add-new-map" method="post" ref={formRef} onSubmit={onSubmitCallback}>
             <span className="formLine">

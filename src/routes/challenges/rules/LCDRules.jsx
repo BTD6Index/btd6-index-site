@@ -1,7 +1,9 @@
+import PageTitle from "../../../util/PageTitle";
+
 export default function LCDRules() {
     return <>
         <p><a href="/lcd">Back to LCDs</a></p>
-        <h1>Rules for LCD</h1>
+        <PageTitle>Rules for LCD</PageTitle>
         <h2>Challenge Settings</h2>
         <p>
             The Challenge Editor should be set to the easy difficulty and Deflation mode.

@@ -1,7 +1,9 @@
+import PageTitle from "../../../util/PageTitle";
+
 export default function TwoMPRules() {
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>
-        <h1>Rules for 2MP</h1>
+        <PageTitle>Rules for 2MP</PageTitle>
         <h2>Challenge Settings</h2>
         <p>
             The Challenge Editor should be set to the hard difficulty and CHIMPS mode.

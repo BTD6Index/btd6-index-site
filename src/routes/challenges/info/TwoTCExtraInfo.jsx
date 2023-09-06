@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import PageTitle from "../../../util/PageTitle";
 
 export default function TwoTCExtraInfo() {
     const [params, ] = useSearchParams();
@@ -18,7 +19,7 @@ export default function TwoTCExtraInfo() {
     }, [params]);
     if (error !== null) {
         return <>
-            <h1>Error getting OG 2TC info</h1>
+            <PageTitle>Error getting OG 2TC info</PageTitle>
             <p>{error}</p>
             <p><a href="/2tc">Back to 2TCs</a></p>
         </>;
@@ -26,7 +27,7 @@ export default function TwoTCExtraInfo() {
         return <></>;
     }
     return <>
-        <h1>Additional Info for OG 2TC</h1>
+        <PageTitle>Additional Info for OG 2TC</PageTitle>
         <h2>{info.tower1} ({info.upgrade1}) and {info.tower2} ({info.upgrade2})</h2>
         <p>Update: {info.version}</p>
         <p>Date of completion (yyyy-mm-dd): {info.date}</p>

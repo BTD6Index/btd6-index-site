@@ -19,7 +19,9 @@ body::before {
   background-repeat: no-repeat;
   position: fixed;
   width: 100vw;
+  width: 100svw;
   height: 100vh;
+  height: 100svh;
   z-index: -1;
   transform: translate3d(0, 0, 0);
 }
@@ -27,7 +29,9 @@ body::before {
 #root {
   position: absolute;
   width: 100vw;
+  width: 100svw;
   min-height: 100vh;
+  min-height: 100svh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

@@ -1,7 +1,9 @@
+import PageTitle from "../../../util/PageTitle";
+
 export default function FTTCRules() {
     return <>
         <p><a href="/fttc">Back to FTTCs</a></p>
-        <h1>Rules for FTTC</h1>
+        <PageTitle>Rules for FTTC</PageTitle>
         <h2>Tower Limitations</h2>
         <p>No heroes allowed!</p>
         <h2>Challenge Settings</h2>

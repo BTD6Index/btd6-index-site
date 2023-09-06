@@ -5,6 +5,7 @@ import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useSubmitCallback } from "./manipCommon";
 import useForceReload from "../../../util/useForceReload";
 import MapSelect from "../../../util/MapSelect";
+import PageTitle from "../../../util/PageTitle";
 
 function ManipLCC({ editParams = null, setEditParams = null }) {
     const [existingInfo, setExistingInfo] = useState(null);
@@ -42,7 +43,7 @@ function ManipLCC({ editParams = null, setEditParams = null }) {
 
     return <>
         <p><a href="/lcc">Back to LCCs</a></p>
-        <h1>{doEdit ? `Edit LCC` : "Add an LCC Completion"}</h1>
+        <PageTitle>{doEdit ? `Edit LCC` : "Add an LCC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-lcc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -96,7 +97,7 @@ const AddLCC = withAuthenticationRequired(() => {
 const EditLCC = withAuthenticationRequired(() => {
     const [params, setParams] = useSearchParams();
     if (!params.has('filekey')) {
-        return <h1>Need to specify filekey</h1>;
+        return <PageTitle>Need to specify filekey</PageTitle>;
     }
     return <ManipLCC editParams={params} setEditParams={setParams} />
 });

@@ -7,6 +7,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useFetchExistingInfo, useSubmitCallback, FormLinkImageEntry, AttachmentsWidget} from "./manipCommon";
 import MapSelect from "../../../util/MapSelect";
+import PageTitle from "../../../util/PageTitle";
 
 const FIELDS = ['tower1', 'tower2']; // needs to be outside so react doesn't treat value as changed every re-render
 
@@ -42,10 +43,10 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
 
     return <>
         <p><a href="/2tcc">Back to 2TCCs</a></p>
-        <h1>{
+        <PageTitle>{
         doEdit
         ? `Edit ${editParams.get('tower1')} and ${editParams.get('tower2')} 2TCC on ${editParams.get('map')}`
-        : "Add a 2TCC Completion"}</h1>
+        : "Add a 2TCC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-2tcc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -138,7 +139,7 @@ const AddTwoTCC = withAuthenticationRequired(() => {
 const EditTwoTCC = withAuthenticationRequired(() => {
     const [params, setParams] = useSearchParams();
     if (['tower1', 'tower2', 'map'].some(key => !params.has(key))) {
-        return <h1>Need to specify tower1, tower2, and map</h1>;
+        return <PageTitle>Need to specify tower1, tower2, and map</PageTitle>;
     }
     return <ManipTwoTCC editParams={params} setEditParams={setParams} />
 });

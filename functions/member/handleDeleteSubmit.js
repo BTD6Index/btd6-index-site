@@ -8,10 +8,6 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
         return Response.json({error}, {status: 400});
     };
 
-    if (context.request.method !== "POST") {
-        return respondError(`Request method should be POST, got ${context.request.method}`);
-    }
-
     let formData = await context.request.formData();
     if (!formData.has('entries')) {
         return respondError(`Need ${challenge} entries to delete passed in`);
@@ -65,10 +61,6 @@ async function handleDeleteSubmitLCCLike({context, challenge}) {
     const respondError = (error) => {
         return Response.json({error}, {status: 400});
     };
-
-    if (context.request.method !== "POST") {
-        return respondError(`Request method should be POST, got ${context.request.method}`);
-    }
 
     let formData = await context.request.formData();
     if (!formData.has('entries')) {

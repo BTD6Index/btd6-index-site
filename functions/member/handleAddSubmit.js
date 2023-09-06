@@ -72,10 +72,6 @@ async function handleAddSubmit({
         return Response.json({ error }, { status: 400 });
     };
 
-    if (context.request.method !== "POST") {
-        return respondError(`Request method should be POST, got ${context.request.method}`);
-    }
-
     let formData = await context.request.formData();
 
     const verify = formData.has('verify') && isHelper;
@@ -224,10 +220,6 @@ async function handleAddSubmitLCCLike({context, challenge}) {
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
     };
-
-    if (context.request.method !== "POST") {
-        return respondError(`Request method should be POST, got ${context.request.method}`);
-    }
 
     let formData = await context.request.formData();
 

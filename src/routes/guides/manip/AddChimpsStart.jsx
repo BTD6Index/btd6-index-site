@@ -3,6 +3,7 @@ import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import useAccessToken from "../../../util/useAccessToken";
 import { useRef, useCallback, useState } from "react";
 import MapSelect from "../../../util/MapSelect";
+import PageTitle from "../../../util/PageTitle";
 
 const AddChimpsStart = withAuthenticationRequired(() => {
     const isAdmin = useCheckIfAdmin();
@@ -38,11 +39,11 @@ const AddChimpsStart = withAuthenticationRequired(() => {
     }, [formRef]);
 
     if (!isAdmin) {
-        return <h1>You are not authorized to view this page.</h1>;
+        return <PageTitle>You are not authorized to view this page.</PageTitle>;
     }
 
     return <>
-        <h1>Add CHIMPS Start</h1>
+        <PageTitle>Add CHIMPS Start</PageTitle>
         <p><a href="/chimps-starts">Back to CHIMPS Starts</a></p>
         <form action="/admin/add-new-chimps-start" method="post" ref={formRef} onSubmit={onSubmitCallback}>
             <span className="formLine">
