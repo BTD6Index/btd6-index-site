@@ -45,7 +45,7 @@ import Maps from './routes/reference/Maps';
 import { AddMap } from './routes/reference/manip/ManipMap';
 import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
 import LoginRedirect from './routes/LoginRedirect';
-
+import { HelmetProvider } from 'react-helmet-async';
 
 const router = createBrowserRouter([
   {
@@ -320,7 +320,7 @@ function AppImpl() {
     }}
     useRefreshTokensFallback 
     >
-    <AppImplImpl />
+    <HelmetProvider><AppImplImpl /></HelmetProvider>
   </Auth0Provider>;
 }
 
