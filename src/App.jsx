@@ -271,12 +271,12 @@ function AppImplImpl() {
             Challenges
             <ul className='dropdown'>
               <li><a className='nolinkstyle' href='/2tc'>2TC</a></li>
-              <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
               <li><a className='nolinkstyle' href='/fttc'>FTTC</a></li>
-              <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
-              <li><a className='nolinkstyle' href='/ltc'>LTC</a></li>
               <li><a className='nolinkstyle' href='/lcc'>LCC</a></li>
+              <li><a className='nolinkstyle' href='/ltc'>LTC</a></li>
               <li><a className='nolinkstyle' href='/lcd'>LCD</a></li>
+              <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
+              <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
             </ul>
           </li>
           <li>
