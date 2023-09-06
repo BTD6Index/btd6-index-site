@@ -110,7 +110,7 @@ async function handleFetchFlat({context, databaseTable, fields, personFields, cu
             return '';
         }
         if (field === 'query') {
-            return processQuery(searchParams.get(field), fieldKeys.filter(field => field != 'query'));
+            return processQuery(searchParams.get(field), fieldKeys.filter(field => field !== 'query'));
         }
         return searchParams.get(field);
     });
