@@ -1,3 +1,9 @@
+#appContainer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 header {
   font-size: 2em;
   padding: 0.2em;
@@ -7,6 +13,12 @@ header {
   border-bottom: 1px solid white;
   align-items: center;
   background-color: #111;
+}
+
+main {
+  overflow-x: auto;
+  flex-grow: 1;
+  padding-bottom: 7.5em;
 }
 
 .glueRat {

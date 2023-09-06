@@ -237,7 +237,7 @@ const router = createBrowserRouter([
 
 function AppImplImpl() {
   const { loginWithRedirect, isAuthenticated, isLoading, logout, user } = useAuth0();
-  return <div>
+  return <div id="appContainer">
     <header>
       <a className='nolinkstyle' href='/'>
         <img className='glueRat' alt='glue rat' src='/GlueGunnerPetRatIcon.png' />
