@@ -17,9 +17,7 @@
     "wrangler": "^3.4.0"
   },
   "scripts": {
-    "start": "concurrently -k true 'npm:start-react' 'npm:start-wrangler'",
-    "start-react": "npx cross-env BROWSER=none vite dev",
-    "start-wrangler": "npx wrangler pages dev --proxy 5173",
+    "start": "wrangler pages dev -- vite dev",
     "build": "vite build"
   },
   "eslintConfig": {
@@ -43,12 +41,15 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@modyfi/vite-plugin-yaml": "^1.0.4",
+    "@nabla/vite-plugin-eslint": "^1.5.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@vitejs/plugin-react": "^4.0.4",
     "concurrently": "^8.2.0",
     "cross-env": "^7.0.3",
+    "eslint": "^8.48.0",
+    "eslint-config-react-app": "^7.0.1",
     "vite": "^4.4.9"
   }
 }

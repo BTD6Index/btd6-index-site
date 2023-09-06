@@ -46,7 +46,7 @@ export default function ChimpsStarts() {
                             {
                             chimpsStartsData.map(chimpsStart => {
                                 const onDelete = async () => {
-                                    if (confirm(`Delete CHIMPS start "${chimpsStart.title}"?`)) {
+                                    if (window.confirm(`Delete CHIMPS start "${chimpsStart.title}"?`)) {
                                         try {
                                             const formData = new FormData();
                                             formData.set('uuid', chimpsStart.uuid);

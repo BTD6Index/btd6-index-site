@@ -36,7 +36,7 @@ const AddChimpsStart = withAuthenticationRequired(() => {
         } catch (e) {
             alert(`Error adding CHIMPS start: ${e.message}`);
         }
-    }, [formRef]);
+    }, [formRef, getToken]);
 
     if (!isAdmin) {
         return <PageTitle>You are not authorized to view this page.</PageTitle>;

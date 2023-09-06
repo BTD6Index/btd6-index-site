@@ -36,7 +36,7 @@ function ManipMap({oldMap = null}) {
         } catch (e) {
             alert(`Error adding map: ${e.message}`);
         }
-    }, [formRef]);
+    }, [formRef, getToken]);
 
     if (!isAdmin) {
         return <PageTitle>You are not authorized to view this page.</PageTitle>;

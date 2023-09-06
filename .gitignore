@@ -39,3 +39,5 @@ __pycache__
 
 drive-migrate.py
 assign-mime-types.py
+
+.eslintcache

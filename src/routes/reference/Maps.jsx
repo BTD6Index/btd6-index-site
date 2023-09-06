@@ -47,7 +47,7 @@ export default function Maps() {
     }, [searchParams]);
 
     const deleteCallback = useCallback(async () => {
-        if (confirm(`Delete map ${searchParams.get('map')}?`)) {
+        if (window.confirm(`Delete map ${searchParams.get('map')}?`)) {
             try {
                 const formData = new FormData();
                 formData.set('map', searchParams.get('map'));
@@ -74,7 +74,7 @@ export default function Maps() {
                 alert(`Error deleting map: ${e.message}`);
             }
         }
-    }, [searchParams, getToken]);
+    }, [searchParams, getToken, setSearchParams]);
 
     return <>
         <PageTitle>Maps</PageTitle>
