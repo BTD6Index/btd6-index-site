@@ -32,7 +32,7 @@ async function processImages({imageKey, editMode, formData, media, context, link
             imageKey, formData.get('image').stream(), editMode ? {} : { onlyIf: { etagDoesNotMatch: '*' } }
         );
         if (r2Obj === null) {
-            return respondError('Failed to upload image object');
+            throw new Error('Failed to upload image object');
         }
     }
 
@@ -43,7 +43,7 @@ async function processImages({imageKey, editMode, formData, media, context, link
                 attachment.stream(), { onlyIf: { etagDoesNotMatch: '*' } }
             );
             if (r2Obj === null) {
-                return respondError('Failed to upload an attachment');
+                throw new Error('Failed to upload an attachment');
             }
         }
     }
@@ -177,15 +177,15 @@ async function handleAddSubmit({
     let batch_result;
     try {
         batch_result = await db.batch(batched_stmts);
+
+        if (editMode) {
+            imageKey = batch_result[update_filekeys_idx].results[0].filekey;
+        }
+    
+        await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
     } catch (e) {
         return respondError(e.message);
     }
-
-    if (editMode) {
-        imageKey = batch_result[update_filekeys_idx].results[0].filekey;
-    }
-
-    await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
 
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(
@@ -275,11 +275,11 @@ async function handleAddSubmitLCCLike({context, challenge}) {
 
     try {
         imageKey = (await query.first()).filekey;
+
+        await processImages({imageKey, context, editMode, formData, media, link, hasImage});
     } catch (e) {
         return respondError(e.message);
     }
-
-    await processImages({imageKey, context, editMode, formData, media, link, hasImage});
     
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(

@@ -75,11 +75,11 @@ export async function onRequestPost(context) {
 
     try {
         imageKey = (await query.first()).filekey;
+
+        await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
     } catch (e) {
         return respondError(e.message);
     }
-
-    await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
     
     for (let webhookUrl of webhookUrls) {
         context.waitUntil(
