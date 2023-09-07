@@ -20,7 +20,7 @@ export default function TwoTCNotes() {
     }
 
     return <>
-        <PageTitle>Notes for {params.get('tower1')} and {params.get('tower2')} 2TC</PageTitle>
+        <PageTitle>{`Notes for ${params.get('tower1')} and ${params.get('tower2')} 2TC`}</PageTitle>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
         <AttachmentsList attachmentKeys={attachmentKeys} />

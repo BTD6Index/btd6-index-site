@@ -20,7 +20,7 @@ export default function FTTCNotes() {
     }
 
     return <>
-        <PageTitle>Notes for {params.get('map')} FTTC</PageTitle>
+        <PageTitle>{`Notes for ${params.get('map')} FTTC`}</PageTitle>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
         <AttachmentsList attachmentKeys={attachmentKeys} />

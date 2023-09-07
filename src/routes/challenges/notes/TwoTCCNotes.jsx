@@ -12,7 +12,7 @@ export default function TwoTCCNotes() {
 
     if (error) {
         return <>
-            <PageTitle>Error retrieving completion notes: {error}</PageTitle>
+            <PageTitle>{`Error retrieving completion notes: ${error}`}</PageTitle>
             <p><a href='/2tcc'>Back to 2TCCs</a></p>
         </>; 
     } else if (notes === null) {

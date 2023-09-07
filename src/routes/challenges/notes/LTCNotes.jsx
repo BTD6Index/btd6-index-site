@@ -44,7 +44,7 @@ export default function LTCNotes() {
     }
 
     return <>
-        <PageTitle>Notes for {params.get('map')} LTC</PageTitle>
+        <PageTitle>{`Notes for ${params.get('map')} LTC`}</PageTitle>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
         <AttachmentsList attachmentKeys={attachments} />

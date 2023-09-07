@@ -20,7 +20,7 @@ export default function TwoMPNotes() {
     }
 
     return <>
-        <PageTitle>Notes for {params.get('entity')} 2MP</PageTitle>
+        <PageTitle>{`Notes for ${params.get('entity')} 2MP`}</PageTitle>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>{notes || 'No notes for this completion'}</ReactMarkdown>
         <h2>Attachments</h2>
         <AttachmentsList attachmentKeys={attachmentKeys} />
