@@ -1,3 +1,7 @@
+:root {
+  --main-font-size: calc(1.4rem);
+}
+
 #appContainer {
   display: flex;
   flex-direction: column;
@@ -5,7 +9,7 @@
 }
 
 header {
-  font-size: 2em;
+  font-size: calc(1.3 * var(--main-font-size));
   padding: 0.2em;
   display: flex;
   flex-direction: row;
@@ -21,7 +25,7 @@ header {
   overflow-x: auto;
   flex-grow: 1;
   text-align: left;
-  font-size: calc(1vw + 1.5vh);
+  font-size: var(--main-font-size);
   padding: 0 4vw;
 }
 main {
@@ -148,7 +152,7 @@ a.nolinkstyle, a:visited.nolinkstyle {
 }
 
 input, button, select {
-  font-size: calc(1vw + 1.5vh);
+  font-size: var(--main-font-size);
   font-family: Dosis, sans-serif;
   background: white;
   color: black;
@@ -197,8 +201,8 @@ input[type="number"] {
 }
 
 input[type="checkbox"], input[type="radio"] {
-  width: calc(1vw + 1.5vh);
-  height: calc(1vw + 1.5vh);
+  width: var(--main-font-size);
+  height: var(--main-font-size);
 }
 
 input[type="file"] {
