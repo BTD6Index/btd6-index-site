@@ -110,14 +110,14 @@ const IMAGE_FORMATS = "image/jpeg, image/png, image/gif, image/webp, image/apng,
 function FormLinkEntry({existingInfo}) {
     return <span className="formLine">
                 <label htmlFor="link">Link</label>
-                <input name="link" type="text" placeholder="Link" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.link} />
+                <input name="link" id="link" type="text" placeholder="Link" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.link} />
             </span>;
 }
 
 function FormImageEntry() {
     return <span className="formLine">
         <label htmlFor="image">Upload Image/Video</label>
-        <input type="file" name="image" accept={IMAGE_FORMATS} />
+        <input type="file" name="image" id="image" accept={IMAGE_FORMATS} />
     </span>;
 }
 
@@ -152,7 +152,7 @@ function AttachmentsWidget({existingAttachments, attachmentsLabel = null}) {
     return <>
         <span className="formLine">
             <label htmlFor="attachments">{attachmentsLabel ?? "Upload Attachments"}</label>
-            <input type="file" name="attachments" accept={IMAGE_FORMATS} multiple />
+            <input type="file" name="attachments" id="attachments" accept={IMAGE_FORMATS} multiple />
         </span>
         {
             (existingAttachments ?? []).map(attachmentKey => {

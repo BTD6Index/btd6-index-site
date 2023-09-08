@@ -29,7 +29,17 @@ export default function ChallengePage({
     fieldDisplayFunc ??= defaultFieldDisplayFunc;
 
     const {
-        completions, offset, hasNext, totalCompletions, onSearch, onPrev, onNext, forceReload, error: searchError, setPendingFilter
+        completions,
+        offset,
+        hasNext,
+        totalCompletions,
+        onSearch,
+        onPrev,
+        onNext,
+        forceReload,
+        error: searchError,
+        setPendingFilter,
+        setOgFilter
     } = useIndexSearch(`/fetch-${challenge}`);
 
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
@@ -80,6 +90,10 @@ export default function ChallengePage({
             <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
             <input type="checkbox" id="filter-pending" onChange={e => setPendingFilter(e.target.checked)} />
             <label htmlFor="filter-pending">Pending completions only</label>
+            { !disableOG && <>
+                <input type="checkbox" id="filter-og" onChange={e => setOgFilter(e.target.checked)} />
+                <label htmlFor="filter-og">OG completions only</label>
+            </> }
         </div>
         <div className="searchUiGroup">
             <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>

@@ -51,7 +51,7 @@ function ManipLCC({ editParams = null, setEditParams = null }) {
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="map">Map</label>
-                <MapSelect name="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
+                <MapSelect name="map" inputId="map" mapValue={map} required onChange={(val) => setMap(val.value)} />
             </span>
             <br />
             <span className="formLine">

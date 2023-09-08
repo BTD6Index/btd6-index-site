@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import useForceReload from "./useForceReload";
 
-export default function useIndexSearch(endpoint) {
+export default function useIndexSearch(endpoint, count = 20) {
     const [query, setQuery] = useState('');
     const [offset, setOffset] = useState(0);
     const [totalCompletions, setTotalCompletions] = useState(0);
@@ -10,13 +10,16 @@ export default function useIndexSearch(endpoint) {
     const {reloadVar, forceReload} = useForceReload();
     const [error, setError] = useState(null);
     const [pendingFilter, setPendingFilter] = useState(false);
+    const [ogFilter, setOgFilter] = useState(false);
 
     useEffect(() => {
         setError(null);
         fetch(endpoint + "?" + new URLSearchParams({
             query: query,
             offset: offset,
-            ...(pendingFilter ? {pending: 1} : {})
+            count,
+            ...(pendingFilter ? {pending: 1} : {}),
+            ...(ogFilter ? {og: 1} : {})
         }))
         .then(async response => {
             const data = await response.json();
@@ -35,7 +38,7 @@ export default function useIndexSearch(endpoint) {
         .catch(err => {
             setError(err.message);
         });
-    }, [query, offset, endpoint, reloadVar, pendingFilter]);
+    }, [query, offset, endpoint, reloadVar, pendingFilter, ogFilter, count]);
 
     const onSearch = useCallback((e) => {
         setOffset(0);
@@ -43,12 +46,12 @@ export default function useIndexSearch(endpoint) {
     }, []);
 
     const onPrev = useCallback(() => {
-        setOffset(state => Math.max(state - 10, 0));
-    }, []);
+        setOffset(state => Math.max(state - count, 0));
+    }, [count]);
 
     const onNext = useCallback(() => {
-        setOffset(state => state + 10);
-    }, []);
+        setOffset(state => state + count);
+    }, [count]);
 
     return {
         query,
@@ -61,6 +64,7 @@ export default function useIndexSearch(endpoint) {
         onPrev,
         onNext,
         forceReload,
-        setPendingFilter
+        setPendingFilter,
+        setOgFilter
     };
 };
