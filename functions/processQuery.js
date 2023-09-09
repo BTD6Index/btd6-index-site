@@ -8,7 +8,7 @@ function processQuery(query, validColumns) {
         if (splitToken.length === 2 && validColumns.includes(splitToken[0])) {
             return `(${splitToken[0]} : "${splitToken[1].replace('"', '\\"')}" *)`;
         }*/
-        return `"${token.replace('"', '\\"')}" *`;
+        return `"${token.replace(/"/g, '\\"')}" *`;
     })
     .join(' AND ');
 }
