@@ -23,10 +23,8 @@ export default function FTTC() {
         challenge="fttc"
         header="Fewest Types of Towers CHIMPS"
         description="In this challenge, win a game of CHIMPS with no heroes and the smallest number of tower types."
-        fieldHeaders={['Map']}
-        fields={['map']}
-        altFields={['towerset']}
-        altFieldHeaders={['Tower Types']}
+        fieldHeaders={['Map', 'Tower Types']}
+        fields={['map', 'towerset']}
         fieldDisplayFunc={fieldDisplayFunc}
     />
 };

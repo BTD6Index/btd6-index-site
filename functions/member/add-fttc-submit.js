@@ -5,7 +5,7 @@ export async function onRequestPost(context) {
         context,
         challenge: 'fttc',
         fields: ['map', 'towerset'],
-        extraInfoFields: ['map', 'version', 'date'],
+        extraInfoFields: ['map', 'towerset', 'version', 'date'],
         genEmbedFunction: ({link, formData, edit, filekey, verify}) => {
             return {
                 "content": `**(${JSON.parse(formData.get('towerset')).join(', ')}) FTTC on ${formData.get('map')} ${

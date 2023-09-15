@@ -122,7 +122,7 @@ CREATE TABLE "fttc_completions" (
     map, towerset, person, link, og, pending, PRIMARY KEY (map, towerset)
 );
 CREATE TABLE "fttc_extra_info" (
-    map PRIMARY KEY, version, date
+    map, towerset, version, date, PRIMARY KEY (map, towerset)
 );
 CREATE TABLE "fttc_completion_notes" (
     map, towerset, notes, PRIMARY KEY (map, towerset)
