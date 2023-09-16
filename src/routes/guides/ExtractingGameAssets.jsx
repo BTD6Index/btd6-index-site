@@ -24,9 +24,14 @@ export default function ExtractingGameAssets() {
                             <li>If Unity complains about compilation errors then ignore them</li>
                         </ul>
                     </li>
-                    <li>Install the <a href="https://docs.unity3d.com/Packages/com.unity.formats.fbx@2.0/manual/index.html">FBX Exporter</a> package. You may need to restart Unity to see the &ldquo;Export to FBX&rdquo; option.</li>
+                    <li>Install the <a href="https://docs.unity3d.com/Packages/com.unity.formats.fbx@2.0/manual/index.html">FBX Exporter</a> package, following the linked instructions. You may need to restart Unity to see the &ldquo;Export to FBX&rdquo; option.</li>
                     <li>Open the desired .prefab (Unity 3D model) file. Note that some tower models are in Assets &gt; Generated &gt; Assets &gt; Monkeys rather than the usual Assets &gt; Monkeys.</li>
-                    <li>Go to GameObject &gt; Export to FBX to export the file as an FBX model usable by most 3D programs.</li>
+                    <li>
+                        Go to GameObject &gt; Export to FBX to export the file as an FBX model usable by most 3D programs.
+                        <ul>
+                            <li>Blender, the main free 3D model editor, can open FBX, though it has some bugs in the importer. For best results you may want to convert the model into an .obj first using e.g. <a href="https://www.autodesk.com/developer-network/platform-technologies/fbx-converter-archives">FBX Converter</a>.</li>
+                        </ul>
+                    </li>
                 </ol>
             </li>
         </ol>
