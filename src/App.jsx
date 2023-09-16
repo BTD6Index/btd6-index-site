@@ -46,6 +46,7 @@ import { AddMap } from './routes/reference/manip/ManipMap';
 import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
 import LoginRedirect from './routes/LoginRedirect';
 import { HelmetProvider } from 'react-helmet-async';
+import ExtractingGameAssets from './routes/guides/ExtractingGameAssets';
 
 const router = createBrowserRouter([
   {
@@ -229,6 +230,10 @@ const router = createBrowserRouter([
         element: <AddChimpsStart />
       },
       {
+        path: "extracting-game-assets",
+        element: <ExtractingGameAssets />
+      },
+      {
         path: 'login-redirect',
         element: <LoginRedirect />
       },
@@ -289,6 +294,7 @@ function AppImplImpl() {
             Guides
             <ul className='dropdown'>
               <li><a className='nolinkstyle' href='/chimps-starts'>CHIMPS Starts</a></li>
+              <li><a className='nolinkstyle' href='/extracting-game-assets'>Extracting BTD6 Game Assets</a></li>
             </ul>
           </li>
         </ul>
