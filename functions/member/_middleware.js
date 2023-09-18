@@ -10,7 +10,9 @@ async function auth(context) {
                 issuer: 'https://lordlandmaster.us.auth0.com/',
                 audience: 'https://btd6index.win/'
             });
-            throw new Error('vrej');
+            if (!context.data.jwtResult?.payload?.permissions?.includes('write:admin')) {
+                throw new Error('You do not have index helper perms');
+            }
         } catch (e) {
             // 403 b/c user is already authenticated
             return Response.json({error: 'Unauthorized access'}, {status: 403});
