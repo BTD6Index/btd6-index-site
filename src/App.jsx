@@ -319,11 +319,11 @@ function AppImpl() {
       audience: 'https://btd6index.win/',
       scope: 'openid email profile offline_access'
     }}
-    useRefreshTokens={false}
+    useRefreshTokens={true}
     onRedirectCallback={(state) => {
       navigate(state?.returnTo ?? window.location.origin);
     }}
-    useRefreshTokensFallback={false}
+    useRefreshTokensFallback={true}
     >
     <HelmetProvider><AppImplImpl /></HelmetProvider>
   </Auth0Provider>;
