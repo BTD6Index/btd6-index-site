@@ -10,6 +10,7 @@ async function auth(context) {
                 issuer: 'https://lordlandmaster.us.auth0.com/',
                 audience: 'https://btd6index.win/'
             });
+            throw new Error('vrej');
         } catch (e) {
             // 403 b/c user is already authenticated
             return Response.json({error: 'Unauthorized access'}, {status: 403});
