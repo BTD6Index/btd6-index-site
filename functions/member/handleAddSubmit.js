@@ -1,3 +1,5 @@
+import sanitizeDiscord from "../sanitizeDiscord";
+
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
     for (let i = 0; i < arrayLen; ++i) {
@@ -289,8 +291,8 @@ async function handleAddSubmitLCCLike({context, challenge}) {
                         "content": `**${formData.get('map')} ${challenge.toUpperCase()} ($${formData.get('money')}) on Version ${formData.get('version')} ${
                             editMode ? 'Edited' : 'Submitted'
                         }${verify ? ' and Verified' : ''}**\n`
-                        + `Person: ${formData.get('person')}\n`
-                        + `Link: ${link || `https://media.btd6index.win/${imageKey}`}\n`
+                        + `Person: ${sanitizeDiscord(formData.get('person'))}\n`
+                        + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${imageKey}`)}\n`
                         + `Notes and Attachments: https://btd6index.win/${challenge}/notes?${new URLSearchParams({
                             filekey: imageKey
                         })}`,

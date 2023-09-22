@@ -1,4 +1,5 @@
 import { processImages, getWebhookUrls } from "./handleAddSubmit";
+import sanitizeDiscord from "../sanitizeDiscord";
 
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
@@ -89,8 +90,8 @@ export async function onRequestPost(context) {
                         "content": `**(${JSON.parse(formData.get('towerset')).join(', ')}) ${formData.get('completiontype').toUpperCase()} LTC on ${formData.get('map')} ${
                             editMode ? 'Edited' : 'Submitted'
                         }${verify ? ' and Verified' : ''}**\n`
-                        + `Person: ${formData.get('person')}\n`
-                        + `Link: ${link || `https://media.btd6index.win/${imageKey}`}\n`
+                        + `Person: ${sanitizeDiscord(formData.get('person'))}\n`
+                        + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${imageKey}`)}\n`
                         + `Notes and Attachments: https://btd6index.win/ltc/notes?${new URLSearchParams({
                             towerset: formData.get('towerset'),
                             map: formData.get('map'),

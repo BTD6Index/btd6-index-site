@@ -1,4 +1,5 @@
 import { handleAddSubmit } from "./handleAddSubmit";
+import sanitizeDiscord from "../sanitizeDiscord";
 
 export async function onRequestPost(context) {
     return handleAddSubmit({
@@ -9,8 +10,8 @@ export async function onRequestPost(context) {
             "content": `**${formData.get('tower1')} and ${formData.get('tower2')} 2TC on ${formData.get('map')} ${
                 edit ? 'Edited' : 'Submitted'
             }${verify ? ' and Verified' : ''}**\n`
-            + `Person: ${formData.get('person')}\n`
-            + `Link: ${link || `https://media.btd6index.win/${filekey}`}\n`
+            + `Person: ${sanitizeDiscord(formData.get('person'))}\n`
+            + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${filekey}`)}\n`
             + `Notes and Attachments: https://btd6index.win/2tc/notes?${new URLSearchParams({
                     tower1: formData.get('tower1'),
                     tower2: formData.get('tower2'),
