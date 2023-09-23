@@ -1,4 +1,4 @@
-export async function onRequest(context) {
+export async function onRequestPost(context) {
     let tokenHandle = await fetch('https://lordlandmaster.us.auth0.com/oauth/token', {
         method: 'post',
         headers: {
@@ -20,17 +20,21 @@ export async function onRequest(context) {
     if (userIds.length > 100) {
         return Response.json({error: 'Cannot specify more than 100 user ids'}, {status: 400});
     }
-    let resHandle = await fetch('https://lordlandmaster.us.auth0.com/api/v2/users?' + new URLSearchParams(
-        {q: userIds.map(userId => `user_id="${userId.replace(/"/g, '\\"')}"`).join(' OR ')}
-    ), {
-        headers: {
-            Authorization: `Bearer ${token.access_token}`
+    for (let userId of userIds) {
+        let resHandle = await fetch(`https://lordlandmaster.us.auth0.com/api/v2/users/${encodeURIComponent(userId)}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token.access_token}`
+            },
+            body: {
+                'blocked': true
+            },
+            method: 'patch'
+        });
+        let res = await resHandle.json();
+        if (!resHandle.ok) {
+            return Response.json({error: 'Error while calling management API: ' + res.message}, {status: 500});
         }
-    });
-    let res = await resHandle.json();
-    if (!resHandle.ok) {
-        return Response.json({error: 'Error while calling management API: ' + res.message}, {status: 500});
     }
-    let resByUserId = new Map(res.map(elem => [elem.user_id, elem.email]));
-    return Response.json(userIds.map(id => resByUserId.get(id)));
+    return new Response("", {status: 204});
 }
