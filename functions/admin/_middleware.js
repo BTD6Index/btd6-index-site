@@ -16,7 +16,7 @@ async function auth(context) {
             }
         } catch (e) {
             // 403 b/c user is already authenticated
-            return Response.json({error: 'Unauthorized access'}, {status: 403});
+            return Response.json({error: `Unauthorized access: ${e.message}`}, {status: 403});
         }
     } else {
         return Response.json({error: 'Unauthorized access'}, {status: 401});
