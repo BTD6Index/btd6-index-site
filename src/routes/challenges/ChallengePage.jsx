@@ -100,9 +100,11 @@ export default function ChallengePage({
             <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>
             {
                 !isLoading && isAuthenticated
-                && <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
-                    Delete Selected
-                </button>
+                && <>
+                    <button type="button" className="dangerButton" disabled={selectedCompletions.length === 0} onClick={onDelete}>
+                        Delete Selected
+                    </button>
+                </>
             }
             {
                 !!(!searchError && totalCompletions) && <span>Results {offset+1} to {offset+completions.length} of {totalCompletions}</span>
@@ -130,6 +132,40 @@ export default function ChallengePage({
                                     const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
                                     const link = completion.link || `https://media.btd6index.win/${completion.filekey}`;
 
+                                    const onBan = async () => {
+                                        try {
+                                            const token = await getToken();
+                                            const emailRes = await fetch('/admin/get-users-emails?' + new URLSearchParams({
+                                                user_id: completion.pending
+                                            }), {
+                                                headers: {
+                                                    Authorization: `Bearer ${token}`
+                                                }
+                                            });
+                                            const emailResJson = await emailRes.json();
+                                            if ('error' in emailResJson) {
+                                                throw new Error(emailResJson.error);
+                                            }
+                                            if (window.confirm(`Ban ${emailResJson[0]}?`)) {
+                                                const banRes = await fetch('/admin/ban-users?' + new URLSearchParams({
+                                                    user_id: completion.pending
+                                                }), {
+                                                    method: "post",
+                                                    headers: {
+                                                        Authorization: `Bearer ${token}`
+                                                    }
+                                                });
+                                                const banResJson = await banRes.json();
+                                                if ('error' in banResJson) {
+                                                    throw new Error(banResJson.error);
+                                                }
+                                                window.alert(`Successfully banned ${emailResJson[0]}`);
+                                            }
+                                        } catch (e) {
+                                            window.alert(`Error banning user: ${e.message}`);
+                                        }
+                                    };
+
                                     return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
                                         {!isLoading && isAuthenticated && <td>
                                             {hasWritePerms && <input
@@ -148,7 +184,12 @@ export default function ChallengePage({
                                                 })}</td>)
                                         }
                                         {
-                                            personFields.map(field => <td key={field}>{completion[field]}{completion.pending ? ' (Pending)' : ''}</td>)
+                                            personFields.map(field => <td key={field}>
+                                                {completion[field]}{completion.pending ? ' (Pending)' : ''}
+                                                {isAdmin && completion.pending && <>
+                                                    {" "}<button type="button" className="dangerButton" onClick={onBan}>Ban Submitter</button>
+                                                </>}
+                                            </td>)
                                         }
                                         {
                                             auxFields

@@ -26,15 +26,15 @@ export async function onRequestPost(context) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token.access_token}`
             },
-            body: {
+            body: JSON.stringify({
                 'blocked': true
-            },
-            method: 'patch'
+            }),
+            method: 'PATCH'
         });
         let res = await resHandle.json();
         if (!resHandle.ok) {
             return Response.json({error: 'Error while calling management API: ' + res.message}, {status: 500});
         }
     }
-    return new Response("", {status: 204});
+    return Response.json({}, {status: 200});
 }
