@@ -5,6 +5,7 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
     "jose": "^4.14.4",
+    "leo-profanity": "^1.7.0",
     "react": "^18.2.0",
     "react-children-utilities": "^2.9.0",
     "react-dom": "^18.2.0",

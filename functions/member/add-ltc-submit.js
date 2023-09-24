@@ -1,5 +1,6 @@
 import { processImages, getWebhookUrls } from "./handleAddSubmit";
 import sanitizeDiscord from "../sanitizeDiscord";
+import profanityFilter from 'leo-profanity';
 
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
@@ -32,6 +33,9 @@ export async function onRequestPost(context) {
     for (let key of requiredFieldKeys) {
         if (!formData.has(key)) {
             return respondError(`Missing required key: ${key}`);
+        }
+        if (profanityFilter.check(formData.get(key))) {
+            return respondError(`Profanity detected in field ${key}`);
         }
     }
     const fieldValues = fieldKeys.map(field => formData.get(field));

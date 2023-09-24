@@ -1,4 +1,5 @@
 import sanitizeDiscord from "../sanitizeDiscord";
+import profanityFilter from 'leo-profanity';
 
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
@@ -81,15 +82,12 @@ async function handleAddSubmit({
 
     const editMode = ['true', '1'].includes(formData.get('edit'));
 
-    for (let key of fields.concat(formData.has('og') ? extraInfoFields : [])) {
+    for (let key of fields.concat(formData.has('og') ? extraInfoFields : []).concat(auxFields)) {
         if (!formData.has(key)) {
             return respondError(`Missing required key: ${key}`);
         }
-    }
-
-    for (let key of auxFields) {
-        if (!formData.has(key)) {
-            return respondError(`Missing required key: ${key}`);
+        if (profanityFilter.check(formData.get(key))) {
+            return respondError(`Profanity detected in field ${key}`);
         }
     }
 
@@ -235,6 +233,9 @@ async function handleAddSubmitLCCLike({context, challenge}) {
     for (let key of requiredFieldKeys) {
         if (!formData.has(key)) {
             return respondError(`Missing required key: ${key}`);
+        }
+        if (profanityFilter.check(formData.get(key))) {
+            return respondError(`Profanity detected in field ${key}`);
         }
     }
     const fieldValues = fieldKeys.map(field => formData.get(field));

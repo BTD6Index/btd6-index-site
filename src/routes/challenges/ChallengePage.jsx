@@ -186,9 +186,9 @@ export default function ChallengePage({
                                         {
                                             personFields.map(field => <td key={field}>
                                                 {completion[field]}{completion.pending ? ' (Pending)' : ''}
-                                                {isAdmin && completion.pending && <>
-                                                    {" "}<button type="button" className="dangerButton" onClick={onBan}>Ban Submitter</button>
-                                                </>}
+                                                {isAdmin && completion.pending && <button type="button" className="dangerButton" onClick={onBan} style={{marginLeft: '1ch'}}>
+                                                    Ban Submitter
+                                                </button>}
                                             </td>)
                                         }
                                         {
