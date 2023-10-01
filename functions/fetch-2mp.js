@@ -4,7 +4,8 @@ import towerNames from "./tower-names.json";
 export async function onRequest(context) {
     return handleFetch({
         context,
-        primaryFieldKeys: ['entity', 'map'],
+        primaryFieldKeys: ['entity'],
+        altFieldKeys: ['map'],
         personKeys: ['person'],
         extraKeys: ['towerquery'],
         challenge: '2mp',

@@ -85,7 +85,7 @@ export default function ChallengePage({
         <PageTitle>{header}</PageTitle>
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
-        <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>
+        {isAdmin && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
         <div className="searchUiGroup">
             <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
             <input type="checkbox" id="filter-pending" onChange={e => setPendingFilter(e.target.checked)} />
@@ -186,9 +186,6 @@ export default function ChallengePage({
                                         {
                                             personFields.map(field => <td key={field}>
                                                 {completion[field]}{completion.pending ? ' (Pending)' : ''}
-                                                {isAdmin && completion.pending && <button type="button" className="dangerButton" onClick={onBan} style={{marginLeft: '1ch'}}>
-                                                    Ban Submitter
-                                                </button>}
                                             </td>)
                                         }
                                         {

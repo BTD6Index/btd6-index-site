@@ -10,13 +10,22 @@ import { processQuery } from "./processQuery";
  * @param {Object} args
  * @param args.context
  * @param {string[]} args.primaryFieldKeys
+ * @param {string[]} args.altFieldKeys
  * @param {string[]} args.personKeys
  * @param {string[]} args.extraKeys
  * @param {string} args.challenge
  * @param {customFieldQuery?} args.customFieldQuery
  * @returns 
  */
-async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = [], challenge, customFieldQuery = null }) {
+async function handleFetch({
+    context,
+    primaryFieldKeys,
+    altFieldKeys = [],
+    personKeys,
+    extraKeys = [],
+    challenge,
+    customFieldQuery = null
+}) {
     const db = context.env.BTD6_INDEX_DB;
 
     let searchParams = new URL(context.request.url).searchParams;
@@ -24,7 +33,8 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
     let offset = parseInt(searchParams.get('offset') ?? '0');
     let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
     
-    let fieldKeys = [...primaryFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending'];
+    let identifierFieldKeys = [...primaryFieldKeys, altFieldKeys];
+    let fieldKeys = [...identifierFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending'];
     let sqlFieldKeys = [...fieldKeys, 'difficulty'].filter(field => searchParams.has(field));
     let specific_field_conds = (paramPos) => {
         return sqlFieldKeys
@@ -55,8 +65,9 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
                 return db.prepare(`
                     SELECT ${select} FROM "${challenge}_completions_fts"
                     INNER JOIN map_information USING (map)
-                    INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
-                    WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?2 OFFSET ?3
+                    INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
+                    LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
+                    WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${identifierFieldKeys.join(',')} LIMIT ?2 OFFSET ?3
                 `).bind(processQuery(query, fieldKeys), limit, offset, JSON.stringify(fieldValues));
             };
         } else {
@@ -64,8 +75,9 @@ async function handleFetch({ context, primaryFieldKeys, personKeys, extraKeys = 
                 return db.prepare(`
                     SELECT ${select} FROM "${challenge}_completions_fts"
                     INNER JOIN map_information USING (map)
-                    INNER JOIN "${challenge}_filekeys" USING (${primaryFieldKeys.join(',')})
-                    WHERE ${specific_field_conds(3)} ORDER BY ${primaryFieldKeys.join(',')} LIMIT ?1 OFFSET ?2
+                    INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
+                    LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
+                    WHERE ${specific_field_conds(3)} ORDER BY ${identifierFieldKeys.join(',')} LIMIT ?1 OFFSET ?2
                 `)
                 .bind(limit, offset, JSON.stringify(fieldValues));
             };
@@ -147,13 +159,14 @@ async function handleFetchOgInfo({context, challenge, joinFields, altJoinFields}
     }
     let res = await context.env.BTD6_INDEX_DB
     .prepare(`
-        SELECT * FROM "${challenge}_extra_info" AS a INNER JOIN "${challenge}_completions" AS b
+        SELECT * FROM "${challenge}_extra_info" AS a
+        INNER JOIN "${challenge}_completions" AS b
         ON ${joinFields.map(field => `a.${field} = b.${field}`).join(' AND ')} AND b.og = 1
         INNER JOIN "${challenge}_filekeys" AS c
         ON ${joinFields.concat(altJoinFields).map(field => `b.${field} = c.${field}`).join(' AND ')}
-        WHERE ${joinFields.map((field, idx) => `b.${field} = ?${idx+1}`).join(' AND ')}
+        WHERE ${joinFields.map((field, idx) => `b.${field} = json_extract(?1, '$[${idx}]')`).join(' AND ')}
     `)
-    .bind(...joinFieldVals)
+    .bind(JSON.stringify(joinFieldVals))
     .first();
     if (res === null) {
         return Response.json({error: 'specified completion doesn\'t exist'}, {status: 400});

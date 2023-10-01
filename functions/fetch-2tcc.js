@@ -14,7 +14,8 @@ function convTowerSubquery(query, queryIdx, paramPos, idx) {
 export async function onRequest(context) {
     return handleFetch({
         context,
-        primaryFieldKeys: ['tower1', 'tower2', 'map'],
+        primaryFieldKeys: ['tower1', 'tower2'],
+        altFieldKeys: ['map'],
         personKeys: ['person1', 'person2'],
         challenge: '2tcc',
         extraKeys: ['towerquery'],
