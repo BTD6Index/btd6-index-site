@@ -131,7 +131,7 @@ export default function ChallengePage({
                                     const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
                                     const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
                                     const link = completion.link || `https://media.btd6index.win/${completion.filekey}`;
-
+                                   /* 
                                     const onBan = async () => {
                                         try {
                                             const token = await getToken();
@@ -164,7 +164,7 @@ export default function ChallengePage({
                                         } catch (e) {
                                             window.alert(`Error banning user: ${e.message}`);
                                         }
-                                    };
+                                    };*/
 
                                     return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
                                         {!isLoading && isAuthenticated && <td>
