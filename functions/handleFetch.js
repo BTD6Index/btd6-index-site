@@ -33,7 +33,7 @@ async function handleFetch({
     let offset = parseInt(searchParams.get('offset') ?? '0');
     let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
     
-    let identifierFieldKeys = [...primaryFieldKeys, altFieldKeys];
+    let identifierFieldKeys = [...primaryFieldKeys, ...altFieldKeys];
     let fieldKeys = [...identifierFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending'];
     let sqlFieldKeys = [...fieldKeys, 'difficulty'].filter(field => searchParams.has(field));
     let specific_field_conds = (paramPos) => {
