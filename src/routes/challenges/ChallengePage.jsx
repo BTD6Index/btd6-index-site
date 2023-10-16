@@ -5,6 +5,7 @@ import { useRef, useCallback } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import PageTitle from "../../util/PageTitle";
+import { Helmet } from "react-helmet-async";
 
 export default function ChallengePage({
     challenge,
@@ -83,6 +84,9 @@ export default function ChallengePage({
 
     return <>
         <PageTitle>{header}</PageTitle>
+        <Helmet>
+            <meta name="description" content={description} />
+        </Helmet>
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
         {isAdmin && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
