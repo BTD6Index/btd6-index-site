@@ -12,7 +12,7 @@ export default function TwoTCCRules() {
         <h2>Challenge Settings</h2>
         <p>
             Must be done in a real co-op game (not challenge editor with extra starting cash).
-            Alternate accounts of the same player are disallowed except to give co-op cash and then immediately leave.
+            Each player must have 1 tower (one player cannot have both).
             Using glitches to get extra cash per round is disallowed.
             The bug where you can disconnect for a round-ish and reconnect, all while letting your partner micro 1 tower without lag, is disallowed.
         </p>
