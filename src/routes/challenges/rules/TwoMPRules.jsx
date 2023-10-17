@@ -15,7 +15,7 @@ export default function TwoMPRules() {
         </p>
         <h2>Submission Requirements</h2>
         <p>
-            Victory Screen screenshots alone are insufficient for inclusion in The Index. You must also provide a screenshot of the final tower setup (with the 2MP'ed tower selected unless something like the Covered Garden covers prevents this).
+            Victory screen screenshots alone are insufficient for inclusion in The Index. You must also provide a screenshot of the final tower setup (with the 2MP'ed tower selected unless something like the Covered Garden covers prevents this).
         </p>
         <h2>Hard Round Recordings</h2>
         <p>
