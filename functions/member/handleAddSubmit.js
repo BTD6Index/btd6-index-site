@@ -1,5 +1,6 @@
 import sanitizeDiscord from "../sanitizeDiscord";
 import profanityFilter from 'leo-profanity';
+profanityFilter.remove('domination');
 
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
