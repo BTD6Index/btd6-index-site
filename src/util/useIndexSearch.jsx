@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
 import useForceReload from "./useForceReload";
 
-export default function useIndexSearch(endpoint, count = 20) {
+export default function useIndexSearch(endpoint, {
+    count = 20,
+    sortBy = []
+}) {
     const [query, setQuery] = useState('');
     const [offset, setOffset] = useState(0);
     const [totalCompletions, setTotalCompletions] = useState(0);
@@ -19,7 +22,8 @@ export default function useIndexSearch(endpoint, count = 20) {
             offset: offset,
             count,
             ...(pendingFilter ? {pending: 1} : {}),
-            ...(ogFilter ? {og: 1} : {})
+            ...(ogFilter ? {og: 1} : {}),
+            sortby: sortBy.join(',')
         }))
         .then(async response => {
             const data = await response.json();
@@ -38,7 +42,7 @@ export default function useIndexSearch(endpoint, count = 20) {
         .catch(err => {
             setError(err.message);
         });
-    }, [query, offset, endpoint, reloadVar, pendingFilter, ogFilter, count]);
+    }, [query, offset, endpoint, reloadVar, pendingFilter, ogFilter, count, sortBy]);
 
     const onSearch = useCallback((e) => {
         setOffset(0);

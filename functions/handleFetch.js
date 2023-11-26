@@ -24,7 +24,8 @@ async function handleFetch({
     personKeys,
     extraKeys = [],
     challenge,
-    customFieldQuery = null
+    customFieldQuery = null,
+    sortByIndex = {}
 }) {
     const db = context.env.BTD6_INDEX_DB;
 
@@ -32,6 +33,7 @@ async function handleFetch({
     let query = searchParams.get('query') ?? '';
     let offset = parseInt(searchParams.get('offset') ?? '0');
     let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
+    let sortBy = searchParams.get('sortby') ?? null;
     
     let identifierFieldKeys = [...primaryFieldKeys, ...altFieldKeys];
     let fieldKeys = [...identifierFieldKeys, ...personKeys, ...extraKeys, 'link', 'og', 'pending'];
@@ -58,6 +60,22 @@ async function handleFetch({
     if (isNaN(count) || count < 0) {
         return Response.json({error: `invalid count ${count}`}, {status: 400});
     }
+
+    let orderStmtClause;
+    if (sortBy) {
+        let sortFields = sortBy?.split(',') ?? [];
+        let processedSortFields = sortFields.map(field => {
+            if (field in sortByIndex) {
+                return sortByIndex[field];
+            } else {
+                throw new Error(`Sort field ${field} is invalid`);
+            }
+        });
+        orderStmtClause = `ORDER BY ${processedSortFields}`;
+    } else {
+        orderStmtClause = `ORDER BY ${identifierFieldKeys.join(',')}`;
+    }
+
     let query_stmt_fn;
     try {
         if (query) {
@@ -67,7 +85,7 @@ async function handleFetch({
                     INNER JOIN map_information USING (map)
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
-                    WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ORDER BY ${identifierFieldKeys.join(',')} LIMIT ?2 OFFSET ?3
+                    WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ${orderStmtClause} LIMIT ?2 OFFSET ?3
                 `).bind(processQuery(query, fieldKeys), limit, offset, JSON.stringify(fieldValues));
             };
         } else {
@@ -77,7 +95,7 @@ async function handleFetch({
                     INNER JOIN map_information USING (map)
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
-                    WHERE ${specific_field_conds(3)} ORDER BY ${identifierFieldKeys.join(',')} LIMIT ?1 OFFSET ?2
+                    WHERE ${specific_field_conds(3)} ${orderStmtClause} LIMIT ?1 OFFSET ?2
                 `)
                 .bind(limit, offset, JSON.stringify(fieldValues));
             };
