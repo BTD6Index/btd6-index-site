@@ -7,6 +7,27 @@ import { processQuery } from "./processQuery";
  */
 
 /**
+ * @param {object} sortByIndex
+ * @param {string?} sortBy 
+ * @returns {string?}
+ */
+function processSortBy(sortByIndex, sortBy) {
+    if (sortBy) {
+        let sortFields = sortBy?.split(',') ?? [];
+        let processedSortFields = sortFields.map(field => {
+            if (field in sortByIndex) {
+                return sortByIndex[field];
+            } else {
+                throw new Error(`Sort field ${field} is invalid`);
+            }
+        });
+        return `ORDER BY ${processedSortFields}`;
+    } else {
+        return null;
+    }
+}
+
+/**
  * @param {Object} args
  * @param args.context
  * @param {string[]} args.primaryFieldKeys
@@ -62,20 +83,7 @@ async function handleFetch({
         return Response.json({error: `invalid count ${count}`}, {status: 400});
     }
 
-    let orderStmtClause;
-    if (sortBy) {
-        let sortFields = sortBy?.split(',') ?? [];
-        let processedSortFields = sortFields.map(field => {
-            if (field in sortByIndex) {
-                return sortByIndex[field];
-            } else {
-                throw new Error(`Sort field ${field} is invalid`);
-            }
-        });
-        orderStmtClause = `ORDER BY ${processedSortFields}`;
-    } else {
-        orderStmtClause = `ORDER BY ${identifierFieldKeys.join(',')}`;
-    }
+    let orderStmtClause = processSortBy(sortByIndex, sortBy) ?? `ORDER BY ${identifierFieldKeys.join(',')}`;
 
     let query_stmt_fn;
     try {
