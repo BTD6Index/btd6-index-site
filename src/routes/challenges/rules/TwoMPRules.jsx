@@ -20,7 +20,7 @@ export default function TwoMPRules() {
         <h2>Hard Round Recordings</h2>
         <p>
             For the successful completion of a submission, recordings of gameplay during hard rounds are mandatory. If a helper from the community requests recordings of a particular round, you will have 48 hours to provide the requested footage. Failure to do so within this timeframe may result in a temporary suspension or ban from future submissions.
-            Additionally, any runs featuring Adora, as well as any runs on Geared, either of the Puddles maps, #Ouch, Quad, Ravine, Dark Dungeons, X Factor, or Erosion, must include full recordings of gameplay.
+            Additionally, any runs featuring Adora, as well as any runs on Geared, either of the Puddles maps, #Ouch, Quad, Ravine, Dark Dungeons, X Factor, Glacial Trail, or Erosion, must include full recordings of gameplay.
         </p>
         <h2>Fair Play and Game Integrity</h2>
         <p>
