@@ -121,12 +121,13 @@ async function handleFetch({
     }
 }
 
-async function handleFetchFlat({context, databaseTable, fields, personFields, customOrder = null}) {
+async function handleFetchFlat({context, databaseTable, fields, personFields, customOrder = null, sortByIndex = {}}) {
     const db = context.env.BTD6_INDEX_DB;
 
     let searchParams = new URL(context.request.url).searchParams;
     let offset = parseInt(searchParams.get('offset') ?? '0');
     let count = Math.min(parseInt(searchParams.get('count') ?? '10'), 100);
+    let sortBy = searchParams.get('sortby') ?? null;
 
     let fieldKeys = [
         'query', ...fields, ...personFields
@@ -160,11 +161,13 @@ async function handleFetchFlat({context, databaseTable, fields, personFields, cu
         return Response.json({error: `invalid count ${count}`}, {status: 400});
     }
 
+    let orderStmtClause = processSortBy(sortByIndex, sortBy) ?? `ORDER BY ${customOrder ?? 'map'}`;
+
     try {
         const res = await db.batch([
-            db.prepare(`SELECT * FROM "${databaseTable}" WHERE ${sql_condition(1)} ORDER BY ${customOrder ?? 'map'} LIMIT ?2 OFFSET ?3`)
+            db.prepare(`SELECT * FROM "${databaseTable}" WHERE ${sql_condition(1)} ${orderStmtClause} LIMIT ?2 OFFSET ?3`)
             .bind(JSON.stringify(fieldValues), count+1, offset),
-            db.prepare(`SELECT COUNT(*) FROM "${databaseTable}" WHERE ${sql_condition(1)}`)
+            db.prepare(`SELECT COUNT(*) FROM "${databaseTable}" WHERE ${sql_condition(1)} ${orderStmtClause}`)
             .bind(JSON.stringify(fieldValues))
         ]);
 
