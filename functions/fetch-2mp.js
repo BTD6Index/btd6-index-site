@@ -9,7 +9,12 @@ export async function onRequest(context) {
         personKeys: ['person'],
         extraKeys: ['towerquery'],
         challenge: '2mp',
-        sortByIndex: {'map': 'map DESC'}, // TODO change this
+        sortByIndex: {
+            'map': 'map',
+            'map DESC': 'map DESC',
+            'entity': 'entity',
+            'entity DESC': 'entity DESC'
+        },
         customFieldQuery: ({field, searchParams, paramPos, idx}) => {
             if (field === 'towerquery') {
                 let query = JSON.parse(searchParams.get('towerquery'));
