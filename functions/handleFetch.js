@@ -15,6 +15,7 @@ import { processQuery } from "./processQuery";
  * @param {string[]} args.extraKeys
  * @param {string} args.challenge
  * @param {customFieldQuery?} args.customFieldQuery
+ * @param {object} args.sortByIndex
  * @returns 
  */
 async function handleFetch({
