@@ -6,6 +6,7 @@ import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import PageTitle from "../../util/PageTitle";
 import { Helmet } from "react-helmet-async";
+import useTristateList from "../../util/useTristateList";
 
 export default function ChallengePage({
     challenge,
@@ -29,7 +30,7 @@ export default function ChallengePage({
     );
     fieldDisplayFunc ??= defaultFieldDisplayFunc;
 
-    const {list: sortBy, toggleElement: toggleSortBy} = useToggleList([]);
+    const {list: sortBy, toggleElement: toggleSortBy} = useTristateList({});
 
     const {
         completions,
@@ -123,12 +124,21 @@ export default function ChallengePage({
                         <tr>
                             {!isLoading && isAuthenticated && <th>Select</th>}
                             {!fieldsInvisible && fieldHeaders.concat(altFieldHeaders).map(
-                                (fh, idx) => <th key={fh}>
-                                    {fh}
-                                    <img src="/sort.svg" className="sortIcon" alt="Sort" onClick={() => {
-                                        toggleSortBy(idx >= fieldHeaders.length ? altFields[idx - fieldHeaders.length] : fields[idx]);
-                                    }} />
-                                </th>)
+                                (fh, idx) => {
+                                    const sortByKey = idx >= fieldHeaders.length ? altFields[idx - fieldHeaders.length] : fields[idx];
+                                    let sortIcon = "/sort.svg";
+                                    if (sortBy[sortByKey] === true) {
+                                        sortIcon = "/sort-ascending.svg";
+                                    } else if (sortBy[sortByKey] === false) {
+                                        sortIcon = "/sort-descending.svg";
+                                    }
+                                    return <th key={fh}>
+                                        {fh}
+                                        <img src={sortIcon} className="sortIcon" alt="Sort" onClick={() => {
+                                            toggleSortBy(sortByKey);
+                                        }} />
+                                    </th>;
+                                })
                             }
                             {personFieldHeaders.map(header => <th key={header}>{header}</th>)}
                             {auxFieldHeaders.map(header => <th key={header}>{header}</th>)}

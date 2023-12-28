@@ -3,7 +3,7 @@ import useForceReload from "./useForceReload";
 
 export default function useIndexSearch(endpoint, {
     count = 20,
-    sortBy = []
+    sortBy = {}
 }) {
     const [query, setQuery] = useState('');
     const [offset, setOffset] = useState(0);
@@ -23,7 +23,16 @@ export default function useIndexSearch(endpoint, {
             count,
             ...(pendingFilter ? {pending: 1} : {}),
             ...(ogFilter ? {og: 1} : {}),
-            sortby: sortBy.join(',')
+            sortby: Object.entries(sortBy).map(([key, mode]) => {
+                switch (mode) {
+                case true:
+                    return key;
+                case false:
+                    return `${key} DESC`;
+                default:
+                    return null;
+                }
+            }).filter(elem => elem !== null).join(',')
         }))
         .then(async response => {
             const data = await response.json();
