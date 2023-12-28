@@ -11,8 +11,8 @@ export async function onRequest(context) {
             'map DESC': 'map DESC',
             'towerset': 'json_array_length(towerset), towerset',
             'towerset DESC': 'json_array_length(towerset) DESC, towerset DESC',
-            'completiontype': 'completion_type',
-            'completiontype DESC': 'completion_type DESC'
+            'completiontype': 'completiontype',
+            'completiontype DESC': 'completiontype DESC'
         },
     });
 }
