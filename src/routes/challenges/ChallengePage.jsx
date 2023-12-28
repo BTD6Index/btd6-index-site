@@ -6,6 +6,7 @@ import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import PageTitle from "../../util/PageTitle";
 import { Helmet } from "react-helmet-async";
+import useTristateList from "../../util/useTristateList";
 
 export default function ChallengePage({
     challenge,
@@ -29,6 +30,8 @@ export default function ChallengePage({
     );
     fieldDisplayFunc ??= defaultFieldDisplayFunc;
 
+    const {list: sortBy, toggleElement: toggleSortBy} = useTristateList({});
+
     const {
         completions,
         offset,
@@ -41,7 +44,7 @@ export default function ChallengePage({
         error: searchError,
         setPendingFilter,
         setOgFilter
-    } = useIndexSearch(`/fetch-${challenge}`);
+    } = useIndexSearch(`/fetch-${challenge}`, {sortBy});
 
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
 
@@ -120,7 +123,23 @@ export default function ChallengePage({
                     <thead>
                         <tr>
                             {!isLoading && isAuthenticated && <th>Select</th>}
-                            {!fieldsInvisible && fieldHeaders.concat(altFieldHeaders).map(fh => <th key={fh}>{fh}</th>)}
+                            {!fieldsInvisible && fieldHeaders.concat(altFieldHeaders).map(
+                                (fh, idx) => {
+                                    const sortByKey = idx >= fieldHeaders.length ? altFields[idx - fieldHeaders.length] : fields[idx];
+                                    let sortIcon = "/sort.svg";
+                                    if (sortBy[sortByKey] === true) {
+                                        sortIcon = "/sort-ascending.svg";
+                                    } else if (sortBy[sortByKey] === false) {
+                                        sortIcon = "/sort-descending.svg";
+                                    }
+                                    return <th key={fh}>
+                                        {fh}
+                                        <img src={sortIcon} className="sortIcon" alt="Sort" onClick={() => {
+                                            toggleSortBy(sortByKey);
+                                        }} />
+                                    </th>;
+                                })
+                            }
                             {personFieldHeaders.map(header => <th key={header}>{header}</th>)}
                             {auxFieldHeaders.map(header => <th key={header}>{header}</th>)}
                             <th>Info</th>
@@ -135,41 +154,6 @@ export default function ChallengePage({
                                     const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
                                     const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
                                     const link = completion.link || `https://media.btd6index.win/${completion.filekey}`;
-                                   /* 
-                                    const onBan = async () => {
-                                        try {
-                                            const token = await getToken();
-                                            const emailRes = await fetch('/admin/get-users-emails?' + new URLSearchParams({
-                                                user_id: completion.pending
-                                            }), {
-                                                headers: {
-                                                    Authorization: `Bearer ${token}`
-                                                }
-                                            });
-                                            const emailResJson = await emailRes.json();
-                                            if ('error' in emailResJson) {
-                                                throw new Error(emailResJson.error);
-                                            }
-                                            if (window.confirm(`Ban ${emailResJson[0]}?`)) {
-                                                const banRes = await fetch('/admin/ban-users?' + new URLSearchParams({
-                                                    user_id: completion.pending
-                                                }), {
-                                                    method: "post",
-                                                    headers: {
-                                                        Authorization: `Bearer ${token}`
-                                                    }
-                                                });
-                                                const banResJson = await banRes.json();
-                                                if ('error' in banResJson) {
-                                                    throw new Error(banResJson.error);
-                                                }
-                                                window.alert(`Successfully banned ${emailResJson[0]}`);
-                                            }
-                                        } catch (e) {
-                                            window.alert(`Error banning user: ${e.message}`);
-                                        }
-                                    };*/
-
                                     return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
                                         {!isLoading && isAuthenticated && <td>
                                             {hasWritePerms && <input

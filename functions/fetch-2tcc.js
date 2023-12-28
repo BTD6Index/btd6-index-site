@@ -19,6 +19,14 @@ export async function onRequest(context) {
         personKeys: ['person1', 'person2'],
         challenge: '2tcc',
         extraKeys: ['towerquery'],
+        sortByIndex: {
+            'map': 'map',
+            'map DESC': 'map DESC',
+            'tower1': 'tower1',
+            'tower1 DESC': 'tower1 DESC',
+            'tower2': 'tower2',
+            'tower2 DESC': 'tower2 DESC',
+        },
         customFieldQuery: ({field, searchParams, paramPos, idx}) => {
             if (field === 'towerquery') {
                 let query = JSON.parse(searchParams.get('towerquery'));
