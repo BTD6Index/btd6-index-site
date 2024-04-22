@@ -42,6 +42,7 @@ import LCDNotes from './routes/challenges/notes/LCDNotes';
 import LCDRules from './routes/challenges/rules/LCDRules';
 import ChimpsStarts from './routes/guides/ChimpsStarts';
 import Maps from './routes/reference/Maps';
+import Odysseys from './routes/reference/Odysseys';
 import { AddMap } from './routes/reference/manip/ManipMap';
 import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
 import LoginRedirect from './routes/LoginRedirect';
@@ -218,6 +219,10 @@ const router = createBrowserRouter([
         element: <Maps />
       },
       {
+        path: "odysseys",
+        element: <Odysseys />
+      },
+      {
         path: "add-map",
         element: <AddMap />
       },
@@ -288,6 +293,7 @@ function AppImplImpl() {
             Reference
             <ul className='dropdown'>
               <li><a className='nolinkstyle' href='/maps'>Maps</a></li>
+              <li><a className='nolinkstyle' href='/odysseys'>Odysseys</a></li>
             </ul>
           </li>
           <li>
