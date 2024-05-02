@@ -47,6 +47,8 @@ import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
 import LoginRedirect from './routes/LoginRedirect';
 import { HelmetProvider } from 'react-helmet-async';
 import ExtractingGameAssets from './routes/guides/ExtractingGameAssets';
+import BalanceChanges from './routes/reference/BalanceChanges';
+import ManipBalanceChanges from './routes/reference/manip/ManipBalanceChanges';
 
 const router = createBrowserRouter([
   {
@@ -234,6 +236,14 @@ const router = createBrowserRouter([
         element: <ExtractingGameAssets />
       },
       {
+        path: "balance-changes",
+        element: <BalanceChanges />
+      },
+      {
+        path: "modify-balance-changes",
+        element: <ManipBalanceChanges />
+      },
+      {
         path: 'login-redirect',
         element: <LoginRedirect />
       },
@@ -288,6 +298,7 @@ function AppImplImpl() {
             Reference
             <ul className='dropdown'>
               <li><a className='nolinkstyle' href='/maps'>Maps</a></li>
+              <li><a className='nolinkstyle' href='/balance-changes'>Balance Changes</a></li>
             </ul>
           </li>
           <li>

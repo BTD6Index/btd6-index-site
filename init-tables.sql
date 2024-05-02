@@ -267,3 +267,8 @@ CREATE TABLE map_information(
 
 CREATE TABLE chimps_starts(map, title, link, uuid PRIMARY KEY);
 CREATE INDEX chimps_starts_map_idx ON chimps_starts(map);
+
+CREATE TABLE balance_changes(tower, version, change);
+CREATE INDEX balance_changes_tower_idx ON balance_changes(tower);
+CREATE INDEX balance_changes_version_idx ON balance_changes(version);
+CREATE INDEX balance_changes_tower_version_idx ON balance_changes(tower, version);
