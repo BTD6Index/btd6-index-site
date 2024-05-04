@@ -22,6 +22,10 @@ header {
   top: 0;
 }
 
+ul {
+  margin: 0;
+}
+
 #mainContainer {
   overflow-x: auto;
   flex-grow: 1;
@@ -257,4 +261,16 @@ dd {
   width: 1em;
   vertical-align: text-bottom;
   cursor: pointer;
+}
+
+.balance-buff {
+  list-style-type: "✔️";
+}
+
+.balance-nerf {
+  list-style-type: "❌";
+}
+
+.balance-miscellaneous {
+  list-style-type: "🟡";
 }
