@@ -9,6 +9,7 @@ import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import useAccessToken from "../../../util/useAccessToken";
 import useForceReload from "../../../util/useForceReload";
 import descendingVersionOrderSort from "../../../util/descendingVersionOrderSort";
+import BalanceChangeDisplay from "../../../util/BalanceChangeDisplay";
 
 const ManipBalanceChanges = withAuthenticationRequired(function () {
     const [tower, setTower] = useState(undefined);
@@ -95,7 +96,7 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
             <h2>Balance Changes</h2>
             <ul>
             {
-                existingChanges.map(change => <li key={change.uuid}>{change.change} <button class="dangerButton" type="button" onClick={async () => {
+                existingChanges.map(change => <BalanceChangeDisplay key={change.uuid} {...change}><button className="dangerButton" type="button" onClick={async () => {
                     if (window.confirm(`Are you sure you want to delete this balance change?`)) {
                         try {
                             const formData = new FormData();
@@ -124,10 +125,15 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
                             alert('Error deleting balance change: ' + ex.message);
                         }
                     }
-                }}>Delete</button></li>)
+                }}>Delete</button></BalanceChangeDisplay>)
             }
             </ul>
             <input required type="text" id="change" name="change" autoComplete="off" placeholder="New Change" />
+            <select required id="nature" name="nature">
+                <option value="buff">Buff</option>
+                <option value="nerf">Nerf</option>
+                <option value="miscellaneous">Miscellaneous</option>
+            </select>
             <input type="submit" value="Add Balance Change" />
         </form>
     </>

@@ -262,3 +262,15 @@ dd {
   vertical-align: text-bottom;
   cursor: pointer;
 }
+
+.balance-buff {
+  list-style-type: "✔️";
+}
+
+.balance-nerf {
+  list-style-type: "❌";
+}
+
+.balance-miscellaneous {
+  list-style-type: "🟡";
+}

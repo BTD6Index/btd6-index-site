@@ -5,6 +5,7 @@ import selectStyle from "../../util/selectStyle";
 import Select from "react-select";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import descendingVersionOrderSort from "../../util/descendingVersionOrderSort";
+import BalanceChangeDisplay from "../../util/BalanceChangeDisplay";
 
 /**
  * 
@@ -20,7 +21,7 @@ function TowerBalanceChanges({tower, balanceChanges}) {
             return <Fragment key={version}>
                 <h3>{version}</h3>
                 <ul>
-                    {subChanges.map(change => <li key={change.uuid}>{change.change}</li>)}
+                    {subChanges.map(change => <BalanceChangeDisplay key={change.uuid} {...change} />)}
                 </ul>
             </Fragment>
         })}
@@ -41,7 +42,7 @@ function VersionBalanceChanges({version, balanceChanges}) {
             return <Fragment key={tower}>
                 <h3>{tower}</h3>
                 <ul>
-                    {subChanges.map(change => <li key={change.uuid}>{change.change}</li>)}
+                    {subChanges.map(change => <BalanceChangeDisplay key={change.uuid} {...change} />)}
                 </ul>
             </Fragment>
         })}

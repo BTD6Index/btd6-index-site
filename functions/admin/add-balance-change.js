@@ -3,10 +3,10 @@ export async function onRequestPost(context) {
     const formData = await context.request.formData();
 
     const fieldKeys = [
-        'tower', 'version', 'change'
+        'tower', 'version', 'change', 'nature'
     ];
     const requiredFieldKeys = [
-        'tower', 'version', 'change'
+        'tower', 'version', 'change', 'nature'
     ];
     for (let fieldKey of requiredFieldKeys) {
         if (!formData.has(fieldKey)) {
@@ -17,7 +17,7 @@ export async function onRequestPost(context) {
     try {
         let res = await db.prepare(`
             INSERT INTO balance_changes
-            VALUES (?1, ?2, ?3, ?4)
+            VALUES (?1, ?2, ?3, ?4, ?5)
             RETURNING *
         `).bind(
             ...fieldKeys.map(field => {
