@@ -67,6 +67,7 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
 
     return <>
         <PageTitle>Modify Balance Changes</PageTitle>
+        <p><a href="/balance-changes">Back to Balance Changes</a></p>
         <form action="/admin/add-balance-change" onSubmit={onAddBalanceChange} ref={formRef}>
             <Select id="tower" name="tower" options={[...towerTypeToOptions.values()]}
                         styles={selectStyle} placeholder="Tower" isClearable

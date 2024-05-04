@@ -3,6 +3,7 @@ import PageTitle from "../../util/PageTitle";
 import { towerTypeToOptions } from "../../util/selectOptions";
 import selectStyle from "../../util/selectStyle";
 import Select from "react-select";
+import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 
 /**
  * 
@@ -50,6 +51,7 @@ export default function BalanceChanges() {
     const [tower, setTower] = useState(undefined);
     const [version, setVersion] = useState("");
     const [balanceChanges, setBalanceChanges] = useState([]);
+    const isAdmin = useCheckIfAdmin();
 
     useEffect(() => {
         let searchParams = {}
@@ -77,7 +79,7 @@ export default function BalanceChanges() {
 
     return <>
         <PageTitle>Balance Changes</PageTitle>
-        <p><a href="/modify-balance-changes">Edit Balance Changes</a></p>
+        {isAdmin && <p><a href="/modify-balance-changes">Edit Balance Changes</a></p>}
         <Select id="tower" options={[...towerTypeToOptions.values()]}
                     styles={selectStyle} placeholder="Tower" isClearable
                     defaultValue={towerTypeToOptions.get(tower) ?? undefined}
