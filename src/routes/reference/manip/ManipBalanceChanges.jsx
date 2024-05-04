@@ -2,6 +2,7 @@ import { withAuthenticationRequired } from "@auth0/auth0-react";
 import PageTitle from "../../../util/PageTitle";
 import { useCallback, useState, useRef, useEffect } from "react";
 import Select from "react-select";
+import CreatableSelect from 'react-select/creatable';
 import selectStyle from "../../../util/selectStyle";
 import { towerTypeToOptions } from "../../../util/selectOptions";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
@@ -12,6 +13,7 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
     const [tower, setTower] = useState(undefined);
     const [version, setVersion] = useState("");
     const [existingChanges, setExistingChanges] = useState([]);
+    const [versionOptions, setVersionOptions] = useState([]);
     const {reloadVar, forceReload} = useForceReload();
     const formRef = useRef();
     const isAdmin = useCheckIfAdmin();
@@ -61,6 +63,16 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
         }
     }, [tower, version, reloadVar]);
 
+    useEffect(() => {
+        fetch('/fetch-balance-change-versions?' + new URLSearchParams(tower ? {tower} : {})).then(async (response) => {
+            const resJson = await response.json();
+            if ('error' in resJson) {
+                throw new Error(resJson.error);
+            }
+            setVersionOptions(resJson.results.map(version => ({value: version, label: version})));
+        });
+    }, [tower]);
+
     if (!isAdmin) {
         return <PageTitle>You are not authorized to view this page.</PageTitle>;
     }
@@ -72,9 +84,11 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
             <Select id="tower" name="tower" options={[...towerTypeToOptions.values()]}
                         styles={selectStyle} placeholder="Tower" isClearable
                         defaultValue={towerTypeToOptions.get(tower) ?? undefined}
+                        required
                         onChange={val => setTower(val?.value ?? undefined)} />
             <br />
-            <input type="text" id="version" name="version" autoComplete="off" placeholder="Version" onChange={val => setVersion(val?.target?.value ?? "")} />
+            <CreatableSelect id="version" name="version" styles={selectStyle} placeholder="Version"
+            isClearable required onChange={val => setVersion(val?.value ?? undefined)} options={versionOptions} />
             <h2>Balance Changes</h2>
             <ul>
             {
@@ -110,7 +124,7 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
                 }}>Delete</button></li>)
             }
             </ul>
-            <input type="text" id="change" name="change" autoComplete="off" placeholder="New Change" />
+            <input required type="text" id="change" name="change" autoComplete="off" placeholder="New Change" />
             <input type="submit" value="Add Balance Change" />
         </form>
     </>
