@@ -17,7 +17,9 @@ function TowerBalanceChanges({tower, balanceChanges}) {
         {Object.entries(versionToBalanceChange).map(([version, subChanges]) => {
             return <Fragment key={version}>
                 <h3>{version}</h3>
-                {subChanges.map(change => <p key={change.uuid}>{change.change}</p>)}
+                <ul>
+                    {subChanges.map(change => <li key={change.uuid}>{change.change}</li>)}
+                </ul>
             </Fragment>
         })}
     </>
@@ -36,7 +38,9 @@ function VersionBalanceChanges({version, balanceChanges}) {
         {Object.entries(towerToBalanceChange).map(([tower, subChanges]) => {
             return <Fragment key={tower}>
                 <h3>{tower}</h3>
-                {subChanges.map(change => <p key={change.uuid}>{change.change}</p>)}
+                <ul>
+                    {subChanges.map(change => <li key={change.uuid}>{change.change}</li>)}
+                </ul>
             </Fragment>
         })}
     </>;

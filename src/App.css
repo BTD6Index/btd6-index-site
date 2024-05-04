@@ -22,6 +22,10 @@ header {
   top: 0;
 }
 
+ul {
+  margin: 0;
+}
+
 #mainContainer {
   overflow-x: auto;
   flex-grow: 1;
