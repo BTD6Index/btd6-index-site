@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import PageTitle from "../../util/PageTitle";
-import { towerTypeToOptions } from "../../util/selectOptions";
+import { towerTypeAndHeroToOptions } from "../../util/selectOptions";
 import selectStyle from "../../util/selectStyle";
 import Select from "react-select";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
@@ -96,9 +96,9 @@ export default function BalanceChanges() {
     return <>
         <PageTitle>Balance Changes</PageTitle>
         {isAdmin && <p><a href="/modify-balance-changes">Edit Balance Changes</a></p>}
-        <Select id="tower" options={[...towerTypeToOptions.values()]}
+        <Select id="tower" options={[...towerTypeAndHeroToOptions.values()]}
                     styles={selectStyle} placeholder="Tower" isClearable
-                    defaultValue={towerTypeToOptions.get(tower) ?? undefined}
+                    defaultValue={towerTypeAndHeroToOptions.get(tower) ?? undefined}
                     onChange={val => setTower(val?.value ?? undefined)} />
         <br />
         <Select id="version" styles={selectStyle} placeholder="Version"

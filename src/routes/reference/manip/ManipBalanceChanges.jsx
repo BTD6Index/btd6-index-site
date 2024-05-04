@@ -4,7 +4,7 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import Select from "react-select";
 import CreatableSelect from 'react-select/creatable';
 import selectStyle from "../../../util/selectStyle";
-import { towerTypeToOptions } from "../../../util/selectOptions";
+import { towerTypeAndHeroToOptions } from "../../../util/selectOptions";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import useAccessToken from "../../../util/useAccessToken";
 import useForceReload from "../../../util/useForceReload";
@@ -85,9 +85,9 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
         <PageTitle>Modify Balance Changes</PageTitle>
         <p><a href="/balance-changes">Back to Balance Changes</a></p>
         <form action="/admin/add-balance-change" onSubmit={onAddBalanceChange} ref={formRef}>
-            <Select id="tower" name="tower" options={[...towerTypeToOptions.values()]}
+            <Select id="tower" name="tower" options={[...towerTypeAndHeroToOptions.values()]}
                         styles={selectStyle} placeholder="Tower" isClearable
-                        defaultValue={towerTypeToOptions.get(tower) ?? undefined}
+                        defaultValue={towerTypeAndHeroToOptions.get(tower) ?? undefined}
                         required
                         onChange={val => setTower(val?.value ?? undefined)} />
             <br />

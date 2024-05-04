@@ -13,6 +13,10 @@ const towerTypeToOptions = new Map(
     .map(key => [key, {value: key, label: key}])
 );
 
+const towerTypeAndHeroToOptions = new Map([
+    ...towerTypeToOptions, Object.keys(heroNames).map(entry => [entry, {value: entry, label: entry}])
+]);
+
 function useMapToOptions(reloadVar = false) {
     const [mapToOptions, setMapToOptions] = useState(new Map());
 
@@ -29,4 +33,4 @@ function useMapToOptions(reloadVar = false) {
     return mapToOptions;
 }
 
-export {towerToOptions, useMapToOptions, towerTypeToOptions};
+export {towerToOptions, useMapToOptions, towerTypeAndHeroToOptions, towerTypeToOptions};
