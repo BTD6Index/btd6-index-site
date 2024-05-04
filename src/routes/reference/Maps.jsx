@@ -4,6 +4,7 @@ import MapSelect from "../../util/MapSelect";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import PageTitle from "../../util/PageTitle";
+import descendingVersionOrderSort from "../../util/descendingVersionOrderSort";
 
 export default function Maps() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -33,11 +34,7 @@ export default function Maps() {
                 if ('error' in resJson) {
                     throw new Error(resJson.error);
                 } else {
-                    setLccs(resJson.results.toSorted((a, b) => {
-                        let aInt = parseInt(a.version.split('.')[0].trim());
-                        let bInt = parseInt(b.version.split('.')[0].trim());
-                        return bInt - aInt; // sort by descending major version order
-                    }));
+                    setLccs(resJson.results.toSorted((a, b) => descendingVersionOrderSort(a, b, v => v.version)));
                 }
             })
             .catch(e => {

@@ -8,6 +8,7 @@ import { towerTypeToOptions } from "../../../util/selectOptions";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import useAccessToken from "../../../util/useAccessToken";
 import useForceReload from "../../../util/useForceReload";
+import descendingVersionOrderSort from "../../../util/descendingVersionOrderSort";
 
 const ManipBalanceChanges = withAuthenticationRequired(function () {
     const [tower, setTower] = useState(undefined);
@@ -69,7 +70,9 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
             if ('error' in resJson) {
                 throw new Error(resJson.error);
             }
-            setVersionOptions(resJson.results.map(version => ({value: version, label: version})));
+            setVersionOptions(resJson.results
+                .sort(descendingVersionOrderSort)
+                .map(version => ({value: version, label: version})));
         });
     }, [tower]);
 

@@ -4,6 +4,7 @@ import { towerTypeToOptions } from "../../util/selectOptions";
 import selectStyle from "../../util/selectStyle";
 import Select from "react-select";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
+import descendingVersionOrderSort from "../../util/descendingVersionOrderSort";
 
 /**
  * 
@@ -76,7 +77,10 @@ export default function BalanceChanges() {
             if ('error' in resJson) {
                 throw new Error(resJson.error);
             }
-            setVersionOptions(resJson.results.map(version => ({value: version, label: version})));
+            console.log(resJson.results);
+            setVersionOptions(resJson.results
+                .sort(descendingVersionOrderSort)
+                .map(version => ({value: version, label: version})));
         });
     }, [tower]);
 
@@ -98,7 +102,6 @@ export default function BalanceChanges() {
         <br />
         <Select id="version" styles={selectStyle} placeholder="Version"
             isClearable onChange={val => setVersion(val?.value ?? undefined)} options={versionOptions} />
-        <button type="button">Latest Version</button>
         <br />
         {balanceChangeInfo}
     </>
