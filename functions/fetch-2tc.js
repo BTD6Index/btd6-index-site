@@ -33,7 +33,7 @@ export async function onRequest(context) {
                 if (query.length === 0) {
                     return 'TRUE';
                 } else if (query.length === 1) {
-                    return `tower1 ${convTowerSubquery(query, 0, paramPos, idx)} OR tower2 ${convTowerSubquery(query, 0, paramPos, idx)}`;
+                    return `(tower1 ${convTowerSubquery(query, 0, paramPos, idx)} OR tower2 ${convTowerSubquery(query, 0, paramPos, idx)})`;
                 } else if (query.length === 2) {
                     return `
                         ((tower1 ${convTowerSubquery(query, 0, paramPos, idx)} AND tower2 ${convTowerSubquery(query, 1, paramPos, idx)})
