@@ -50,6 +50,7 @@ function VersionBalanceChanges({version, balanceChanges}) {
 export default function BalanceChanges() {
     const [tower, setTower] = useState(undefined);
     const [version, setVersion] = useState("");
+    const [versionOptions, setVersionOptions] = useState([]);
     const [balanceChanges, setBalanceChanges] = useState([]);
     const isAdmin = useCheckIfAdmin();
 
@@ -69,6 +70,16 @@ export default function BalanceChanges() {
         });
     }, [tower, version]);
 
+    useEffect(() => {
+        fetch('/fetch-balance-change-versions?' + new URLSearchParams(tower ? {tower} : {})).then(async (response) => {
+            const resJson = await response.json();
+            if ('error' in resJson) {
+                throw new Error(resJson.error);
+            }
+            setVersionOptions(resJson.results.map(version => ({value: version, label: version})));
+        });
+    }, [tower]);
+
     let balanceChangeInfo = <></>;
 
     if (tower) {
@@ -85,7 +96,8 @@ export default function BalanceChanges() {
                     defaultValue={towerTypeToOptions.get(tower) ?? undefined}
                     onChange={val => setTower(val?.value ?? undefined)} />
         <br />
-        <input type="text" id="version" autoComplete="off" placeholder="Version" onChange={val => setVersion(val?.target?.value ?? "")} />
+        <Select id="version" styles={selectStyle} placeholder="Version"
+            isClearable onChange={val => setVersion(val?.value ?? undefined)} options={versionOptions} />
         <button type="button">Latest Version</button>
         <br />
         {balanceChangeInfo}
