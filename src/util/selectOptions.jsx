@@ -14,7 +14,7 @@ const towerTypeToOptions = new Map(
 );
 
 const towerTypeAndHeroToOptions = new Map([
-    ...towerTypeToOptions, Object.keys(heroNames).map(entry => [entry, {value: entry, label: entry}])
+    ...towerTypeToOptions, ...Object.keys(heroNames).map(entry => [entry, {value: entry, label: entry}])
 ]);
 
 function useMapToOptions(reloadVar = false) {
