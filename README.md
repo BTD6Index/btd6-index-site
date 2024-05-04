@@ -3,6 +3,8 @@ This project is hosted on [https://btd6index.win](https://btd6index.win) using [
 ## Setup/Running
 - Run `npm install` to install dependencies 
 - Run `npm start` to start the application locally.
+- Run `wrangler d1 execute btd6index --file=init-tables.sql --local` to initialize databases to empty.
+  - Or replace init-tables.sql with an existing exported btd6 index database sql file.
 ## API Reference (in progress)
 All endpoints output a JSON `{"error": "error_message"}` in case of an error.
 ### `GET /fetch-2tc`
