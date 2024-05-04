@@ -6,11 +6,13 @@ import selectStyle from "../../../util/selectStyle";
 import { towerTypeToOptions } from "../../../util/selectOptions";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import useAccessToken from "../../../util/useAccessToken";
+import useForceReload from "../../../util/useForceReload";
 
 const ManipBalanceChanges = withAuthenticationRequired(function () {
     const [tower, setTower] = useState(undefined);
     const [version, setVersion] = useState("");
     const [existingChanges, setExistingChanges] = useState([]);
+    const {reloadVar, forceReload} = useForceReload();
     const formRef = useRef();
     const isAdmin = useCheckIfAdmin();
     const getToken = useAccessToken();
@@ -41,10 +43,11 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
             }
             
             alert('Successfully added balance change.');
+            forceReload();
         } catch (ex) {
             alert('Error adding balance change: ' + ex.message);
         }
-    }, [getToken]);
+    }, [getToken, forceReload]);
 
     useEffect(() => {
         if (tower && version) {
@@ -56,7 +59,7 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
                 setExistingChanges(resJson.results);
             });
         }
-    }, [tower, version]);
+    }, [tower, version, reloadVar]);
 
     if (!isAdmin) {
         return <PageTitle>You are not authorized to view this page.</PageTitle>;
@@ -98,6 +101,7 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
                             }
 
                             alert('Successfully deleted balance change.');
+                            forceReload();
                         } catch (ex) {
                             alert('Error deleting balance change: ' + ex.message);
                         }
