@@ -132,6 +132,7 @@ const ManipBalanceChanges = withAuthenticationRequired(function () {
             <select required id="nature" name="nature">
                 <option value="buff">Buff</option>
                 <option value="nerf">Nerf</option>
+                <option value="bugfix">Bugfix</option>
                 <option value="miscellaneous">Miscellaneous</option>
             </select>
             <input type="submit" value="Add Balance Change" />
