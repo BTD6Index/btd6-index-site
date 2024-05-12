@@ -3,15 +3,22 @@ export async function onRequest(context) {
     
     let searchParams = new URL(context.request.url).searchParams;
 
-    let fieldKeys = ['tower', 'version'];
-
     let queryBuilder = ['TRUE'];
     let params = [];
 
-    for (let fieldKey of fieldKeys) {
-        if (searchParams.has(fieldKey)) {
-            queryBuilder.push(`${fieldKey} = ?${queryBuilder.length}`)
-            params.push(searchParams.get(fieldKey))
+    if (searchParams.has('tower')) {
+        queryBuilder.push(`tower = ?${params.length + 1}`);
+        params.push(searchParams.get('tower'));
+    }
+
+    if (searchParams.has('version')) {
+        if (searchParams.has('version_end')) {
+            // TODO refine this
+            queryBuilder.push(`CAST(version AS FLOAT) BETWEEN ?${params.length + 1} AND ?${params.length + 2}`);
+            params.push(parseFloat(searchParams.get('version')), parseFloat(searchParams.get('version_end')));
+        } else {
+            queryBuilder.push(`version = ?${params.length + 1}`);
+            params.push(searchParams.get('version'));
         }
     }
 
