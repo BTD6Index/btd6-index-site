@@ -44,6 +44,7 @@ import ChimpsStarts from './routes/guides/ChimpsStarts';
 import Maps from './routes/reference/Maps';
 import Odysseys from './routes/reference/Odysseys';
 import { AddMap } from './routes/reference/manip/ManipMap';
+import { AddOdyssey } from './routes/reference/manip/ManipOdyssey';
 import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
 import LoginRedirect from './routes/LoginRedirect';
 import { HelmetProvider } from 'react-helmet-async';
@@ -225,6 +226,10 @@ const router = createBrowserRouter([
       {
         path: "add-map",
         element: <AddMap />
+      },
+      {
+        path: "add-odyssey",
+        element: <AddOdyssey />
       },
       {
         path: "chimps-starts",

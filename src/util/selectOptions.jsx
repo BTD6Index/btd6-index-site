@@ -26,8 +26,24 @@ function useMapToOptions(reloadVar = false) {
             );
         });
     }, [reloadVar]);
-    
+    console.log(mapToOptions);
     return mapToOptions;
 }
 
-export {towerToOptions, useMapToOptions, towerTypeToOptions};
+function useOdysseyToOptions(reloadVar = false) {
+    const [odysseyToOptions, setOdysseyToOptions] = useState(new Map());
+
+    useEffect(() => {
+        fetch('/list-odysseys')
+        .then(async (res) => {
+            let odysseysList = await res.json();
+            setOdysseyToOptions(
+                new Map(odysseysList.results.map(odysseyName => [odysseyName, {value: odysseyName, label: odysseyName}]))
+            );
+        });
+    }, [reloadVar]);
+    console.log(odysseyToOptions);
+    return odysseyToOptions;
+}
+
+export {towerToOptions, useMapToOptions, towerTypeToOptions, useOdysseyToOptions};
