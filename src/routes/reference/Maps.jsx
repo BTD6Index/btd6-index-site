@@ -85,7 +85,10 @@ export default function Maps() {
         {
             searchParams.get('map') && mapInfo && <>
                 <h2>Map Information for {mapInfo.map}</h2>
-                { isAdmin && <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Map</button> }
+                { isAdmin && <>
+                    <a href={`/add-map?${new URLSearchParams({map: searchParams.get('map')})}`}><button type="button">Edit Map</button></a>
+                    <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Map</button>
+                </> }
                 <dl>
                     <dt>Abbreviation</dt>
                     <dd>{mapInfo.abbreviation}</dd>
