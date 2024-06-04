@@ -8,7 +8,7 @@ export async function onRequest(context) {
         altFieldKeys: ['map'],
         personKeys: ['person'],
         extraKeys: ['towerquery'],
-        challenge: '2mp',
+        challenge: 'twomp',
         sortByIndex: {
             'map': 'map',
             'map DESC': 'map DESC',

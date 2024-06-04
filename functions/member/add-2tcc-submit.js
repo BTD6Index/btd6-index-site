@@ -3,7 +3,7 @@ import sanitizeDiscord from "../sanitizeDiscord";
 
 export async function onRequestPost(context) {
     return handleAddSubmit({
-        context, challenge: '2tcc',
+        context, challenge: 'twotcc',
         fields: ['tower1', 'tower2', 'map'],
         extraInfoFields: ['tower1', 'tower2', 'upgrade1', 'upgrade2', 'version', 'date', 'money'],
         auxFields: ['person1', 'person2'],

@@ -3,7 +3,7 @@ import sanitizeDiscord from "../sanitizeDiscord";
 
 export async function onRequestPost(context) {
     return handleAddSubmit({
-        context, challenge: '2mp',
+        context, challenge: 'twomp',
         fields: ['entity', 'map'],
         extraInfoFields: ['entity', 'upgrade', 'version', 'date'],
         genEmbedFunction: ({link, formData, edit, filekey, verify}) => {

@@ -22,7 +22,8 @@ export default function ChallengePage({
     auxFieldHeaders = [],
     fieldDisplayFunc = null,
     disableOG = false,
-    fieldsInvisible = false
+    fieldsInvisible = false,
+    alternateFormats = {}
 }) {
     const defaultFieldDisplayFunc = useCallback(
         ({ fieldName: _dummy, fieldValue, completion: _dummy1 }) => fieldValue || 'N/A',
@@ -93,6 +94,18 @@ export default function ChallengePage({
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
         {isAdmin && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
+        {
+            Object.keys(alternateFormats).length > 0 && <>
+                <input type="radio" id="alternate-format-List" name="format" value="List" checked />
+                <label htmlFor="alternate-format-List">List</label>
+                {
+                    Object.keys(alternateFormats).map((formatName) => <>
+                        <input type="radio" id={`alternate-format-${formatName}`} name="format" value="List" />
+                        <label htmlFor={`alternate-format-${formatName}`}>{formatName}</label>
+                    </>)
+                }
+            </>
+        }
         <div className="searchUiGroup">
             <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
             <input type="checkbox" id="filter-pending" onChange={e => setPendingFilter(e.target.checked)} />

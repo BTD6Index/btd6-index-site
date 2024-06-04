@@ -1,116 +1,116 @@
 -- 2 Towers CHIMPS
-CREATE TABLE "2tc_completions" (
+CREATE TABLE "twotc_completions" (
     tower1, tower2, map, person, link, og, pending, PRIMARY KEY (tower1, tower2, map)
 );
-CREATE VIRTUAL TABLE "2tc_completions_fts" USING fts5(
-    tower1, tower2, map, person, link, og, pending UNINDEXED, content='2tc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+CREATE VIRTUAL TABLE "twotc_completions_fts" USING fts5(
+    tower1, tower2, map, person, link, og, pending UNINDEXED, content='twotc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
 );
 
-CREATE TRIGGER "2tc_completions_ai" AFTER INSERT ON '2tc_completions' BEGIN 
-    INSERT INTO "2tc_completions_fts" (rowid, tower1, tower2, map, person, link, og, pending) VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person, new.link, new.og, new.pending);
+CREATE TRIGGER "twotc_completions_ai" AFTER INSERT ON 'twotc_completions' BEGIN 
+    INSERT INTO "twotc_completions_fts" (rowid, tower1, tower2, map, person, link, og, pending) VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person, new.link, new.og, new.pending);
 END;
-CREATE TRIGGER "2tc_completions_ad" AFTER DELETE ON '2tc_completions' BEGIN 
-    INSERT INTO "2tc_completions_fts" ('2tc_completions_fts', rowid, tower1, tower2, map, person, link, og, pending) VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person, old.link, old.og, old.pending);
+CREATE TRIGGER "twotc_completions_ad" AFTER DELETE ON 'twotc_completions' BEGIN 
+    INSERT INTO "twotc_completions_fts" ('twotc_completions_fts', rowid, tower1, tower2, map, person, link, og, pending) VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person, old.link, old.og, old.pending);
 END;
-CREATE TRIGGER "2tc_completions_au" AFTER UPDATE ON '2tc_completions' BEGIN 
-    INSERT INTO "2tc_completions_fts" ('2tc_completions_fts', rowid, tower1, tower2, map, person, link, og, pending) VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person, old.link, old.og, old.pending);
+CREATE TRIGGER "twotc_completions_au" AFTER UPDATE ON 'twotc_completions' BEGIN 
+    INSERT INTO "twotc_completions_fts" ('twotc_completions_fts', rowid, tower1, tower2, map, person, link, og, pending) VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person, old.link, old.og, old.pending);
 
-    INSERT INTO "2tc_completions_fts" (rowid, tower1, tower2, map, person, link, og, pending) VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person, new.link, new.og, new.pending);
+    INSERT INTO "twotc_completions_fts" (rowid, tower1, tower2, map, person, link, og, pending) VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person, new.link, new.og, new.pending);
 END;
 
-CREATE TRIGGER "2tc_completions_bi" BEFORE INSERT ON "2tc_completions" BEGIN 
-    SELECT RAISE(ABORT, '2tc completion already exists') FROM "2tc_completions" AS cmp
+CREATE TRIGGER "twotc_completions_bi" BEFORE INSERT ON "twotc_completions" BEGIN 
+    SELECT RAISE(ABORT, 'twotc completion already exists') FROM "twotc_completions" AS cmp
     WHERE (cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)
     OR (cmp.tower1, cmp.tower2, cmp.map) = (new.tower2, new.tower1, new.map);
 END;
-CREATE TRIGGER "2tc_completions_bu" BEFORE UPDATE ON "2tc_completions" BEGIN 
-    SELECT RAISE(ABORT, '2tc completion already exists') FROM "2tc_completions" AS cmp
+CREATE TRIGGER "twotc_completions_bu" BEFORE UPDATE ON "twotc_completions" BEGIN 
+    SELECT RAISE(ABORT, 'twotc completion already exists') FROM "twotc_completions" AS cmp
     WHERE NOT ( (new.tower1, new.tower2, new.map) = (old.tower1, old.tower2, old.map)
     OR (new.tower1, new.tower2, new.map) = (old.tower2, old.tower1, old.map) )
     AND ((cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)
     OR (cmp.tower1, cmp.tower2, cmp.map) = (new.tower2, new.tower1, new.map));
 END;
 
-CREATE TABLE "2tc_extra_info" (
+CREATE TABLE "twotc_extra_info" (
     tower1, tower2, upgrade1, upgrade2, version, date, PRIMARY KEY (tower1, tower2)
 );
-CREATE TABLE "2tc_completion_notes" (
+CREATE TABLE "twotc_completion_notes" (
     tower1, tower2, map, notes, PRIMARY KEY (tower1, tower2, map)
 );
 
-CREATE TABLE "2tc_filekeys" (
+CREATE TABLE "twotc_filekeys" (
     tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map)
 );
 
 -- 2 Megapops CHIMPS
-CREATE TABLE "2mp_completions" (
+CREATE TABLE "twomp_completions" (
     entity, map, person, link, og, pending, PRIMARY KEY (entity, map)
 );
-CREATE VIRTUAL TABLE "2mp_completions_fts" USING fts5(
-    entity, map, person, link, og, pending UNINDEXED, content='2mp_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+CREATE VIRTUAL TABLE "twomp_completions_fts" USING fts5(
+    entity, map, person, link, og, pending UNINDEXED, content='twomp_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
 );
-CREATE TRIGGER "2mp_completions_ai" AFTER INSERT ON '2mp_completions' BEGIN 
-    INSERT INTO "2mp_completions_fts" (rowid, entity, map, person, link, og, pending) VALUES (new.rowid, new.entity, new.map, new.person, new.link, new.og, new.pending);
+CREATE TRIGGER "twomp_completions_ai" AFTER INSERT ON 'twomp_completions' BEGIN 
+    INSERT INTO "twomp_completions_fts" (rowid, entity, map, person, link, og, pending) VALUES (new.rowid, new.entity, new.map, new.person, new.link, new.og, new.pending);
 END;
-CREATE TRIGGER "2mp_completions_ad" AFTER DELETE ON '2mp_completions' BEGIN 
-    INSERT INTO "2mp_completions_fts" ('2mp_completions_fts', rowid, entity, map, person, link, og, pending) VALUES ('delete', old.rowid, old.entity, old.map, old.person, old.link, old.og, old.pending);
+CREATE TRIGGER "twomp_completions_ad" AFTER DELETE ON 'twomp_completions' BEGIN 
+    INSERT INTO "twomp_completions_fts" ('twomp_completions_fts', rowid, entity, map, person, link, og, pending) VALUES ('delete', old.rowid, old.entity, old.map, old.person, old.link, old.og, old.pending);
 END;
-CREATE TRIGGER "2mp_completions_au" AFTER UPDATE ON '2mp_completions' BEGIN 
-    INSERT INTO "2mp_completions_fts" ('2mp_completions_fts', rowid, entity, map, person, link, og, pending) VALUES ('delete', old.rowid, old.entity, old.map, old.person, old.link, old.og, old.pending);
+CREATE TRIGGER "twomp_completions_au" AFTER UPDATE ON 'twomp_completions' BEGIN 
+    INSERT INTO "twomp_completions_fts" ('twomp_completions_fts', rowid, entity, map, person, link, og, pending) VALUES ('delete', old.rowid, old.entity, old.map, old.person, old.link, old.og, old.pending);
 
-    INSERT INTO "2mp_completions_fts" (rowid, entity, map, person, link, og, pending) VALUES (new.rowid, new.entity, new.map, new.person, new.link, new.og, new.pending);
+    INSERT INTO "twomp_completions_fts" (rowid, entity, map, person, link, og, pending) VALUES (new.rowid, new.entity, new.map, new.person, new.link, new.og, new.pending);
 END;
 
-CREATE TABLE "2mp_extra_info" (
+CREATE TABLE "twomp_extra_info" (
     entity PRIMARY KEY, upgrade, version, date
 );
-CREATE TABLE "2mp_completion_notes" (
+CREATE TABLE "twomp_completion_notes" (
     entity, map, notes, PRIMARY KEY (entity, map)
 );
 
-CREATE TABLE "2mp_filekeys" (
+CREATE TABLE "twomp_filekeys" (
     entity, map, filekey UNIQUE, PRIMARY KEY (entity, map)
 );
 
 -- 2 Towers Co-op CHIMPS
-CREATE TABLE "2tcc_completions" (
+CREATE TABLE "twotcc_completions" (
     tower1, tower2, map, person1, person2, link, og, pending, PRIMARY KEY (tower1, tower2, map)
 );
-CREATE VIRTUAL TABLE "2tcc_completions_fts" USING fts5(
-    tower1, tower2, map, person1, person2, link, og, pending UNINDEXED, content='2tcc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+CREATE VIRTUAL TABLE "twotcc_completions_fts" USING fts5(
+    tower1, tower2, map, person1, person2, link, og, pending UNINDEXED, content='twotcc_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
 );
-CREATE TRIGGER "2tcc_completions_ai" AFTER INSERT ON '2tcc_completions' BEGIN 
-    INSERT INTO "2tcc_completions_fts" (rowid, tower1, tower2, map, person1, person2, link, og, pending)
+CREATE TRIGGER "twotcc_completions_ai" AFTER INSERT ON 'twotcc_completions' BEGIN 
+    INSERT INTO "twotcc_completions_fts" (rowid, tower1, tower2, map, person1, person2, link, og, pending)
     VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person1, new.person2, new.link, new.og, new.pending);
 END;
-CREATE TRIGGER "2tcc_completions_ad" AFTER DELETE ON '2tcc_completions' BEGIN 
-    INSERT INTO "2tcc_completions_fts" ('2tcc_completions_fts', rowid, tower1, tower2, map, person1, person2, link, og, pending)
+CREATE TRIGGER "twotcc_completions_ad" AFTER DELETE ON 'twotcc_completions' BEGIN 
+    INSERT INTO "twotcc_completions_fts" ('twotcc_completions_fts', rowid, tower1, tower2, map, person1, person2, link, og, pending)
     VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person1, old.person2, old.link, old.og, old.pending);
 END;
-CREATE TRIGGER "2tcc_completions_au" AFTER UPDATE ON '2tcc_completions' BEGIN 
-    INSERT INTO "2tcc_completions_fts" ('2tcc_completions_fts', rowid, tower1, tower2, map, person1, person2, link, og, pending)
+CREATE TRIGGER "twotcc_completions_au" AFTER UPDATE ON 'twotcc_completions' BEGIN 
+    INSERT INTO "twotcc_completions_fts" ('twotcc_completions_fts', rowid, tower1, tower2, map, person1, person2, link, og, pending)
     VALUES ('delete', old.rowid, old.tower1, old.tower2, old.map, old.person1, old.person2, old.link, old.og, old.pending);
     
-    INSERT INTO "2tcc_completions_fts" (rowid, tower1, tower2, map, person1, person2, link, og, pending)
+    INSERT INTO "twotcc_completions_fts" (rowid, tower1, tower2, map, person1, person2, link, og, pending)
     VALUES (new.rowid, new.tower1, new.tower2, new.map, new.person1, new.person2, new.link, new.og, new.pending);
 END;
-CREATE TABLE "2tcc_extra_info" (
+CREATE TABLE "twotcc_extra_info" (
     tower1, tower2, upgrade1, upgrade2, version, date, money INTEGER, PRIMARY KEY (tower1, tower2)
 );
-CREATE TABLE "2tcc_completion_notes" (
+CREATE TABLE "twotcc_completion_notes" (
     tower1, tower2, map, notes, PRIMARY KEY (tower1, tower2, map)
 );
-CREATE TABLE "2tcc_filekeys" (
+CREATE TABLE "twotcc_filekeys" (
     tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map)
 );
 
-CREATE TRIGGER "2tcc_completions_bi" BEFORE INSERT ON "2tcc_completions" BEGIN 
-    SELECT RAISE(ABORT, '2tcc completion already exists') FROM "2tcc_completions" AS cmp
+CREATE TRIGGER "twotcc_completions_bi" BEFORE INSERT ON "twotcc_completions" BEGIN 
+    SELECT RAISE(ABORT, 'twotcc completion already exists') FROM "twotcc_completions" AS cmp
     WHERE (cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)
     OR (cmp.tower1, cmp.tower2, cmp.map) = (new.tower2, new.tower1, new.map);
 END;
-CREATE TRIGGER "2tcc_completions_bu" BEFORE UPDATE ON "2tcc_completions" BEGIN 
-    SELECT RAISE(ABORT, '2tcc completion already exists') FROM "2tcc_completions" AS cmp
+CREATE TRIGGER "twotcc_completions_bu" BEFORE UPDATE ON "twotcc_completions" BEGIN 
+    SELECT RAISE(ABORT, 'twotcc completion already exists') FROM "twotcc_completions" AS cmp
     WHERE NOT ( (new.tower1, new.tower2, new.map) = (old.tower1, old.tower2, old.map)
     OR (new.tower1, new.tower2, new.map) = (old.tower2, old.tower1, old.map) )
     AND ((cmp.tower1, cmp.tower2, cmp.map) = (new.tower1, new.tower2, new.map)

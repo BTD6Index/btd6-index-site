@@ -6,7 +6,7 @@ export async function onRequest(context) {
         return Response.json({error: `need entity and map specified`}, {status: 400});
     }
     let res = await context.env.BTD6_INDEX_DB
-    .prepare('SELECT * FROM "2mp_completion_notes" WHERE entity = ?1 AND map = ?2')
+    .prepare('SELECT * FROM "twomp_completion_notes" WHERE entity = ?1 AND map = ?2')
     .bind(entity, map)
     .first();
     if (res === null) {

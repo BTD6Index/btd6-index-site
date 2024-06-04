@@ -7,5 +7,6 @@ export default function TwoMPC() {
     description="In this challenge, win CHIMPS with a given tower so that pops on other towers are less than 42,693 (the total pops in a CHIMPS game, excluding regrows, minus 2 million)."
     fieldHeaders={['Entity']}
     fields={['entity']}
+    // alternateFormats={{Table: null}}
     />
 };
