@@ -5,7 +5,7 @@ export default function TwoTCRules() {
         <p><a href="/2tc">Back to 2TCs</a></p>
         <PageTitle>Rules for 2TC</PageTitle>
         <h2>Tower Limitations</h2>
-        <p>Towers that have successfully soloed CHIMPS mode in the past or currently are <strong>not</strong> allowed. As of now, this includes <strong>Sauda</strong> and <strong>Geraldo</strong>.</p>
+        <p>Towers that have successfully soloed CHIMPS mode in the past or currently are <strong>not</strong> allowed. As of now, this includes <strong>Sauda</strong>, <strong>Geraldo</strong>, and <strong>Corvus</strong>.</p>
         <h2>Challenge Settings</h2>
         <p>
             The Challenge Editor should be set to the hard difficulty and CHIMPS mode.
@@ -34,6 +34,7 @@ export default function TwoTCRules() {
         <h2>Fair Play and Game Integrity</h2>
         <p>
             No game modification, hacking, or unauthorized software use allowed. This includes the use of speedhacks and any other alterations that deviate from the game's original mechanics and settings. Violation leads to disqualification and potential exclusion from future challenges.
+            You may not submit if you are banned from the BTD6 Index Discord Server. 
         </p>
     </>;
 }
