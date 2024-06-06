@@ -202,6 +202,7 @@ thead {
   left: 0;
   top: 0;
   background: black;
+  z-index: 10;
 }
 thead::before {
   content: '';
@@ -218,6 +219,21 @@ thead::after {
   left: 0;
   width: 100%;
   border-bottom: 2px solid white;
+}
+table.twowayTable tbody td:first-child, table.twowayTable tbody th:first-child {
+  border-right: 2px solid white;
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: black;
+}
+table.twowayTable tbody td:first-child::after, table.twowayTable tbody th:first-child::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  border-right: 2px solid white;
 }
 
 .pendingCompletion {
