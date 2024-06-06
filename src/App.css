@@ -177,6 +177,11 @@ button {
   overflow-x: auto;
   width: 100%;
 }
+.twompTableContainer {
+  overflow-x: auto;
+  width: 90vw;
+  height: 60vh;
+}
 table {
   margin: 0.5em 0;
   border-collapse: collapse;

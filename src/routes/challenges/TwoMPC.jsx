@@ -11,7 +11,7 @@ function TwoMPCTable() {
         });
     }, []);
 
-    return apiResult === null ? <></> : <div className="tableContainer"><table>
+    return apiResult === null ? <></> : <div className="twompTableContainer"><table>
         <thead>
             <tr>
                 <td></td>
