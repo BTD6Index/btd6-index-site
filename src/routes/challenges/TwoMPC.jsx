@@ -11,7 +11,7 @@ function TwoMPCTable() {
         });
     }, []);
 
-    return apiResult === null ? <></> : <table>
+    return apiResult === null ? <></> : <div className="tableContainer"><table>
         <thead>
             <tr>
                 <td></td>
@@ -27,7 +27,7 @@ function TwoMPCTable() {
                 </tr>;
             })}
         </tbody>
-    </table>;
+    </table></div>;
 }
 
 export default function TwoMPC() {
