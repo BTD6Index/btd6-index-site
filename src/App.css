@@ -186,13 +186,40 @@ table {
   margin: 0.5em 0;
   border-collapse: collapse;
   border: 2px solid white;
+  background: black;
 }
 table th, table td {
   padding: 0.2em 0.5em;
 }
-thead tr:last-child th, thead tr:last-child {
+/* thead {
+  border-bottom: 2px solid white;
+  position: sticky;
+  top: 0;
+  left: 0;
+} */
+thead {
+  position: sticky;
+  left: 0;
+  top: 0;
+  background: black;
+}
+thead::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid white;
+}
+thead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   border-bottom: 2px solid white;
 }
+
 .pendingCompletion {
   color: #bbb;
   font-weight: 200;
