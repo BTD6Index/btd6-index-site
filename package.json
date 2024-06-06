@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
+    "bitset": "^5.1.1",
     "jose": "^4.14.4",
     "leo-profanity": "^1.7.0",
     "react": "^18.2.0",
