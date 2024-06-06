@@ -31,6 +31,7 @@ export default function LCDRules() {
         <h2>Fair Play and Game Integrity</h2>
         <p>
             No game modification, hacking, or unauthorized software use allowed. This includes the use of speedhacks and any other alterations that deviate from the game's original mechanics and settings. Violation leads to disqualification and potential exclusion from future challenges.
+            You may not submit if you are banned from the BTD6 Index Discord Server. 
         </p>
     </>;
 }
