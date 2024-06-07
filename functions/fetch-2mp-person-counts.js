@@ -5,6 +5,7 @@ export async function onRequest(context) {
     const limit = Math.min(parseInt(searchParams.get('limit') ?? '10'), 30);
     const res = await db.prepare(`SELECT
     (SELECT count(*) FROM twomp_completions WHERE person = person0) AS count,
+    (SELECT count(DISTINCT map) FROM twomp_completions WHERE person = person0) AS uniquecount,
     person0 AS person,
     (SELECT map FROM twomp_completions WHERE person = person0 GROUP BY map ORDER BY count(*) DESC LIMIT 1) AS favoritemap,
     (SELECT difficulty FROM twomp_completions INNER JOIN map_information USING (map) WHERE person = person0 GROUP BY difficulty ORDER BY count(*) DESC LIMIT 1) AS favoritedifficulty
