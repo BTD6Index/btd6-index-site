@@ -181,6 +181,7 @@ button {
   overflow-x: auto;
   width: 90vw;
   height: 60vh;
+  font-size: 75%;
 }
 table {
   margin: 0.5em 0;
