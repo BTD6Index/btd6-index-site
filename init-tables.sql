@@ -286,3 +286,32 @@ CREATE TABLE odyssey_information(
     supportTowers,
     miscNotes
 );
+
+-- Least Towers Odyssey
+CREATE TABLE "lto_completions" (
+    odysseyName, towerset, person, link, og, pending, PRIMARY KEY (odysseyName, towerset)
+);
+CREATE TABLE "lto_extra_info" (
+    odysseyName, towerset, version, date, PRIMARY KEY (odysseyName, towerset)
+);
+CREATE TABLE "lto_completion_notes" (
+    odysseyName, towerset, notes, PRIMARY KEY (odysseyName, towerset)
+);
+CREATE TABLE "lto_filekeys" (
+    odysseyName, towerset, filekey UNIQUE, PRIMARY KEY (odysseyName, towerset)
+);
+
+CREATE VIRTUAL TABLE "lto_completions_fts" USING fts5(
+    odysseyName, towerset, person, link, og, pending UNINDEXED, content='lto_completions', tokenize='unicode61 remove_diacritics 2', prefix='1 2 3'
+);
+CREATE TRIGGER "lto_completions_ai" AFTER INSERT ON 'lto_completions' BEGIN 
+    INSERT INTO "lto_completions_fts" (rowid, odysseyName, towerset, person, link, og, pending) VALUES (new.rowid, new.odysseyName, new.towerset, new.person, new.link, new.og, new.pending);
+END;
+CREATE TRIGGER "lto_completions_ad" AFTER DELETE ON 'lto_completions' BEGIN 
+    INSERT INTO "lto_completions_fts" ('lto_completions_fts', rowid, odysseyName, towerset, person, link, og, pending) VALUES ('delete', old.rowid, old.odysseyName, old.towerset, old.person, old.link, old.og, old.pending);
+END;
+CREATE TRIGGER "lto_completions_au" AFTER UPDATE ON 'lto_completions' BEGIN 
+    INSERT INTO "lto_completions_fts" ('lto_completions_fts', rowid, odysseyName, towerset, person, link, og, pending) VALUES ('delete', old.rowid, old.odysseyName, old.towerset, old.person, old.link, old.og, old.pending);
+
+    INSERT INTO "lto_completions_fts" (rowid, odysseyName, towerset, person, link, og, pending) VALUES (new.rowid, new.odysseyName, new.towerset, new.person, new.link, new.og, new.pending);
+END;

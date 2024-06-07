@@ -14,6 +14,12 @@ const towerTypeToOptions = new Map(
     .map(key => [key, {value: key, label: key}])
 );
 
+const towrerTypePlusHeroToOptions = new Map(
+    Object.keys(towerNames)
+    .concat(Object.keys(heroNames))
+    .map(key => [key, {value: key, label: key}])
+);
+
 function useMapToOptions(reloadVar = false) {
     const [mapToOptions, setMapToOptions] = useState(new Map());
 
@@ -26,7 +32,6 @@ function useMapToOptions(reloadVar = false) {
             );
         });
     }, [reloadVar]);
-    console.log(mapToOptions);
     return mapToOptions;
 }
 
@@ -42,8 +47,7 @@ function useOdysseyToOptions(reloadVar = false) {
             );
         });
     }, [reloadVar]);
-    console.log(odysseyToOptions);
     return odysseyToOptions;
 }
 
-export {towerToOptions, useMapToOptions, towerTypeToOptions, useOdysseyToOptions};
+export {towerToOptions, useMapToOptions, towerTypeToOptions, useOdysseyToOptions, towrerTypePlusHeroToOptions};

@@ -8,14 +8,13 @@ import PageTitle from "../../util/PageTitle";
 export default function Odysseys() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [odysseyInfo, setOdysseyInfo] = useState(null);
-    const [lccs, setLccs] = useState(null);
-    const [lccError, setLccError] = useState(null);
+    const [ltos, setLtos] = useState(null);
+    const [ltoError, setLtoError] = useState(null);
     const isAdmin = useCheckIfAdmin();
     const getToken = useAccessToken();
 
     useEffect(() => {
         const odysseyName = searchParams.get('odysseyName');
-        console.log('hi' + searchParams);
         if (odysseyName) {
             fetch('/fetch-odyssey-info?' + new URLSearchParams({odysseyName}))
             .then(async (res) => {
@@ -25,27 +24,28 @@ export default function Odysseys() {
         }
     }, [searchParams]);
 
-    /*useEffect(() => {
-        const map = searchParams.get('odysseyNumber');
+    useEffect(() => {
+        const map = searchParams.get('odysseyName');
         if (map) {
-            fetch('/fetch-lcc?' + new URLSearchParams({map, pending: 0, count: 100}))
+            fetch('/fetch-lto?' + new URLSearchParams({map, pending: 0, count: 100}))
             .then(async (res) => {
                 let resJson = await res.json();
                 if ('error' in resJson) {
                     throw new Error(resJson.error);
                 } else {
-                    setLccs(resJson.results.toSorted((a, b) => {
-                        let aInt = parseInt(a.version.split('.')[0].trim());
-                        let bInt = parseInt(b.version.split('.')[0].trim());
-                        return bInt - aInt; // sort by descending major version order
-                    }));
+
+                    let lto = [];
+                    resJson.results.forEach(element => {
+                        if(element.odysseyName === map) {lto.push(element)};
+                    });
+                    setLtos(lto);
                 }
             })
             .catch(e => {
-                setLccError(e.message);
+                setLtoError(e.message);
             });
         }
-    }, [searchParams]);*/
+    }, [searchParams]);
 
     const deleteCallback = useCallback(async () => {
         if (window.confirm(`Delete odyssey ${searchParams.get('odysseyNumber')}?`)) {
@@ -88,7 +88,7 @@ export default function Odysseys() {
         />
         {
             searchParams.get('odysseyName') && odysseyInfo && <>
-                <br/><br/>{ isAdmin && <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Map</button> }
+                <br/><br/>{ isAdmin && <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Odyssey</button> }
                 <h2>Odyssey Information for {odysseyInfo.odysseyName}</h2>
                 <h3 style={{color:"red"}}>{odysseyInfo.isExtreme === true ? "🔥Extreme Odyssey🔥" : ""}</h3>
                 <dl>
@@ -222,38 +222,34 @@ export default function Odysseys() {
                         </tbody>
                     </table>
                 </dl>
-                <h2>LCC History for {odysseyInfo.map}</h2>
+                <h2>LTOs for {odysseyInfo.odysseyName}</h2>
                 {
-                    /*lccError
-                    ? <p>Error fetching LCCs: {lccError}</p>
-                    : (lccs && <>
+                    ltoError
+                    ? <p>Error fetching LTOs: {ltoError}</p>
+                    : (ltos && <>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Version</th>
-                                    <th>Cost</th>
+                                    <th>Towers</th>
                                     <th>Person</th>
-                                    <th>Date</th>
                                     <th>Info</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    lccs.map(lcc => {
-                                        const link = lcc.link || `https://media.btd6index.win/${lcc.filekey}`;
+                                    ltos.map(lto => {
+                                        const link = lto.link || `https://media.btd6index.win/${lto.filekey}`;
 
-                                        return <tr key={lcc.filekey}>
-                                            <td>{lcc.version}</td>
-                                            <td>{lcc.money}</td>
-                                            <td>{lcc.person}</td>
-                                            <td>{lcc.date}</td>
-                                            <td><a href={link}>Link</a> | <a href={'/lcc/notes?' + new URLSearchParams({filekey: lcc.filekey})}>Notes</a></td>
+                                        return <tr key={lto.filekey}>
+                                            <td>{JSON.parse(lto.towerset).join(', ')}</td>
+                                            <td>{lto.person}</td>
+                                            <td><a href={link}>Link</a> | <a href={'/lto/notes?' + new URLSearchParams({filekey: lto.filekey})}>Notes</a></td>
                                         </tr>;
                                     })
                                 }
                             </tbody>
                         </table>
-                    </>)*/
+                    </>)
                 }
             </>
         }
