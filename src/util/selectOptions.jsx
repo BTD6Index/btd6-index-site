@@ -1,4 +1,5 @@
-import towerNames from './tower-names.json';
+//tower-names.json blanked and line 2 redirected from import towerNames from './tower-names.json'; to import towerNames from '../../functions/tower-names.json'; so site would load properly*/
+import towerNames from '../../functions/tower-names.json';
 import heroNames from './heroes.json';
 import { useEffect, useState } from 'react';
 
@@ -29,8 +30,22 @@ function useMapToOptions(reloadVar = false) {
             );
         });
     }, [reloadVar]);
-    
     return mapToOptions;
 }
 
-export {towerToOptions, useMapToOptions, towerTypeAndHeroToOptions, towerTypeToOptions};
+function useOdysseyToOptions(reloadVar = false) {
+    const [odysseyToOptions, setOdysseyToOptions] = useState(new Map());
+
+    useEffect(() => {
+        fetch('/list-odysseys')
+        .then(async (res) => {
+            let odysseysList = await res.json();
+            setOdysseyToOptions(
+                new Map(odysseysList.results.map(odysseyName => [odysseyName, {value: odysseyName, label: odysseyName}]))
+            );
+        });
+    }, [reloadVar]);
+    return odysseyToOptions;
+}
+
+export {towerToOptions, useMapToOptions, towerTypeToOptions, useOdysseyToOptions, towerTypeAndHeroToOptions};
