@@ -1,12 +1,13 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import useIndexSearch from "../../util/useIndexSearch";
 import useToggleList from "../../util/useToggleList";
-import { useRef, useCallback, useState, Fragment } from "react";
+import { useRef, useCallback, Fragment } from "react";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import PageTitle from "../../util/PageTitle";
 import { Helmet } from "react-helmet-async";
 import useTristateList from "../../util/useTristateList";
+import { useSearchParams } from "react-router-dom";
 
 export default function ChallengePage({
     challenge,
@@ -25,6 +26,8 @@ export default function ChallengePage({
     fieldsInvisible = false,
     alternateFormats = {}
 }) {
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const defaultFieldDisplayFunc = useCallback(
         ({ fieldName: _dummy, fieldValue, completion: _dummy1 }) => fieldValue || 'N/A',
         []
@@ -86,10 +89,10 @@ export default function ChallengePage({
         }
     }, [selectedCompletions, deleteForm, getToken, forceReload, challenge, setSelectedCompletions]);
 
-    const [AlternateFormat, setAlternateFormat] = useState(null);
     const changeAlternateFormat = useCallback(e => {
-        setAlternateFormat(alternateFormats[e.target.value] ?? null)
-    }, [alternateFormats]);
+        setSearchParams({view: e.target.value ?? "List"});
+    }, [setSearchParams]);
+    const AlternateFormat = alternateFormats[searchParams.get('view')] ?? null;
 
     return <>
         <PageTitle>{header}</PageTitle>
@@ -101,11 +104,13 @@ export default function ChallengePage({
         {isAdmin && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
         {
             Object.keys(alternateFormats).length > 0 && <>
-                <input type="radio" id="alternate-format-List" name="format" value="List" onChange={changeAlternateFormat} defaultChecked />
+                <input type="radio" id="alternate-format-List" name="format" value="List"
+                onChange={changeAlternateFormat} checked={!(searchParams.get('view') in alternateFormats)} />
                 <label htmlFor="alternate-format-List">List</label>
                 {
                     Object.keys(alternateFormats).map((formatName) => <Fragment key={formatName}>
-                        <input type="radio" id={`alternate-format-${formatName}`} name="format" value={formatName} onChange={changeAlternateFormat} />
+                        <input type="radio" id={`alternate-format-${formatName}`} name="format" value={formatName}
+                        onChange={changeAlternateFormat} checked={searchParams.get('view') === formatName} />
                         <label htmlFor={`alternate-format-${formatName}`}>{formatName}</label>
                     </Fragment>)
                 }
