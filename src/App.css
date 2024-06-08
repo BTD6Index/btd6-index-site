@@ -204,7 +204,6 @@ thead {
   left: 0;
   top: 0;
   background: black;
-  z-index: 10;
   border-bottom: 2px solid white;
 }
 thead th, thead td {
