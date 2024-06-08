@@ -2,13 +2,14 @@ export async function onRequestPost(context) {
     const db = context.env.BTD6_INDEX_DB;
     const formData = await context.request.formData();
 
+    const OLD_ODYSSEY_KEY = 'oldOdyssey';
     const fieldKeys = [
-        'odysseyNumber', 'odysseyName', 'startDate', 'endDate', 'isExtreme', 'islandOne', 'islandTwo', 
+        'odysseyName', 'startDate', 'endDate', 'isExtreme', 'islandOne', 'islandTwo', 
         'islandThree', 'islandFour', 'islandFive', 'heroes', 'primaryTowers', 
-        'militaryTowers', 'magicTowers', 'supportTowers', 'miscInfo'
+        'militaryTowers', 'magicTowers', 'supportTowers', 'miscNotes'
     ];
     const requiredFieldKeys = [
-        'odysseyNumber', 'odysseyName', 'startDate', 'endDate',
+        'odysseyName', 'startDate', 'endDate',
     ];
 
     for (let fieldKey of requiredFieldKeys) {
@@ -18,14 +19,24 @@ export async function onRequestPost(context) {
     }
 
     try {
-        await db.prepare(`
-            INSERT INTO odyssey_information
-            VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)
-        `).bind(
-            ...fieldKeys.map(field => {
-                return formData.get(field);
-            })
-        ).run();
+        let paramsToAdd = fieldKeys.map(field => {
+            if (field === 'isExtreme') {
+                return formData.has(field) ? 1 : 0;
+            }
+            return formData.get(field);
+        });
+        if (formData.has(OLD_ODYSSEY_KEY)) {
+            await db.prepare(`
+                UPDATE odyssey_information SET (${fieldKeys.join(',')})
+                = (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)
+                WHERE odysseyName = ?16
+            `).bind(...paramsToAdd, formData.get(OLD_ODYSSEY_KEY)).run();
+        } else {
+            await db.prepare(`
+                INSERT INTO odyssey_information
+                VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)
+            `).bind(...paramsToAdd).run();
+        }
     } catch (e) {
         return Response.json({error: e.message}, {status: 400});
     }

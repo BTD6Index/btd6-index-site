@@ -2,7 +2,7 @@ import Select from "react-select";
 import selectStyle from "../../../util/selectStyle";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { towrerTypePlusHeroToOptions } from "../../../util/selectOptions";
+import { towerTypeAndHeroToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
@@ -62,9 +62,9 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
                 <label htmlFor="towerset">Towers</label>
                 <Select
                     isMulti
-                    options={[...towrerTypePlusHeroToOptions.values()]}
+                    options={[...towerTypeAndHeroToOptions.values()]}
                     styles={selectStyle}
-                    defaultValue={towersetList.map(towerType => towrerTypePlusHeroToOptions.get(towerType))}
+                    defaultValue={towersetList.map(towerType => towerTypeAndHeroToOptions.get(towerType))}
                     onChange={useCallback((newValue) => {
                         setTowersetValue(JSON.stringify(newValue.map(val => val.value)));
                     }, [])}

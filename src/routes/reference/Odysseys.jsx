@@ -25,9 +25,9 @@ export default function Odysseys() {
     }, [searchParams]);
 
     useEffect(() => {
-        const map = searchParams.get('odysseyName');
-        if (map) {
-            fetch('/fetch-lto?' + new URLSearchParams({map, pending: 0, count: 100}))
+        const odysseyName = searchParams.get('odysseyName');
+        if (odysseyName) {
+            fetch('/fetch-lto?' + new URLSearchParams({odysseyName, pending: 0, count: 100}))
             .then(async (res) => {
                 let resJson = await res.json();
                 if ('error' in resJson) {
@@ -36,7 +36,7 @@ export default function Odysseys() {
 
                     let lto = [];
                     resJson.results.forEach(element => {
-                        if(element.odysseyName === map) {lto.push(element)};
+                        if(element.odysseyName === odysseyName) {lto.push(element)};
                     });
                     setLtos(lto);
                 }
@@ -48,10 +48,10 @@ export default function Odysseys() {
     }, [searchParams]);
 
     const deleteCallback = useCallback(async () => {
-        if (window.confirm(`Delete odyssey ${searchParams.get('odysseyNumber')}?`)) {
+        if (window.confirm(`Delete odyssey ${searchParams.get('odysseyName')}?`)) {
             try {
                 const formData = new FormData();
-                formData.set('odysseyNumber', searchParams.get('odysseyNumber'));
+                formData.set('odysseyName', searchParams.get('odysseyName'));
                 const token = await getToken({
                     authorizationParams: {
                         audience: 'https://btd6index.win/',
@@ -88,7 +88,11 @@ export default function Odysseys() {
         />
         {
             searchParams.get('odysseyName') && odysseyInfo && <>
-                <br/><br/>{ isAdmin && <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Odyssey</button> }
+                <br/><br/>
+                { isAdmin && <>
+                    <a href={`/add-odyssey?${new URLSearchParams({odysseyName: searchParams.get('odysseyName')})}`}><button type="button">Edit Odyssey</button></a>
+                    <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Odyssey</button>
+                </> }
                 <h2>Odyssey Information for {odysseyInfo.odysseyName}</h2>
                 <h3 style={{color:"red"}}>{odysseyInfo.isExtreme === true ? "🔥Extreme Odyssey🔥" : ""}</h3>
                 <dl>
@@ -115,11 +119,11 @@ export default function Odysseys() {
                                 <td>{odysseyInfo.islandFive.split(" | ")[1]}</td>
                             </tr>
                             <tr>
-                                <td>{odysseyInfo.islandOne.split(" | ")[2]}</td>
-                                <td>{odysseyInfo.islandTwo.split(" | ")[2]}</td>
-                                <td>{odysseyInfo.islandThree.split(" | ")[2]}</td>
-                                <td>{odysseyInfo.islandFour.split(" | ")[2]}</td>
-                                <td>{odysseyInfo.islandFive.split(" | ")[2]}</td>
+                                <td>Rounds {odysseyInfo.islandOne.split(" | ")[2]}</td>
+                                <td>Rounds {odysseyInfo.islandTwo.split(" | ")[2]}</td>
+                                <td>Rounds {odysseyInfo.islandThree.split(" | ")[2]}</td>
+                                <td>Rounds {odysseyInfo.islandFour.split(" | ")[2]}</td>
+                                <td>Rounds {odysseyInfo.islandFive.split(" | ")[2]}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -221,6 +225,12 @@ export default function Odysseys() {
                             </tr>
                         </tbody>
                     </table>
+                    {
+                        odysseyInfo.miscNotes && <>
+                            <dt>Miscellaneous Notes</dt>
+                            <dd className="multiline">{odysseyInfo.miscNotes}</dd>
+                        </>
+                    }
                 </dl>
                 <h2>LTOs for {odysseyInfo.odysseyName}</h2>
                 {

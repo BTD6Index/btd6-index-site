@@ -274,8 +274,7 @@ CREATE INDEX balance_changes_version_idx ON balance_changes(version);
 CREATE INDEX balance_changes_tower_version_idx ON balance_changes(tower, version);
 
 CREATE TABLE odyssey_information(
-    odysseyNumber INTEGER PRIMARY KEY,
-    odysseyName,
+    odysseyName PRIMARY KEY,
     startDate,
     endDate,
     isExtreme,
