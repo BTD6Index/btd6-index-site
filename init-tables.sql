@@ -275,6 +275,8 @@ CREATE INDEX balance_changes_tower_version_idx ON balance_changes(tower, version
 
 CREATE TABLE odyssey_information(
     odysseyName PRIMARY KEY,
+    seats INTEGER,
+    towers INTEGER,
     startDate,
     endDate,
     isExtreme,

@@ -111,6 +111,16 @@ function ManipOdyssey() {
             </span>
             <br />
             <span className="formLine">
+                <label htmlFor="seats">Number of Seats</label>
+                <input name='seats' id='seats' type='number' defaultValue={oldOdysseyInfo?.seats} required />
+            </span>
+            <br />
+            <span className="formLine">
+                <label htmlFor="towers">Number of Towers</label>
+                <input name='towers' id='towers' type='number' defaultValue={oldOdysseyInfo?.towers} required />
+            </span>
+            <br />
+            <span className="formLine">
                 <label htmlFor="heroes">Hero Info</label>
                 <input name='heroes' id='heroes' type='text' size="80" defaultValue={oldOdysseyInfo?.heroes} required />
             </span>

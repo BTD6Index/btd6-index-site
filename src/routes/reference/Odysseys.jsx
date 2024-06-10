@@ -138,6 +138,7 @@ export default function Odysseys() {
                             </tr>
                         </tbody>
                     </table>
+                    <dt>{odysseyInfo.seats} Seats, {odysseyInfo.towers} Towes Max</dt>
                     <dt>Hero Information</dt>
                     <table className='odysseyTowersTable'>
                         <thead>

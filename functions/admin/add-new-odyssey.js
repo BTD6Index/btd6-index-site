@@ -4,9 +4,9 @@ export async function onRequestPost(context) {
 
     const OLD_ODYSSEY_KEY = 'oldOdyssey';
     const fieldKeys = [
-        'odysseyName', 'startDate', 'endDate', 'isExtreme', 'islandOne', 'islandTwo', 
-        'islandThree', 'islandFour', 'islandFive', 'heroes', 'primaryTowers', 
-        'militaryTowers', 'magicTowers', 'supportTowers', 'miscNotes'
+        'odysseyName', 'seats', 'towers', 'startDate', 'endDate', 'isExtreme', 
+        'islandOne', 'islandTwo', 'islandThree', 'islandFour', 'islandFive', 
+        'heroes', 'primaryTowers', 'militaryTowers', 'magicTowers', 'supportTowers', 'miscNotes'
     ];
     const requiredFieldKeys = [
         'odysseyName', 'startDate', 'endDate',
@@ -28,13 +28,13 @@ export async function onRequestPost(context) {
         if (formData.has(OLD_ODYSSEY_KEY)) {
             await db.prepare(`
                 UPDATE odyssey_information SET (${fieldKeys.join(',')})
-                = (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)
+                = (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)
                 WHERE odysseyName = ?16
             `).bind(...paramsToAdd, formData.get(OLD_ODYSSEY_KEY)).run();
         } else {
             await db.prepare(`
                 INSERT INTO odyssey_information
-                VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)
+                VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)
             `).bind(...paramsToAdd).run();
         }
     } catch (e) {
