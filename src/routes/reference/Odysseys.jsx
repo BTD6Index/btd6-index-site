@@ -4,7 +4,7 @@ import OdysseySelect from "../../util/OdysseySelect";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import PageTitle from "../../util/PageTitle";
-import { towerTypeToOptions, heroToOptions } from "../../util/selectOptions";
+import filterNewTowers from "../../util/filterNewTowers.js";
 
 export default function Odysseys() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -13,8 +13,8 @@ export default function Odysseys() {
     const [ltoError, setLtoError] = useState(null);
     const isAdmin = useCheckIfAdmin();
     const getToken = useAccessToken();
-
-    const heroList = [...heroToOptions.keys()], towerList = [...towerTypeToOptions.keys()];
+    const [heroList, setHeroList] = useState([]);
+    const [towerList, setTowerList] = useState(null);
 
     useEffect(() => {
         const odysseyName = searchParams.get('odysseyName');
@@ -49,6 +49,13 @@ export default function Odysseys() {
             });
         }
     }, [searchParams]);
+
+    useEffect(() => {
+        let date = odysseyInfo ? odysseyInfo.startDate : '2018-06-18';
+        setHeroList(filterNewTowers(date, 'heroes'));
+        setTowerList(filterNewTowers(date, 'towers'));
+    }, [odysseyInfo])
+
 
     const deleteCallback = useCallback(async () => {
         if (window.confirm(`Delete odyssey ${searchParams.get('odysseyName')}?`)) {
@@ -89,8 +96,9 @@ export default function Odysseys() {
             onChange={val => setSearchParams({odysseyName: val.value})}
             reloadVar={searchParams.get('odysseyName')}
         />
-        {
+        {   
             searchParams.get('odysseyName') && odysseyInfo && <>
+                {console.log(heroList)}
                 <br/><br/>
                 { isAdmin && <>
                     <a href={`/add-odyssey?${new URLSearchParams({odysseyName: searchParams.get('odysseyName')})}`}><button type="button">Edit Odyssey</button></a>
@@ -100,7 +108,7 @@ export default function Odysseys() {
                 <h3 style={{color:"red"}}>{odysseyInfo.isExtreme === true ? "🔥Extreme Odyssey🔥" : ""}</h3>
                 <dl>
                     <dt>Date: {odysseyInfo.startDate} - {odysseyInfo.endDate}</dt>
-                    <table class='odysseyMapsTable'>
+                    <table className='odysseyMapsTable'>
                         <thead>
                             <tr>
                                 <th>Map #1</th><th>Map #2</th><th>Map #3</th><th>Map #4</th><th>Map #5</th>
@@ -131,7 +139,7 @@ export default function Odysseys() {
                         </tbody>
                     </table>
                     <dt>Hero Information</dt>
-                    <table class='odysseyTowersTable'>
+                    <table className='odysseyTowersTable'>
                         <thead>
                             <tr>
                                 {heroList.map(hero => (<th key={hero}>{hero}</th>))}
@@ -144,7 +152,7 @@ export default function Odysseys() {
                         </tbody>
                     </table>
                     <dt>Primary Tower Information</dt>
-                    <table class='odysseyTowersTable'>
+                    <table className='odysseyTowersTable'>
                         <thead>
                             <tr>
                                 {towerList.slice(0,towerList.indexOf('Sniper Monkey')).map(tower => <th key={tower}>{tower}</th>)}
@@ -157,33 +165,33 @@ export default function Odysseys() {
                         </tbody>
                     </table>
                     <dt>Military Tower Information</dt>
-                    <table class='odysseyTowersTable'>
+                    <table className='odysseyTowersTable'>
                         <thead>
                             <tr>
-                                {towerList.slice(towerList.indexOf('Sniper Monkey') ,towerList.indexOf('Wizard Monkey')).map(tower => <th key={tower}>{tower}</th>)}
+                                {towerList.slice(towerList.indexOf('Sniper Monkey'), towerList.indexOf('Wizard Monkey')).map(tower => <th key={tower}>{tower}</th>)}
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                {towerList.slice(towerList.indexOf('Sniper Monkey') ,towerList.indexOf('Wizard Monkey')).map((tower, i) => <td key={tower}>{odysseyInfo.militaryTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.militaryTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.militaryTowers.split(" | ")[i])}</td>)}
+                                {towerList.slice(towerList.indexOf('Sniper Monkey'), towerList.indexOf('Wizard Monkey')).map((tower, i) => <td key={tower}>{odysseyInfo.militaryTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.militaryTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.militaryTowers.split(" | ")[i])}</td>)}
                             </tr>
                         </tbody>
                     </table>
                     <dt>Magic Tower Information</dt>
-                    <table class='odysseyTowersTable'>
+                    <table className='odysseyTowersTable'>
                         <thead>
                             <tr>
-                                {towerList.slice(towerList.indexOf('Wizard Monkey') ,towerList.indexOf('Banana Farm')).map(tower => <th key={tower}>{tower}</th>)}
+                                {towerList.slice(towerList.indexOf('Wizard Monkey'), towerList.indexOf('Banana Farm')).map(tower => <th key={tower}>{tower}</th>)}
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                {towerList.slice(towerList.indexOf('Wizard Monkey') ,towerList.indexOf('Banana Farm')).map((tower, i) => <td key={tower}>{odysseyInfo.magicTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.magicTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.magicTowers.split(" | ")[i])}</td>)}
+                                {towerList.slice(towerList.indexOf('Wizard Monkey'), towerList.indexOf('Banana Farm')).map((tower, i) => <td key={tower}>{odysseyInfo.magicTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.magicTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.magicTowers.split(" | ")[i])}</td>)}
                             </tr>
                         </tbody>
                     </table>
                     <dt>Support Tower Information</dt>
-                    <table class='odysseyTowersTable'>
+                    <table className='odysseyTowersTable'>
                         <thead>
                             <tr>
                                 {towerList.slice(towerList.indexOf('Banana Farm')).map(tower => <th key={tower}>{tower}</th>)}
