@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect, Fragment } from "react";
-//imageObjectRegex.jsx blanked, and line 3 changed from import { imageObjectRegex } from "../../../util/imageObjectRegex"; to import { imageObjectRegex } from "../../../../functions/imageObjectRegex.js"; to allow site to load locally
-import { imageObjectRegex } from "../../../../functions/imageObjectRegex.js";
+//import { imageObjectRegex } from "../../../../functions/imageObjectRegex.js";
+import { imageObjectRegex } from "../../../util/imageObjectRegex";
 import useAccessToken from "../../../util/useAccessToken";
 import useForceReload from "../../../util/useForceReload";
 

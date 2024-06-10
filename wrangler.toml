@@ -1,7 +1,7 @@
 [[d1_databases]]
 binding = "BTD6_INDEX_DB"
 database_name = "btd6index"
-database_id = "10ae7575-0381-46c6-a1ea-964acef749d9"
+database_id = "dedaa678-21d1-4d64-8f1c-a98d4936734c"
 
 [[r2_buckets]]
 binding = 'BTD6_INDEX_MEDIA'

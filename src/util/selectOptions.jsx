@@ -1,5 +1,5 @@
-//tower-names.json blanked and line 2 redirected from import towerNames from './tower-names.json'; to import towerNames from '../../functions/tower-names.json'; so site would load properly*/
-import towerNames from '../../functions/tower-names.json';
+//import towerNames from '../../functions/tower-names.json';
+import towerNames from './tower-names.json';
 import heroNames from './heroes.json';
 import { useEffect, useState } from 'react';
 
