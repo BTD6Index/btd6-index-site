@@ -4,7 +4,7 @@ import OdysseySelect from "../../util/OdysseySelect";
 import useCheckIfAdmin from "../../util/useCheckIfAdmin";
 import useAccessToken from "../../util/useAccessToken";
 import PageTitle from "../../util/PageTitle";
-import filterNewTowers from "../../util/filterNewTowers.js";
+import filterNewTowers from "../../util/filterNewTowers.jsx";
 
 export default function Odysseys() {
     const [searchParams, setSearchParams] = useSearchParams();

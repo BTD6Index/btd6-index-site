@@ -29,7 +29,7 @@ export async function onRequestPost(context) {
             await db.prepare(`
                 UPDATE odyssey_information SET (${fieldKeys.join(',')})
                 = (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)
-                WHERE odysseyName = ?16
+                WHERE odysseyName = ?18
             `).bind(...paramsToAdd, formData.get(OLD_ODYSSEY_KEY)).run();
         } else {
             await db.prepare(`
