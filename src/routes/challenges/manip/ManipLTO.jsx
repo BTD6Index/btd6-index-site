@@ -14,6 +14,7 @@ const ALT_FIELDS = ['towerset'];
 
 function ManipLTO({ editParams = null, setEditParams = null }) {
     const [isOG, setOG] = useState(false);
+    const [options, setOptions] = useState([...towerTypeAndHeroToOptions.values()]);
 
     const {existingInfo, ogInfo, noteInfo, existingAttachments, forceReload} = useFetchExistingInfo({
         editParams,
@@ -45,10 +46,6 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
         setOdyssey(existingInfo?.[0]?.odysseyName)
     }, [existingInfo]);
 
-    const [options, setOptions] = useState([...towerTypeAndHeroToOptions.values()]);
-
-    console.log(towersetValue)
-
     return <>
         <p><a href="/lto">Back to LTOs</a></p>
         <PageTitle>{doEdit ? `Edit (${towersetList.join(', ')}) LTO for ${editParams.get('odyssey')}` : "Add an LTO Completion"}</PageTitle>
@@ -72,9 +69,7 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
                     required 
                     onChange={useCallback((newValue, option) => {
                         if (option.action === "select-option") {
-                            setOptions(o => [ ...o, {
-                                value: option.option.value + "_" + Date.now(),
-                                label: option.option.label}])
+                            setOptions(o => [ ...o, {value: option.option.value + "_" + Date.now(), label: option.option.label}])
                         }
                         if (option.action === "clear"){
                             setOptions([...towerTypeAndHeroToOptions.values()]);
