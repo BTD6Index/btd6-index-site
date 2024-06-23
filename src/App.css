@@ -204,7 +204,6 @@ thead {
   left: 0;
   top: 0;
   background: black;
-  z-index: 10;
   border-bottom: 2px solid white;
 }
 thead th, thead td {
@@ -220,6 +219,19 @@ table.twowayTable tbody td:first-child, table.twowayTable tbody th:first-child {
 table.twowayTable td, table.twowayTable th {
   border: 2px solid white;
   text-align: center;
+}
+
+table.odysseyTowersTable{
+  text-align:center;
+  & th, td{
+    border:2px solid #444444;
+  }
+}
+table.odysseyMapsTable {
+  & th, td{
+    border-left: 2px solid #999999;
+    border-right: 2px solid #999999;
+  }
 }
 
 .pendingCompletion {

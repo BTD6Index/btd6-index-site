@@ -51,7 +51,6 @@ function ManipMap() {
                 if ('error' in resJson) {
                     throw new Error(resJson.error);
                 }
-                console.log(resJson.difficulty);
                 setOldMapInfo(resJson);
             });
         }

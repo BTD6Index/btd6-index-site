@@ -40,9 +40,16 @@ import LCD from './routes/challenges/LCD';
 import { AddLCD, EditLCD } from './routes/challenges/manip/ManipLCD';
 import LCDNotes from './routes/challenges/notes/LCDNotes';
 import LCDRules from './routes/challenges/rules/LCDRules';
+import LTO from './routes/challenges/LTO';
+import LTOExtraInfo from './routes/challenges/info/LTOExtraInfo';
+import LTONotes from './routes/challenges/notes/LTONotes';
+import { AddLTO, EditLTO } from './routes/challenges/manip/ManipLTO';
+import LTORules from './routes/challenges/rules/LTORules';
 import ChimpsStarts from './routes/guides/ChimpsStarts';
 import Maps from './routes/reference/Maps';
+import Odysseys from './routes/reference/Odysseys';
 import { AddMap } from './routes/reference/manip/ManipMap';
+import { AddOdyssey } from './routes/reference/manip/ManipOdyssey';
 import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
 import LoginRedirect from './routes/LoginRedirect';
 import { HelmetProvider } from 'react-helmet-async';
@@ -84,6 +91,10 @@ const router = createBrowserRouter([
         element: <LCD />
       },
       {
+        path: "lto",
+        element: <LTO />
+      },
+      {
         path: "2tcc",
         element: <TwoTCC />
       },
@@ -116,6 +127,10 @@ const router = createBrowserRouter([
         element: <AddLCD />
       },
       {
+        path: "add-lto-form",
+        element: <AddLTO />
+      },
+      {
         path: "edit-2mp-form",
         element: <EditTwoMP />
       },
@@ -144,6 +159,10 @@ const router = createBrowserRouter([
         element: <EditLCD />
       },
       {
+        path: "edit-lto-form",
+        element: <EditLTO />
+      },
+      {
         path: "2tc/extra-info",
         element: <TwoTCExtraInfo />
       },
@@ -158,6 +177,10 @@ const router = createBrowserRouter([
       {
         path: "2tcc/extra-info",
         element: <TwoTCCExtraInfo />
+      },
+      {
+        path: "lto/extra-info",
+        element: <LTOExtraInfo />
       },
       {
         path: "2mp/notes",
@@ -188,6 +211,10 @@ const router = createBrowserRouter([
         element: <LCDNotes />
       },
       {
+        path: "lto/notes",
+        element: <LTONotes />
+      },
+      {
         path: "2mp/rules",
         element: <TwoMPRules />
       },
@@ -216,12 +243,24 @@ const router = createBrowserRouter([
         element: <LCDRules />
       },
       {
+        path: "lto/rules",
+        element: <LTORules />
+      },
+      {
         path: "maps",
         element: <Maps />
       },
       {
+        path: "odysseys",
+        element: <Odysseys />
+      },
+      {
         path: "add-map",
         element: <AddMap />
+      },
+      {
+        path: "add-odyssey",
+        element: <AddOdyssey />
       },
       {
         path: "chimps-starts",
@@ -292,6 +331,7 @@ function AppImplImpl() {
               <li><a className='nolinkstyle' href='/lcd'>LCD</a></li>
               <li><a className='nolinkstyle' href='/2mp'>2MPC</a></li>
               <li><a className='nolinkstyle' href='/2tcc'>2TCC</a></li>
+              <li><a className='nolinkstyle' href='/lto'>LTO</a></li>
             </ul>
           </li>
           <li>
@@ -299,6 +339,7 @@ function AppImplImpl() {
             <ul className='dropdown'>
               <li><a className='nolinkstyle' href='/maps'>Maps</a></li>
               <li><a className='nolinkstyle' href='/balance-changes'>Balance Changes</a></li>
+              <li><a className='nolinkstyle' href='/odysseys'>Odysseys</a></li>
             </ul>
           </li>
           <li>
