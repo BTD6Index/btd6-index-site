@@ -48,7 +48,7 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
 
     return <>
         <p><a href="/lto">Back to LTOs</a></p>
-        <PageTitle>{doEdit ? `Edit (${towersetList.join(', ')}) LTO for ${editParams.get('odyssey')}` : "Add an LTO Completion"}</PageTitle>
+        <PageTitle>{doEdit ? `Edit (${towersetList.join(', ')}) LTO for ${editParams.get('odysseyName')}` : "Add an LTO Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-lto-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
@@ -127,8 +127,8 @@ const AddLTO = withAuthenticationRequired(() => {
 
 const EditLTO = withAuthenticationRequired(() => {
     const [params, setParams] = useSearchParams();
-    if (!params.has('towerset') || !params.has('odyssey')) {
-        return <PageTitle>Need to specify odyssey and towerset</PageTitle>;
+    if (!params.has('towerset') || !params.has('odysseyName')) {
+        return <PageTitle>Need to specify Odyssey Name and Towerset</PageTitle>;
     }
     return <ManipLTO editParams={params} setEditParams={setParams} />
 });
