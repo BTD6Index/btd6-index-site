@@ -30,6 +30,42 @@ function TwoMPCTable() {
     </table></div>;
 }
 
+function TwoMPPersonStats() {
+    const [apiResult, setApiResult] = useState(null);
+
+    useEffect(() => {
+        fetch('/fetch-2mp-person-counts?limit=10').then(async (res) => {
+            setApiResult(await res.json());
+        });
+    }, []);
+
+    return apiResult === null ? <></> : <>
+        <h2>Top 10 Leaderboard</h2>
+        <div className="tableContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Person</th>
+                        <th># of Completions</th>
+                        <th># of Maps Completed</th>
+                        <th>Most Completed Map</th>
+                        <th>Most Completed Difficulty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {apiResult.personData.map(data => <tr key={data.person}>
+                        <td>{data.person}</td>
+                        <td>{data.count}</td>
+                        <td>{data.uniquecount}</td>
+                        <td>{data.favoritemap}</td>
+                        <td>{data.favoritedifficulty}</td>
+                    </tr>)}
+                </tbody>
+            </table>
+        </div>
+    </>;
+}
+
 export default function TwoMPC() {
     return <ChallengePage
     challenge="2mp"
@@ -37,6 +73,6 @@ export default function TwoMPC() {
     description="In this challenge, win CHIMPS with a given tower so that pops on other towers are less than 42,693 (the total pops in a CHIMPS game, excluding regrows, minus 2 million)."
     fieldHeaders={['Entity']}
     fields={['entity']}
-    alternateFormats={{Table: TwoMPCTable}}
+    alternateFormats={{Table: TwoMPCTable, 'Person Stats': TwoMPPersonStats}}
     />
 };
