@@ -3,7 +3,7 @@ import { imageObjectRegex } from "../../../util/imageObjectRegex";
 import useAccessToken from "../../../util/useAccessToken";
 import useForceReload from "../../../util/useForceReload";
 
-function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceReload: forceReloadVar}) {
+function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceReload: forceReloadVar, setSubmissionInProgress}) {
     const getToken = useAccessToken();
 
     return useCallback((e) => {
@@ -13,6 +13,7 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
             alert('You cannot reference a media.btd6index.win image from a different completion');
             return;
         }
+        setSubmissionInProgress(true);
         getToken({
             authorizationParams: {
                 audience: 'https://btd6index.win/',
@@ -44,8 +45,10 @@ function useSubmitCallback({formRef, challenge, oldLink, setEditParams, forceRel
             }
         }).catch(error => {
             window.alert(`Error adding ${challenge}: ${error.message}`);
+        }).finally(() => {
+            setSubmissionInProgress(false);
         });
-    }, [getToken, challenge, formRef, oldLink, setEditParams, forceReloadVar]);
+    }, [formRef, oldLink, setSubmissionInProgress, getToken, challenge, setEditParams, forceReloadVar]);
 }
 
 const DEFAULT_ALT_FIELDS = ['map'];

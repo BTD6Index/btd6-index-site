@@ -65,8 +65,11 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
 
     const isAdmin = useCheckIfAdmin();
 
+    const [submissionInProgress, setSubmissionInProgress] = useState(false);
+
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: 'ltc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
+        formRef: theForm, challenge: 'ltc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload,
+        setSubmissionInProgress
     });
 
     const getInitialTowersetList = useCallback(
@@ -194,7 +197,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             {editParams && ['map', 'towerset', 'completiontype'].map(
                 field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field) ?? undefined} />)}
             <input type="hidden" name="edit" value={doEdit} />
-            <input type="submit" name="submit" value={doEdit ? "Update LTC" : "Add LTC"} />
+            <input type="submit" name="submit" value={doEdit ? "Update LTC" : "Add LTC"} disabled={submissionInProgress} />
         </form>
     </>
 };

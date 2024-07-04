@@ -30,8 +30,11 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
 
     const doEdit = editParams !== null;
 
+    const [submissionInProgress, setSubmissionInProgress] = useState(false);
+
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
+        formRef: theForm, challenge: '2mp', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload,
+        setSubmissionInProgress
     });
 
     const [map, setMap] = useState(null);
@@ -100,7 +103,7 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
             {editParams && ['entity', 'map'].map(
                 field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field) ?? undefined} />)}
             <input type="hidden" name="edit" value={doEdit} />
-            <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} />
+            <input type="submit" name="submit" value={doEdit ? "Update 2MP" : "Add 2MP"} disabled={submissionInProgress} />
         </form>
     </>
 };

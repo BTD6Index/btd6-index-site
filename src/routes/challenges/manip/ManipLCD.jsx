@@ -32,8 +32,10 @@ function ManipLCD({ editParams = null, setEditParams = null }) {
 
     const isAdmin = useCheckIfAdmin();
 
+    const [submissionInProgress, setSubmissionInProgress] = useState(false);
+
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: 'lcd', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
+        formRef: theForm, challenge: 'lcd', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload, setSubmissionInProgress
     });
 
     const [map, setMap] = useState(null);
@@ -85,7 +87,7 @@ function ManipLCD({ editParams = null, setEditParams = null }) {
             <br />
             {editParams && <input type="hidden" name='edited-filekey' value={editParams.get('filekey') ?? undefined} />}
             <input type="hidden" name="edit" value={doEdit} />
-            <input type="submit" name="submit" value={doEdit ? "Update LCD" : "Add LCD"} />
+            <input type="submit" name="submit" value={doEdit ? "Update LCD" : "Add LCD"} disabled={submissionInProgress} />
         </form>
     </>
 };

@@ -30,8 +30,10 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
         setOG(!!existingInfo?.[0]?.og);
     }, [existingInfo]);
 
+    const [submissionInProgress, setSubmissionInProgress] = useState(false);
+
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: '2tcc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
+        formRef: theForm, challenge: '2tcc', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload, setSubmissionInProgress
     });
 
     const filteredTowerOptions = [...towerToOptions.values()];
@@ -127,7 +129,7 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
             {editParams && ['tower1', 'tower2', 'map'].map(
                 field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field) ?? undefined} />)}
             <input type="hidden" name="edit" value={doEdit} />
-            <input type="submit" name="submit" value={doEdit ? "Update 2TCC" : "Add 2TCC"} />
+            <input type="submit" name="submit" value={doEdit ? "Update 2TCC" : "Add 2TCC"} disabled={submissionInProgress} />
         </form>
     </>
 };
