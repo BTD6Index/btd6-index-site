@@ -78,7 +78,6 @@ export default function BalanceChanges() {
             if ('error' in resJson) {
                 throw new Error(resJson.error);
             }
-            console.log(resJson.results);
             setVersionOptions(resJson.results
                 .sort(descendingVersionOrderSort)
                 .map(version => ({value: version, label: version})));

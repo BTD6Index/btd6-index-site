@@ -1,4 +1,4 @@
-# The BTD6 Index Website (WIP)
+# The BTD6 Index Website
 This project is hosted on [https://btd6index.win](https://btd6index.win) using [CloudFlare Pages](https://developers.cloudflare.com/pages/).
 ## Setup/Running
 - Run `npm install` to install dependencies 

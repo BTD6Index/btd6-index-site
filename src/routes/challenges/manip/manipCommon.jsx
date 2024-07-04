@@ -1,4 +1,5 @@
 import { useCallback, useState, useEffect, Fragment } from "react";
+//import { imageObjectRegex } from "../../../../functions/imageObjectRegex.js";
 import { imageObjectRegex } from "../../../util/imageObjectRegex";
 import useAccessToken from "../../../util/useAccessToken";
 import useForceReload from "../../../util/useForceReload";
@@ -70,7 +71,6 @@ function useFetchExistingInfo({editParams, fields, altFields = DEFAULT_ALT_FIELD
             .then(async (res) => {
                 let json = await res.json();
                 if ('error' in json) {
-                    console.log(json.error);
                     setExistingInfo(null);
                 } else {
                     setExistingInfo(json.results);
@@ -80,7 +80,6 @@ function useFetchExistingInfo({editParams, fields, altFields = DEFAULT_ALT_FIELD
                         ));
                         let ogJson = await ogRes.json();
                         if ('error' in ogJson) {
-                            console.log(ogJson.error);
                             setOGInfo(null);
                         } else {
                             setOGInfo(ogJson.result);
@@ -91,7 +90,6 @@ function useFetchExistingInfo({editParams, fields, altFields = DEFAULT_ALT_FIELD
                     ));
                     let notesJson = await notesRes.json();
                     if ('error' in notesJson) {
-                        console.log(notesJson.error);
                         setNoteInfo(null);
                     } else {
                         setNoteInfo(notesJson);

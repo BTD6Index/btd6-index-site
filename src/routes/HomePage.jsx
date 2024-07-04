@@ -4,6 +4,7 @@ function HomePage() {
     return <>
         <PageTitle>High-Level Bloons TD 6 Challenges</PageTitle>
         <p>We are a community of Bloons TD 6 players tracking various community-created challenges.</p>
+        <p>Support us using the in-game creator code <strong>BTD6INDEX</strong></p>
         <h2>Popular Challenges</h2>
         <p><a href='/2mp'>2 Million Pops CHIMPS</a> - Complete a BTD6 CHIMPS game with 2 million pops on a tower (excluding regrow pops)</p>
         <p><a href='/2tc'>2 Towers CHIMPS</a> - Complete a BTD6 CHIMPS game with 2 towers</p>
