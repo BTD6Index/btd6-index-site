@@ -9,6 +9,31 @@ import { Helmet } from "react-helmet-async";
 import useTristateList from "../../util/useTristateList";
 import { useSearchParams } from "react-router-dom";
 
+function SortByWidget({sortBy, toggleSortBy, sortByKey}) {
+    let sortIcon = "/sort.svg";
+    if (sortBy[sortByKey] === true) {
+        sortIcon = "/sort-ascending.svg";
+    } else if (sortBy[sortByKey] === false) {
+        sortIcon = "/sort-descending.svg";
+    }
+    const onClick = useCallback(() => {
+        toggleSortBy(sortByKey);
+    }, [toggleSortBy, sortByKey]);
+    return <img src={sortIcon} className="sortIcon" alt="Sort" onClick={onClick} />
+}
+
+function FieldHeaders({headersList, fieldList, toggleSortBy, sortBy, fieldsToSort = fieldList}) {
+    return <>
+        {headersList.map((header, idx) => {
+            const sortByKey = fieldList[idx];
+            return <th key={header}>
+                {header}
+                {fieldsToSort.includes(sortByKey) && <SortByWidget sortByKey={sortByKey} toggleSortBy={toggleSortBy} sortBy={sortBy} />}
+            </th>;
+        })}
+    </>
+}
+
 export default function ChallengePage({
     challenge,
     header,
@@ -147,25 +172,12 @@ export default function ChallengePage({
                         <thead>
                             <tr>
                                 {!isLoading && isAuthenticated && <th>Select</th>}
-                                {!fieldsInvisible && fieldHeaders.concat(altFieldHeaders).map(
-                                    (fh, idx) => {
-                                        const sortByKey = idx >= fieldHeaders.length ? altFields[idx - fieldHeaders.length] : fields[idx];
-                                        let sortIcon = "/sort.svg";
-                                        if (sortBy[sortByKey] === true) {
-                                            sortIcon = "/sort-ascending.svg";
-                                        } else if (sortBy[sortByKey] === false) {
-                                            sortIcon = "/sort-descending.svg";
-                                        }
-                                        return <th key={fh}>
-                                            {fh}
-                                            <img src={sortIcon} className="sortIcon" alt="Sort" onClick={() => {
-                                                toggleSortBy(sortByKey);
-                                            }} />
-                                        </th>;
-                                    })
-                                }
-                                {personFieldHeaders.map(header => <th key={header}>{header}</th>)}
-                                {auxFieldHeaders.map(header => <th key={header}>{header}</th>)}
+                                {!fieldsInvisible && <>
+                                    <FieldHeaders headersList={fieldHeaders} fieldList={fields} toggleSortBy={toggleSortBy} sortBy={sortBy} />
+                                    <FieldHeaders headersList={altFieldHeaders} fieldList={altFields} toggleSortBy={toggleSortBy} sortBy={sortBy} />
+                                </>}
+                                <FieldHeaders headersList={personFieldHeaders} fieldList={personFields} toggleSortBy={toggleSortBy} sortBy={sortBy} fieldsToSort={[]} />
+                                <FieldHeaders headersList={auxFieldHeaders} fieldList={auxFields} toggleSortBy={toggleSortBy} sortBy={sortBy} fieldsToSort={challenge === '2tc' ? ['date'] : []} />
                                 <th>Info</th>
                                 {!disableOG && <th>OG?</th>}
                                 {!isLoading && isAuthenticated && <th>Edit</th>}

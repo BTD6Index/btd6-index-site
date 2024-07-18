@@ -26,6 +26,8 @@ export async function onRequest(context) {
             'tower1 DESC': 'tower1 DESC',
             'tower2': 'tower2',
             'tower2 DESC': 'tower2 DESC',
+            'date': 'date',
+            'date DESC': 'date DESC'
         },
         customFieldQuery: ({field, searchParams, paramPos, idx}) => {
             if (field === 'towerquery') {
