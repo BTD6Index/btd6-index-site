@@ -148,7 +148,7 @@ export default function Odysseys() {
                         </thead>
                         <tbody>
                             <tr>
-                                {heroList.map((hero, i) => (<td key={hero}>{odysseyInfo.heroes.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.heroes.split(" | ")[i] === "false" ? "❌" : odysseyInfo.heroes.split(" | ")[i])}</td>))}
+                                {heroList.map((hero, i) => (<td key={hero}>{odysseyInfo.heroes.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.heroes.split(" | ")[i] === "false" ? "❌" : odysseyInfo.heroes.split(" | ")[i].toString().replaceAll('"',''))}</td>))}
                             </tr>
                         </tbody>
                     </table>
@@ -161,7 +161,7 @@ export default function Odysseys() {
                         </thead>
                         <tbody>
                             <tr>
-                                {towerList.slice(0,towerList.indexOf('Sniper Monkey')).map((tower, i) => <td key={tower}>{odysseyInfo.primaryTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.primaryTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.primaryTowers.split(" | ")[i])}</td>)}
+                                {towerList.slice(0,towerList.indexOf('Sniper Monkey')).map((tower, i) => <td key={tower}>{odysseyInfo.primaryTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.primaryTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.primaryTowers.split(" | ")[i].toString().replaceAll('"',''))}</td>)}
                             </tr>
                         </tbody>
                     </table>
@@ -174,7 +174,7 @@ export default function Odysseys() {
                         </thead>
                         <tbody>
                             <tr>
-                                {towerList.slice(towerList.indexOf('Sniper Monkey'), towerList.indexOf('Wizard Monkey')).map((tower, i) => <td key={tower}>{odysseyInfo.militaryTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.militaryTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.militaryTowers.split(" | ")[i])}</td>)}
+                                {towerList.slice(towerList.indexOf('Sniper Monkey'), towerList.indexOf('Wizard Monkey')).map((tower, i) => <td key={tower}>{odysseyInfo.militaryTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.militaryTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.militaryTowers.split(" | ")[i].toString().replaceAll('"',''))}</td>)}
                             </tr>
                         </tbody>
                     </table>
@@ -187,7 +187,7 @@ export default function Odysseys() {
                         </thead>
                         <tbody>
                             <tr>
-                                {towerList.slice(towerList.indexOf('Wizard Monkey'), towerList.indexOf('Banana Farm')).map((tower, i) => <td key={tower}>{odysseyInfo.magicTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.magicTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.magicTowers.split(" | ")[i])}</td>)}
+                                {towerList.slice(towerList.indexOf('Wizard Monkey'), towerList.indexOf('Banana Farm')).map((tower, i) => <td key={tower}>{odysseyInfo.magicTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.magicTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.magicTowers.split(" | ")[i].toString().replaceAll('"',''))}</td>)}
                             </tr>
                         </tbody>
                     </table>
@@ -200,7 +200,7 @@ export default function Odysseys() {
                         </thead>
                         <tbody>
                             <tr>
-                                {towerList.slice(towerList.indexOf('Banana Farm')).map((tower, i) => <td key={tower}>{odysseyInfo.supportTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.supportTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.supportTowers.split(" | ")[i])}</td>)}
+                                {towerList.slice(towerList.indexOf('Banana Farm')).map((tower, i) => <td key={tower}>{odysseyInfo.supportTowers.split(" | ")[i] === "true" ? "✔️" : (odysseyInfo.supportTowers.split(" | ")[i] === "false" ? "❌" : odysseyInfo.supportTowers.split(" | ")[i].toString().replaceAll('"',''))}</td>)}
                             </tr>
                         </tbody>
                     </table>

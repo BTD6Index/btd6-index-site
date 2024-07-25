@@ -91,15 +91,14 @@ function ManipOdyssey() {
     }, [sDate])
 
     const getData = (value, i, data, setData) => {
-        let tmp = (value === 'left') ? true : (value === 'right') ? false : (value === 'center') ? '' : value;
-        console.log(tmp)
+        let tmp = (value === 'left' || value === 'false') ? false : (value === 'right' || value === 'true') ? true : value;
         setData(data.map((_, idx) => {return idx === i ? data[idx] = tmp : data[idx]}))
     }
 
     if (!isAdmin) {
         return <PageTitle>You are not authorized to view this page.</PageTitle>;
     }
-
+    console.log(JSON.stringify(primaryInfo)?.slice(1, -1).replaceAll(',', ' | '))
     return <>
         <PageTitle>{searchParams.get('odysseyName') ? 'Edit Odyssey' : 'Add Odyssey'}</PageTitle>
         <p><a href='/odysseys'>Back to Odysseys</a></p>
@@ -170,7 +169,7 @@ function ManipOdyssey() {
                 <input type="hidden" name="heroes" value={JSON.stringify(heroInfo)?.slice(1, -1).replaceAll(',', ' | ')}></input>
             </span>
             <br />
-{/*             <span>
+            <span>
                 <label>Primary Tower Info</label>
                 <span className="formLine" style={{display: 'flex', flexFlow: 'row wrap'}}>
                     {towers.slice(0, towers.indexOf("Sniper Monkey")).map((e, i) => {
@@ -209,7 +208,7 @@ function ManipOdyssey() {
                 </span>
                 <input type="hidden" name="supportTowers" value={JSON.stringify(supportInfo)?.slice(1, -1).replaceAll(',', ' | ')}></input>
             </span>
-            <br /> */}
+            <br />
             <span className="formLine">
                 <label htmlFor="miscNotes">Miscellaneous Notes</label>
                 <textarea id="miscNotes" name="miscNotes" cols={50} rows={5} defaultValue={oldOdysseyInfo?.miscNotes}/>
