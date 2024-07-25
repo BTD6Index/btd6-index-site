@@ -5,6 +5,10 @@ import useAccessToken from "../../../util/useAccessToken";
 import PageTitle from "../../../util/PageTitle";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import heroNames from '../../../util/heroes.json'
+import towerNames from '../../../../functions/tower-names.json'
+import TripleToggleSwitch from "../../../util/tripleToggle";
+import filterNewTowers from "../../../util/filterNewTowers";
 
 function ManipOdyssey() {
     const isAdmin = useCheckIfAdmin();
@@ -12,6 +16,15 @@ function ManipOdyssey() {
     const formRef = useRef();
     const [searchParams, setSearchParams] = useSearchParams();
     const [oldOdysseyInfo, setOldOdysseyInfo] = useState(null);
+    const [heroes, setHeroes] = useState(Object.keys(heroNames));
+    const [towers, setTowers] = useState(Object.keys(towerNames));
+    const [heroInfo, setHeroInfo] = useState(new Array(heroes.length).fill(false));
+    const [primaryInfo, setPrimaryInfo] = useState(new Array(towers.slice(0, towers.indexOf("Sniper Monkey")).length).fill(false));
+    const [militaryInfo, setMilitaryInfo] = useState(new Array(towers.slice(towers.indexOf("Sniper Monkey"), towers.indexOf("Wizard Monkey")).length).fill(false));
+    const [magicInfo, setMagicInfo] = useState(new Array(towers.slice(towers.indexOf("Wizard Monkey"), towers.indexOf("Banana Farm")).length).fill(false));
+    const [supportInfo, setSupportInfo] = useState(new Array(towers.slice(towers.indexOf("Banana Farm")).length).fill(false));
+    const [sDate, setSDate] = useState('2018-06-18');
+    const [eDate, setEDate] = useState('2018-06-23');
 
     const onSubmitCallback = useCallback(async (event) => {
         try {
@@ -52,14 +65,40 @@ function ManipOdyssey() {
                     throw new Error(resJson.error);
                 }
                 setOldOdysseyInfo(resJson);
+                setHeroInfo(resJson.heroes.split(' | '));
+                setPrimaryInfo(resJson.primaryTowers.split(' | '));
+                setMilitaryInfo(resJson.militaryTowers.split(' | '));
+                setMagicInfo(resJson.magicTowers.split(' | '));
+                setSupportInfo(resJson.supportTowers.split(' | '));
+                setSDate(resJson.startDate);
+                setEDate(resJson.endDate);
             });
         }
     }, [searchParams]);
 
+    useEffect(() =>{
+        let adjustedSSDate = new Date(new Date(sDate).getTime() + (10 * 60 * 60 * 1000));
+        let adjustedEEDate = new Date(adjustedSSDate.getTime() + (5 * 24 * 60 * 60 * 1000));
+        setHeroes(filterNewTowers(sDate, 'heroes'));
+        setTowers(filterNewTowers(sDate, 'towers'));
+        
+        let y = adjustedEEDate.getFullYear().toString(), m = (adjustedEEDate.getMonth() + 1).toString(), d = adjustedEEDate.getDate().toString();
+
+        if(m.length === 1) m = '0' + m;
+        if(d.length === 1) d = '0' + d;
+
+        setEDate(`${y}-${m}-${d}`)
+    }, [sDate])
+
+    const getData = (value, i, data, setData) => {
+        let tmp = (value === 'left' || value === 'false') ? false : (value === 'right' || value === 'true') ? true : value;
+        setData(data.map((_, idx) => {return idx === i ? data[idx] = tmp : data[idx]}))
+    }
+
     if (!isAdmin) {
         return <PageTitle>You are not authorized to view this page.</PageTitle>;
     }
-
+    console.log(JSON.stringify(primaryInfo)?.slice(1, -1).replaceAll(',', ' | '))
     return <>
         <PageTitle>{searchParams.get('odysseyName') ? 'Edit Odyssey' : 'Add Odyssey'}</PageTitle>
         <p><a href='/odysseys'>Back to Odysseys</a></p>
@@ -72,12 +111,12 @@ function ManipOdyssey() {
             <br />
             <span className="formLine">
                 <label htmlFor="startDate">Start Date</label>
-                <input name='startDate' id='startDate' type='date' defaultValue={oldOdysseyInfo?.startDate} required />
+                <input onChange={e => setSDate(e.target.value)}name='startDate' id='startDate' type='date' value={sDate ? sDate : oldOdysseyInfo?.startDate} required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="endDate">End Date</label>
-                <input name='endDate' id='endDate' type='date' defaultValue={oldOdysseyInfo?.endDate} required />
+                <input onChange={e => setEDate(e.target.value)} name='endDate' id='endDate' type='date' value={eDate ? eDate : oldOdysseyInfo?.endDate} required />
             </span>
             <br />
             <span className="formLine">
@@ -120,29 +159,54 @@ function ManipOdyssey() {
                 <input name='towers' id='towers' type='number' defaultValue={oldOdysseyInfo?.towers} required />
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="heroes">Hero Info</label>
-                <input name='heroes' id='heroes' type='text' size="80" defaultValue={oldOdysseyInfo?.heroes} required />
+            <span>
+                <label>Hero Info</label>
+                <span className="formLine" style={{display: 'flex', flexFlow: 'row wrap'}}>
+                    {heroes.map((e, i) => {
+                        return(<TripleToggleSwitch key={i} title={e} lock={i} getData={getData} old={heroInfo[i]} data={heroInfo} setData={setHeroInfo}/>)
+                    })}
+                </span>
+                <input type="hidden" name="heroes" value={JSON.stringify(heroInfo)?.slice(1, -1).replaceAll(',', ' | ')}></input>
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="primaryTowers">Primary Tower Info</label>
-                <input name='primaryTowers' id='primaryTowers' type='text' size="40" defaultValue={oldOdysseyInfo?.primaryTowers} required />
+            <span>
+                <label>Primary Tower Info</label>
+                <span className="formLine" style={{display: 'flex', flexFlow: 'row wrap'}}>
+                    {towers.slice(0, towers.indexOf("Sniper Monkey")).map((e, i) => {
+                        return(<TripleToggleSwitch key={i} title={e} lock={i} getData={getData} old={primaryInfo[i]} data={primaryInfo} setData={setPrimaryInfo}/>)
+                    })}
+                </span>
+                <input type="hidden" name="primaryTowers" value={JSON.stringify(primaryInfo)?.slice(1, -1).replaceAll(',', ' | ')}></input>
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="militaryTowers">Military Tower Info</label>
-                <input name='militaryTowers' id='militaryTowers' type='text' size="40" defaultValue={oldOdysseyInfo?.militaryTowers} required />
+            <span>
+                <label>Military Tower Info</label>
+                <span className="formLine" style={{display: 'flex', flexFlow: 'row wrap'}}>
+                    {towers.slice(towers.indexOf("Sniper Monkey"), towers.indexOf("Wizard Monkey")).map((e, i) => {
+                        return(<TripleToggleSwitch key={i} title={e} lock={i} getData={getData} old={militaryInfo[i]} data={militaryInfo} setData={setMilitaryInfo}/>)
+                    })}
+                </span>
+                <input type="hidden" name="militaryTowers" value={JSON.stringify(militaryInfo)?.slice(1, -1).replaceAll(',', ' | ')}></input>
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="magicTowers">Magic Tower Info</label>
-                <input name='magicTowers' id='magicTowers' type='text' size="40" defaultValue={oldOdysseyInfo?.magicTowers} required />
+            <span>
+                <label>Magic Tower Info</label>
+                <span className="formLine" style={{display: 'flex', flexFlow: 'row wrap'}}>
+                    {towers.slice(towers.indexOf("Wizard Monkey"), towers.indexOf("Banana Farm")).map((e, i) => {
+                        return(<TripleToggleSwitch key={i} title={e} lock={i} getData={getData} old={magicInfo[i]} data={magicInfo} setData={setMagicInfo}/>)
+                    })}
+                </span>
+                <input type="hidden" name="magicTowers" value={JSON.stringify(magicInfo)?.slice(1, -1).replaceAll(',', ' | ')}></input>
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="supportTowers">Support Tower Info</label>
-                <input name='supportTowers' id='supportTowers' type='text' size="40" defaultValue={oldOdysseyInfo?.supportTowers} required />
+            <span>
+                <label>Support Tower Info</label>
+                <span className="formLine" style={{display: 'flex', flexFlow: 'row wrap'}}>
+                    {towers.slice(towers.indexOf("Banana Farm")).map((e, i) => {
+                        return(<TripleToggleSwitch key={i} title={e} lock={i} getData={getData} old={supportInfo[i]} data={supportInfo} setData={setSupportInfo}/>)
+                    })}
+                </span>
+                <input type="hidden" name="supportTowers" value={JSON.stringify(supportInfo)?.slice(1, -1).replaceAll(',', ' | ')}></input>
             </span>
             <br />
             <span className="formLine">
