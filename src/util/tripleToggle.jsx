@@ -5,7 +5,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import TextField from '@mui/material/TextField';
-import "./tripleToggle.css";
 
 export default function TripleToggleSwitch( { title, lock, getData, old, data, setData } ) {
     let a = (old === false || old === "false") ? 'left' : (old === true || old === "true") ? 'right' : 'center';
