@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect, Fragment } from "react";
-//import { imageObjectRegex } from "../../../../functions/imageObjectRegex.js";
-import { imageObjectRegex } from "../../../util/imageObjectRegex";
+import { imageObjectRegex } from "../../../../functions/imageObjectRegex.js";
+//import { imageObjectRegex } from "../../../util/imageObjectRegex";
 import useAccessToken from "../../../util/useAccessToken";
 import useForceReload from "../../../util/useForceReload";
 
