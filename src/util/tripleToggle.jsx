@@ -34,7 +34,7 @@ export default function TripleToggleSwitch( { title, lock, getData, old, data, s
   }, [alignment, text])
 
   return (
-    <div className="tripleToddleContainer">
+    <div className="tripleToggleContainer">
         <h5 className="title">{title}</h5>
         <ToggleButtonGroup
             value={alignment}

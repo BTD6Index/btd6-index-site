@@ -325,12 +325,12 @@ dd {
   list-style-type: "🟦";
 }
 
-.tripleToddleContainer .MuiButtonBase-root{
+.tripleToggleContainer .MuiButtonBase-root{
     background-color: bisque !important;
     padding: 5px !important;
 }
 
-.tripleToddleContainer .MuiInputBase-root{
+.tripleToggleContainer .MuiInputBase-root{
     background: bisque !important;
     width: 80px !important;
     padding: 5px !important;
