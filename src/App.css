@@ -325,14 +325,15 @@ dd {
   list-style-type: "🟦";
 }
 
-.css-d9c359-MuiButtonBase-root-MuiToggleButton-root{
+.tripleToddleContainer .MuiButtonBase-root{
     background-color: bisque !important;
     padding: 5px !important;
 }
 
-.css-mps6pm-MuiInputBase-input-MuiFilledInput-input {
+.tripleToddleContainer .MuiInputBase-root{
     background: bisque !important;
     width: 80px !important;
     padding: 5px !important;
     margin: 2px !important;
+    height: 30px !important;
 }
