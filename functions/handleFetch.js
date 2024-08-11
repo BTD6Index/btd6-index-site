@@ -97,7 +97,7 @@ async function handleFetch({
                     WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ${orderStmtClause} LIMIT ?2 OFFSET ?3
                 `).bind(processQuery(query, fieldKeys), limit, offset, JSON.stringify(fieldValues));
             };
-        } else if (challenge == 'lto') {
+        } else if (challenge === 'lto') {
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
                     SELECT ${select} FROM "${challenge}_completions_fts"

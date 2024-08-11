@@ -20,6 +20,34 @@ async function auth(context) {
     } else {
         return Response.json({error: 'Unauthorized access'}, {status: 401});
     }
+
+    let auditWebhooks = context.env.WEBHOOKS_AUDIT
+    auditWebhooks = typeof auditWebhooks === 'string' ? JSON.parse(auditWebhooks) : (auditWebhooks ?? []);
+
+    for (let webhook of auditWebhooks) {
+        try {
+            await fetch(webhook, {
+                body: JSON.stringify({
+                    "content": `URL: ${context.request.url}
+User ID (in Auth0, go to User Management -> Users and search for \`user_id:"<user_id>"\` by \`Lucene syntax (advanced)\`): \`${context.data.jwtResult?.payload?.sub}\`
+Request body (excluding file contents): \`${
+    JSON.stringify([...(await context.request.formData()).entries()].filter(([, value]) => typeof value === 'string'))
+}\``,
+                    "username": "Glue Rat",
+                    "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
+                    "attachments": []
+                }),
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+        } catch (ex) {
+            console.error(ex);
+        }
+    }
+    
+
     return await context.next();
 }
 

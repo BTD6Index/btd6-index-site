@@ -12,7 +12,7 @@ export default function TripleToggleSwitch( { title, lock, getData, old, data, s
     if(old !== false || old !== "false" || old !== true || old !== "true" || old !== 'center') b = old
     const [alignment, setAlignment] = useState(a);
     const [text, setText] = useState(b);
-    const [restriction, setRestriction] = useState('');
+    const [/* restriction */, setRestriction] = useState('');
 
   const handleAlignment = (event, newAlignment) => {
     console.log(event)
@@ -31,7 +31,7 @@ export default function TripleToggleSwitch( { title, lock, getData, old, data, s
         setRestriction(alignment)
         getData(alignment, lock, data, setData)
     }
-  }, [alignment, text])
+  }, [alignment, data, getData, lock, setData, text])
 
   return (
     <div className="tripleToggleContainer">
