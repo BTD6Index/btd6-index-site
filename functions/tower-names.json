@@ -215,6 +215,18 @@
         "050": "Spirit Of The Forest",
         "005": "Avatar Of Wrath"
     },
+    "Mermonkey": {
+        "xyz": "Base Mermonkey",
+        "300": "Abyss Dweller",
+        "030": "Riptide Champion",
+        "003": "Alluring Melody",
+        "400": "Abyssal Warrior",
+        "040": "Arctic Knight",
+        "004": "Symphonic Resonance",
+        "500": "Lord of the Abyss",
+        "050": "Popseidon",
+        "005": "The Final Harmonic"
+    },
     "Banana Farm": {
         "xyz": "Base Farm",
         "300": "Banana Plantation",
@@ -274,17 +286,5 @@
         "500": "Megalodon",
         "050": "Giganotosaurus",
         "005": "Pou\u0101kai"
-    },
-    "Mermonkey": {
-        "xyz": "Base Mermonkey",
-        "300": "Abyss Dweller",
-        "030": "Riptide Champion",
-        "003": "Alluring Melody",
-        "400": "Abyssal Warrior",
-        "040": "Arctic Knight",
-        "004": "Symphonic Resonance",
-        "500": "Lord of the Abyss",
-        "050": "Popseidon",
-        "005": "The Final Harmonic"
     }
 }
