@@ -126,7 +126,7 @@ export default function ChallengePage({
         </Helmet>
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
-        {isAdmin && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
+        {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
         {
             Object.keys(alternateFormats).length > 0 && <>
                 <input type="radio" id="alternate-format-List" name="format" value="List"
