@@ -10,7 +10,7 @@ async function auth(context) {
                 issuer: 'https://lordlandmaster.us.auth0.com/',
                 audience: 'https://btd6index.win/'
             });
-            if (!context.data.jwtResult?.payload?.permissions?.includes('write:admin')) {
+            if (!context.data.jwtResult?.payload?.permissions?.includes('write:member')) {
                 throw new Error('You do not have index helper perms');
             }
         } catch (e) {
