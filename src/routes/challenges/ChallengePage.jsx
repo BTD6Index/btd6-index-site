@@ -49,7 +49,8 @@ export default function ChallengePage({
     fieldDisplayFunc = null,
     disableOG = false,
     fieldsInvisible = false,
-    alternateFormats = {}
+    alternateFormats = {},
+    hasVersion = false
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -72,7 +73,8 @@ export default function ChallengePage({
         forceReload,
         error: searchError,
         setPendingFilter,
-        setOgFilter
+        setOgFilter,
+        onVersionSearch
     } = useIndexSearch(`/fetch-${challenge}`, {sortBy});
 
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
@@ -151,6 +153,9 @@ export default function ChallengePage({
                     <label htmlFor="filter-og">OG completions only</label>
                 </> }
             </div>
+            { hasVersion && <div className="searchUiGroup">
+                <input type="text" name="version" id="versionbar" placeholder="Version" onChange={onVersionSearch} />
+            </div> }
             <div className="searchUiGroup">
                 <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
                 <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>

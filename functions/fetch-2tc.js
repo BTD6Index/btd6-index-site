@@ -17,7 +17,7 @@ export async function onRequest(context) {
         primaryFieldKeys: ['tower1', 'tower2'],
         altFieldKeys: ['map'],
         personKeys: ['person'],
-        extraKeys: ['towerquery'],
+        extraKeys: ['towerquery', 'version'],
         challenge: 'twotc',
         sortByIndex: {
             'map': 'map',
@@ -44,6 +44,8 @@ export async function onRequest(context) {
                 } else {
                     throw Error("towerquery array length should be 2 or fewer");
                 }
+            } else if (field === 'version') {
+                return `twotc_extra_info.version = json_extract(?${paramPos}, '$[${idx}]')`
             }
             return null;
         }
