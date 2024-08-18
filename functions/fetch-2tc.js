@@ -45,7 +45,8 @@ export async function onRequest(context) {
                     throw Error("towerquery array length should be 2 or fewer");
                 }
             } else if (field === 'version') {
-                return `twotc_extra_info.version = json_extract(?${paramPos}, '$[${idx}]')`
+                return `(og AND (twotc_extra_info.version = json_extract(?${paramPos}, '$[${idx}]')
+                OR SUBSTR(twotc_extra_info.version, 1, INSTR(twotc_extra_info.version, '.') - 1) = json_extract(?${paramPos}, '$[${idx}]')))`
             }
             return null;
         }
