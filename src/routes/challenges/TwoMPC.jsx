@@ -74,5 +74,13 @@ export default function TwoMPC() {
     fieldHeaders={['Entity']}
     fields={['entity']}
     alternateFormats={{Table: TwoMPCTable, 'Person Stats': TwoMPPersonStats}}
+    auxFields={['version', 'date']}
+    auxFieldHeaders={['OG Version', 'OG Date']}
+    fieldDisplayFunc={({ fieldName, fieldValue, completion }) => {
+        if ((fieldName === 'version' || fieldName === 'date') && !completion.og) {
+            return 'N/A';
+        }
+        return fieldValue || 'N/A';
+    }}
     />
 };

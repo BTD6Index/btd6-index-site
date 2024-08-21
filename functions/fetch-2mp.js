@@ -13,7 +13,9 @@ export async function onRequest(context) {
             'map': 'map',
             'map DESC': 'map DESC',
             'entity': 'entity',
-            'entity DESC': 'entity DESC'
+            'entity DESC': 'entity DESC',
+            'date': 'date',
+            'date DESC': 'date DESC'
         },
         customFieldQuery: ({field, searchParams, paramPos, idx}) => {
             if (field === 'towerquery') {
