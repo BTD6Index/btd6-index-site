@@ -15,5 +15,6 @@ export default function TwoTC() {
         }
         return fieldValue || 'N/A';
     }}
+    hasVersion
     />
 };

@@ -29,6 +29,11 @@ function CompletionTypeWidget({existingInfo}) {
             checked={completionType === 'cheapest'} onChange={changeHandler} />
             <label htmlFor="completiontype-cheapest">Cheapest</label>
         </span>
+        <span className="formSubLine">
+            <input type="radio" value="heroless" name="completiontype" id="completiontype-heroless"
+            checked={completionType === 'heroless'} onChange={changeHandler} />
+            <label htmlFor="completiontype-heroless">Heroless</label>
+        </span>
     </span>
 }
 

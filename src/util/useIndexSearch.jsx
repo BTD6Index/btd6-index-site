@@ -6,6 +6,7 @@ export default function useIndexSearch(endpoint, {
     sortBy = {}
 }) {
     const [query, setQuery] = useState('');
+    const [version, setVersion] = useState('');
     const [offset, setOffset] = useState(0);
     const [totalCompletions, setTotalCompletions] = useState(0);
     const [completions, setCompletions] = useState([]);
@@ -23,6 +24,7 @@ export default function useIndexSearch(endpoint, {
             count,
             ...(pendingFilter ? {pending: 1} : {}),
             ...(ogFilter ? {og: 1} : {}),
+            ...(version ? {version} : {}),
             sortby: Object.entries(sortBy).map(([key, mode]) => {
                 switch (mode) {
                 case true:
@@ -51,11 +53,16 @@ export default function useIndexSearch(endpoint, {
         .catch(err => {
             setError(err.message);
         });
-    }, [query, offset, endpoint, reloadVar, pendingFilter, ogFilter, count, sortBy]);
+    }, [query, offset, endpoint, reloadVar, pendingFilter, ogFilter, count, sortBy, version]);
 
     const onSearch = useCallback((e) => {
         setOffset(0);
         setQuery(e.target.value);
+    }, []);
+
+    const onVersionSearch = useCallback((e) => {
+        setOffset(0);
+        setVersion(e.target.value);
     }, []);
 
     const onPrev = useCallback(() => {
@@ -74,6 +81,7 @@ export default function useIndexSearch(endpoint, {
         error,
         totalCompletions,
         onSearch,
+        onVersionSearch,
         onPrev,
         onNext,
         forceReload,

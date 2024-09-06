@@ -27,6 +27,8 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
         setOG(!!existingInfo?.[0]?.og);
     }, [existingInfo]);
 
+    const [submissionInProgress, setSubmissionInProgress] = useState(false);
+
     const theForm = useRef();
 
     const isAdmin = useCheckIfAdmin();
@@ -34,7 +36,8 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
     const doEdit = editParams !== null;
 
     const submitCallback = useSubmitCallback({
-        formRef: theForm, challenge: 'lto', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload
+        formRef: theForm, challenge: 'lto', oldLink: existingInfo?.[0]?.link, setEditParams, forceReload,
+        setSubmissionInProgress
     });
 
     const towersetList = editParams?.get('towerset') ? JSON.parse(editParams?.get('towerset')) : []
@@ -116,7 +119,7 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
             {editParams && ['odyssey', 'towerset'].map(
                 field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field) ?? undefined} />)}
             <input type="hidden" name="edit" value={doEdit} />
-            <input type="submit" name="submit" value={doEdit ? "Update LTO" : "Add LTO"} />
+            <input type="submit" name="submit" value={doEdit ? "Update LTO" : "Add LTO"} disabled={submissionInProgress} />
         </form>
     </>
 };

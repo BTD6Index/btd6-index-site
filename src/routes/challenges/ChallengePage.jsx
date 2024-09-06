@@ -49,7 +49,8 @@ export default function ChallengePage({
     fieldDisplayFunc = null,
     disableOG = false,
     fieldsInvisible = false,
-    alternateFormats = {}
+    alternateFormats = {},
+    hasVersion = false
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -72,7 +73,8 @@ export default function ChallengePage({
         forceReload,
         error: searchError,
         setPendingFilter,
-        setOgFilter
+        setOgFilter,
+        onVersionSearch
     } = useIndexSearch(`/fetch-${challenge}`, {sortBy});
 
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
@@ -126,7 +128,7 @@ export default function ChallengePage({
         </Helmet>
         <p>{description}</p>
         <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
-        {isAdmin && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
+        {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
         {
             Object.keys(alternateFormats).length > 0 && <>
                 <input type="radio" id="alternate-format-List" name="format" value="List"
@@ -151,6 +153,9 @@ export default function ChallengePage({
                     <label htmlFor="filter-og">OG completions only</label>
                 </> }
             </div>
+            { hasVersion && <div className="searchUiGroup">
+                <input type="text" name="version" id="versionbar" placeholder="Version" onChange={onVersionSearch} />
+            </div> }
             <div className="searchUiGroup">
                 <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
                 <button type="button" onClick={onNext} disabled={!hasNext}>Next</button>
@@ -177,7 +182,9 @@ export default function ChallengePage({
                                     <FieldHeaders headersList={altFieldHeaders} fieldList={altFields} toggleSortBy={toggleSortBy} sortBy={sortBy} />
                                 </>}
                                 <FieldHeaders headersList={personFieldHeaders} fieldList={personFields} toggleSortBy={toggleSortBy} sortBy={sortBy} fieldsToSort={[]} />
-                                <FieldHeaders headersList={auxFieldHeaders} fieldList={auxFields} toggleSortBy={toggleSortBy} sortBy={sortBy} fieldsToSort={challenge === '2tc' ? ['date'] : []} />
+                                <FieldHeaders
+                                    headersList={auxFieldHeaders} fieldList={auxFields} toggleSortBy={toggleSortBy}
+                                    sortBy={sortBy} fieldsToSort={['2tc', '2mp'].includes(challenge) ? ['date'] : []} />
                                 <th>Info</th>
                                 {!disableOG && <th>OG?</th>}
                                 {!isLoading && isAuthenticated && <th>Edit</th>}

@@ -105,7 +105,7 @@ export default function Odysseys() {
                     <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Odyssey</button>
                 </> }
                 <h2>Odyssey Information for {odysseyInfo.odysseyName}</h2>
-                <h3 style={{color:"red"}}>{odysseyInfo.isExtreme === true ? "🔥Extreme Odyssey🔥" : ""}</h3>
+                {odysseyInfo.isExtreme === 1 && <h3 style={{color:"red"}}>🔥Extreme Odyssey🔥</h3>}
                 <dl>
                     <dt>Date: {odysseyInfo.startDate} - {odysseyInfo.endDate}</dt>
                     <table className='odysseyMapsTable'>
