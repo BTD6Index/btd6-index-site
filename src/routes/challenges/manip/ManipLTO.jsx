@@ -58,8 +58,8 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
-                <label htmlFor="odyssey">Odyssey</label>
-                <OdysseySelect name="odyssey" inputId="odyssey" odysseyValue={odyssey} required onChange={(val) => setOdyssey(val.value)} />
+                <label htmlFor="odysseyName">Odyssey</label>
+                <OdysseySelect name="odysseyName" inputId="odyssey" odysseyValue={odyssey} required onChange={(val) => setOdyssey(val.value)} />
             </span>
             <br />
             <span className="formLine">
@@ -116,7 +116,7 @@ function ManipLTO({ editParams = null, setEditParams = null }) {
                     <br />
                 </>
             }
-            {editParams && ['odyssey', 'towerset'].map(
+            {editParams && ['odysseyName', 'towerset'].map(
                 field => <input type="hidden" name={`edited-${field}`} key={field} value={editParams.get(field) ?? undefined} />)}
             <input type="hidden" name="edit" value={doEdit} />
             <input type="submit" name="submit" value={doEdit ? "Update LTO" : "Add LTO"} disabled={submissionInProgress} />
