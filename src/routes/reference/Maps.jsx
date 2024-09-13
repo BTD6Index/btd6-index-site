@@ -88,7 +88,9 @@ export default function Maps() {
                 { isAdmin && <>
                     <a href={`/add-map?${new URLSearchParams({map: searchParams.get('map')})}`}><button type="button">Edit Map</button></a>
                     <button type="button" className="dangerButton" onClick={deleteCallback}>Delete Map</button>
+                    <br />
                 </> }
+                <img src={`https://media.btd6index.win/maps/${encodeURIComponent(mapInfo.map)}`} alt={mapInfo.map} />
                 <dl>
                     <dt>Abbreviation</dt>
                     <dd>{mapInfo.abbreviation}</dd>
