@@ -1,4 +1,3 @@
-//import towerNames from '../../functions/tower-names.json';
 import towerNames from './tower-names.json';
 import heroNames from './heroes.json';
 import { useEffect, useState } from 'react';

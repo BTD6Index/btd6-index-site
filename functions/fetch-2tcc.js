@@ -1,5 +1,5 @@
 import { handleFetch } from "./handleFetch";
-import towerNames from "./tower-names.json";
+import towerNames from "../src/util/tower-names.json";
 
 function convTowerSubquery(query, queryIdx, paramPos, idx) {
     const subquery = query[queryIdx];
