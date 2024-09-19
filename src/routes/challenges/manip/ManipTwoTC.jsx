@@ -2,7 +2,7 @@ import Select from "react-select";
 import selectStyle from "../../../util/selectStyle";
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { towerToOptions } from "../../../util/selectOptions";
+import { startingTowerToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useFetchExistingInfo, useSubmitCallback, AttachmentsWidget, FormLinkImageEntry} from "./manipCommon";
@@ -37,7 +37,9 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
         setSubmissionInProgress
     });
 
-    const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo'].includes(value));
+    const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo', 'Corvus'].includes(value));
+    const filteredStartingTowerOptions = [...startingTowerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo', 'Corvus'].includes(value));
+
 
     const [map, setMap] = useState(null);
     useEffect(() => {
@@ -57,7 +59,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1</label>
-                <Select name="tower1" options={filteredTowerOptions} styles={selectStyle} defaultValue={
+                <Select name="tower1" options={filteredStartingTowerOptions} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('tower1')) ?? undefined
                     } required />
             </span>
