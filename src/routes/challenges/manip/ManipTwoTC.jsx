@@ -58,14 +58,14 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
-                <label htmlFor="tower1">Tower 1</label>
+                <label htmlFor="tower1">Tower 1 (the first of the 2 towers obtained)</label>
                 <Select name="tower1" options={filteredStartingTowerOptions} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('tower1')) ?? undefined
                     } required />
             </span>
             <br />
             <span className="formLine">
-                <label htmlFor="tower2">Tower 2</label>
+                <label htmlFor="tower2">Tower 2 (the second of the 2 towers obtained)</label>
                 <Select name="tower2" options={filteredTowerOptions} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('tower2')) ?? undefined
                     } required />
