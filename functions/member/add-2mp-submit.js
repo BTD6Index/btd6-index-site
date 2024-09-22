@@ -7,7 +7,6 @@ export async function onRequestPost(context) {
         fields: ['entity', 'map'],
         extraInfoFields: ['entity', 'upgrade', 'version', 'date'],
         genEmbedFunction: ({link, formData, edit, filekey, verify}) => {
-            const today = Date.now();
             return {
                 "content": ``,
                 "embeds": [
@@ -16,7 +15,7 @@ export async function onRequestPost(context) {
                     "title": `${formData.get('entity')} 2MPC on ${formData.get('map')} ${
                         edit ? 'Edited' : 'Submitted'
                     }${verify ? ' and Verified' : ''}`,
-                    "timestamp": today.toISOString(),
+                    "timestamp": Date.now().toISOString(),
                     "color": 16737024,
                     "fields": [
                         {

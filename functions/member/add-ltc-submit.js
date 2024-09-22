@@ -102,6 +102,39 @@ export async function onRequestPost(context) {
                             map: formData.get('map'),
                             completiontype: formData.get('completiontype')
                         })}`,
+                        "embeds": [
+                            {
+                            "title": `${formData.get('completiontype').toUpperCase()} ${JSON.parse(formData.get('towerset')).length}TC on ${formData.get('map')} ${
+                                edit ? 'Edited' : 'Submitted'
+                            }${verify ? ' and Verified' : ''}`,
+                            "timestamp": Date.now().toISOString(),
+                            "color": 16737024,
+                            "fields": [
+                                {
+                                "name": "Person",
+                                "value": `${sanitizeDiscord(formData.get('person'))}`,
+                                "inline": true
+                                },
+                                {
+                                "name": "Towers",
+                                "value": `${JSON.parse(formData.get('towerset')).join('\n')}`,
+                                "inline": true
+                                },
+                                {
+                                "name": "Notes and Attachments",
+                                "value": formData.has('notes') ? `${sanitizeDiscord(formData.get('notes'))}` : "-# none :(",
+                                "inline": true
+                                },
+                                {
+                                "name": link ? "Link" : "",
+                                "value": link || ""
+                                }
+                            ],
+                            "url": `${sanitizeDiscord(link || `https://media.btd6index.win/${filekey}`)}`,
+                            "image": {
+                                "url": link ? null : `https://media.btd6index.win/${filekey}`                    }
+                            }
+                            ],
                         "username": "Glue Rat",
                         "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
                         "attachments": []
