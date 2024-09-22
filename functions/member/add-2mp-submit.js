@@ -7,16 +7,39 @@ export async function onRequestPost(context) {
         fields: ['entity', 'map'],
         extraInfoFields: ['entity', 'upgrade', 'version', 'date'],
         genEmbedFunction: ({link, formData, edit, filekey, verify}) => {
+            const today = Date.now();
             return {
-                "content": `**${formData.get('entity')} 2MPC on ${formData.get('map')} ${
-                    edit ? 'Edited' : 'Submitted'
-                }${verify ? ' and Verified' : ''}**\n`
-                + `Person: ${sanitizeDiscord(formData.get('person'))}\n`
-                + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${filekey}`)}\n`
-                + `Notes and Attachments: https://btd6index.win/2mp/notes?${new URLSearchParams({
-                    entity: formData.get('entity'),
-                    map: formData.get('map')
-                })}`,
+                "content": ``,
+                "embeds": [
+                    {
+                    "id": 435480726,
+                    "title": `${formData.get('entity')} 2MPC on ${formData.get('map')} ${
+                        edit ? 'Edited' : 'Submitted'
+                    }${verify ? ' and Verified' : ''}`,
+                    "timestamp": today.toISOString(),
+                    "color": 16737024,
+                    "fields": [
+                        {
+                        "name": "Person",
+                        "value": `${sanitizeDiscord(formData.get('person'))}`,
+                        "inline": true
+                        },
+                        {
+                        "name": "Notes and Attachments",
+                        "value": formData.has('notes') ? `${sanitizeDiscord(formData.get('notes'))}` : "-# none :(",
+                        "inline": true
+                        },
+                        {
+                        "name": link ? "Link" : "",
+                        "value": link || ""
+                        }
+                    ],
+                    "url": `${sanitizeDiscord(link || `https://media.btd6index.win/${filekey}`)}`,
+                    "image": {
+                        "url": link ? null : `https://media.btd6index.win/${filekey}`
+                    }
+                    }
+                ],
                 "username": "Glue Rat",
                 "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
                 "attachments": []
