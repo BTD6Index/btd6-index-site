@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
                     }
                 ],
                 "url": link ? link : `https://media.btd6index.win/${filekey}`,
-                "image": {"url": link ? null : `https://media.btd6index.win/ee99c6a6-fff7-4753-a11a-15365cd188a6`},
+                "image": {"url": link ? null : `https://media.btd6index.win/${filekey}`},
                 "footer": {
                     "text": new Intl.DateTimeFormat('en-US', {dateStyle: 'full', timeStyle: 'long'}).format(Date.now())
                 }
