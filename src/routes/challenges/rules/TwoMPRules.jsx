@@ -4,6 +4,10 @@ export default function TwoMPRules() {
     return <>
         <p><a href="/2mp">Back to 2MPs</a></p>
         <PageTitle>Rules for 2MP</PageTitle>
+         <h2>Challenge Rules</h2>
+        <p>
+            Total Stolen pops must add up to under 42,693 pops. A helper may ask for a recording showing all towers stolen pops if deemed necessary. 
+        </p>
         <h2>Challenge Settings</h2>
         <p>
             The Challenge Editor should be set to the hard difficulty and CHIMPS mode.
@@ -20,7 +24,8 @@ export default function TwoMPRules() {
         <h2>Hard Round Recordings</h2>
         <p>
             For the successful completion of a submission, recordings of gameplay during hard rounds are mandatory. If a helper from the community requests recordings of a particular round, you will have 48 hours to provide the requested footage. Failure to do so within this timeframe may result in a temporary suspension or ban from future submissions.
-            Additionally, any runs featuring Adora, as well as any runs on Geared, either of the Puddles maps, #Ouch, Quad, Ravine, Dark Dungeons, X Factor, Glacial Trail, or Erosion, must include full recordings of gameplay.
+            Additionally, any runs featuring Adora, as well as any runs on #OUCH, Quad, Bloody Puddles, Ravine, Dark Dungeon, Flooded Valley, Erosion, and Glacial Trail, must include full recordings of gameplay.
+            It is highly recommended to have a recording that shows all tower's stolen pops, as that is usually requested for hard completions by helpers. 
         </p>
         <h2>Fair Play and Game Integrity</h2>
         <p>

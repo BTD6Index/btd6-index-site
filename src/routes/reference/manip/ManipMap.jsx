@@ -70,6 +70,11 @@ function ManipMap() {
             </span>
             <br />
             <span className="formLine">
+                <label htmlFor="image">Upload Map Image</label>
+                <input type="file" name="image" id="image" accept="image/jpeg, image/png, image/gif, image/webp, image/apng" />
+            </span>
+            <br />
+            <span className="formLine">
                 <label htmlFor="abbreviation">Map Abbreviation</label>
                 <input name='abbreviation' id='abbreviation' type='text' defaultValue={oldMapInfo?.abbreviation} required />
             </span>

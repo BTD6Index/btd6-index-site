@@ -4,6 +4,11 @@ export default function LCCRules() {
     return <>
         <p><a href="/lcc">Back to LCCs</a></p>
         <PageTitle>Rules for LCC</PageTitle>
+        <h2>Challenge Rules</h2>
+        <p>
+            All Least Cost CHIMPS submissions must be under 100k. (This rule may change depending on future expert maps.)
+            All beginner maps Least Cost CHIMPS submissions must be under 50k.
+        </p>
         <h2>Challenge Settings</h2>
         <p>
             The Challenge Editor should be set to the hard difficulty and CHIMPS mode.
@@ -26,7 +31,7 @@ export default function LCCRules() {
         <h2>Hard Round Recordings</h2>
         <p>
             For the successful completion of a submission, recordings of gameplay during hard rounds are mandatory. If a helper from the community requests recordings of a particular round, you will have 48 hours to provide the requested footage. Failure to do so within this timeframe may result in a temporary suspension or ban from future submissions.
-            Additionally, any runs featuring Adora, as well as any runs on Geared, either of the Puddles maps, #Ouch, Quad, Ravine, Dark Dungeons, X Factor, or Erosion, must include full recordings of gameplay.
+            Additionally, any runs featuring Adora, as well as any runs on #OUCH, Quad, Bloody Puddles, Ravine, Dark Dungeon, Flooded Valley, Erosion, and Glacial Trail, must include full recordings of gameplay.
         </p>
         <h2>Fair Play and Game Integrity</h2>
         <p>

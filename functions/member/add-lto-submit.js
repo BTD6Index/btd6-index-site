@@ -5,8 +5,8 @@ export async function onRequestPost(context) {
     return handleAddSubmit({
         context,
         challenge: 'lto',
-        fields: ['odyssey', 'towerset'],
-        extraInfoFields: ['odyssey', 'towerset', 'version', 'date'],
+        fields: ['odysseyName', 'towerset'],
+        extraInfoFields: ['odysseyName', 'towerset', 'version', 'date'],
         genEmbedFunction: ({link, formData, edit, filekey, verify}) => {
             return {
                 "content": `**(${JSON.parse(formData.get('towerset')).join(', ')}) LTO for ${formData.get('odyssey')} ${

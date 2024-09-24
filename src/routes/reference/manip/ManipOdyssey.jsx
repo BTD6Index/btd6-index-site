@@ -6,7 +6,7 @@ import PageTitle from "../../../util/PageTitle";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import heroNames from '../../../util/heroes.json'
-import towerNames from '../../../../functions/tower-names.json'
+import towerNames from '../../../util/tower-names.json'
 import TripleToggleSwitch from "../../../util/tripleToggle";
 import filterNewTowers from "../../../util/filterNewTowers";
 
