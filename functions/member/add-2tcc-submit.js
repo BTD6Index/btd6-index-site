@@ -8,16 +8,31 @@ export async function onRequestPost(context) {
         extraInfoFields: ['tower1', 'tower2', 'upgrade1', 'upgrade2', 'version', 'date', 'money'],
         auxFields: ['person1', 'person2'],
         genEmbedFunction: ({ link, formData, edit, filekey, verify }) => ({
-            "content": `**${formData.get('tower1')} and ${formData.get('tower2')} 2TCC on ${formData.get('map')} ${
-                edit ? 'Edited' : 'Submitted'
-            }${verify ? ' and Verified' : ''}**\n`
-            + `People: ${sanitizeDiscord(formData.get('person1'))}, ${sanitizeDiscord(formData.get('person2'))}\n`
-            + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${filekey}`)}\n`
-            + `Notes and Attachments: https://btd6index.win/2tcc/notes?${new URLSearchParams({
-                    tower1: formData.get('tower1'),
-                    tower2: formData.get('tower2'),
-                    map: formData.get('map')
-                })}`,
+            "embeds": [{
+                "title": `${formData.get('tower1')} & ${formData.get('tower2')} 2TCC on ${formData.get('map')} ${edit ? 'Edited' : 'Submitted'}${verify ? ' and Verified' : ''}`,
+                "color": 16737024,
+                "fields": [
+                    {
+                        "name": "Person",
+                        "value": `${formData.get('person1')} & ${formData.get('person2')}`,
+                        "inline": true
+                    },
+                    {
+                        "name": "Notes and Attachments",
+                        "value": formData.get('notes') !== "" ? `${formData.get('notes')}` : "-# none :(",
+                        "inline": true
+                    },
+                    {
+                        "name": link ? "Link" : "",
+                        "value": link || ""
+                    }
+                ],
+                "url": link ? link : `https://media.btd6index.win/${filekey}`,
+                "image": {"url": link ? null : `https://media.btd6index.win/ee99c6a6-fff7-4753-a11a-15365cd188a6`},
+                "footer": {
+                    "text": new Intl.DateTimeFormat('en-US', {dateStyle: 'full', timeStyle: 'long'}).format(Date.now())
+                }
+            }],
             "username": "Glue Rat",
             "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
             "attachments": []
