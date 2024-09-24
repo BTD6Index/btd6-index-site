@@ -8,15 +8,31 @@ export async function onRequestPost(context) {
         extraInfoFields: ['entity', 'upgrade', 'version', 'date'],
         genEmbedFunction: ({link, formData, edit, filekey, verify}) => {
             return {
-                "content": `**${formData.get('entity')} 2MPC on ${formData.get('map')} ${
-                    edit ? 'Edited' : 'Submitted'
-                }${verify ? ' and Verified' : ''}**\n`
-                + `Person: ${sanitizeDiscord(formData.get('person'))}\n`
-                + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${filekey}`)}\n`
-                + `Notes and Attachments: https://btd6index.win/2mp/notes?${new URLSearchParams({
-                    entity: formData.get('entity'),
-                    map: formData.get('map')
-                })}`,
+                "embeds": [{
+                    "title": `${formData.get('entity')} 2MPC on ${formData.get('map')} ${edit ? 'Edited' : 'Submitted'}${verify ? ' and Verified' : ''}`,
+                    "color": 16737024,
+                    "fields": [
+                        {
+                            "name": "Person",
+                            "value": formData.get('person'),
+                            "inline": true
+                        },
+                        {
+                            "name": "Notes and Attachments",
+                            "value": formData.get('notes') !== "" ? `${formData.get('notes')}` : "-# none :(",
+                            "inline": true
+                        },
+                        {
+                            "name": link ? "Link" : "",
+                            "value": link || ""
+                        }
+                    ],
+                    "url": link ? link : `https://media.btd6index.win/${filekey}`,
+                    "image": {"url": link ? null : `https://media.btd6index.win/ee99c6a6-fff7-4753-a11a-15365cd188a6`},
+                    "footer": {
+                        "text": new Intl.DateTimeFormat('en-US', {dateStyle: 'full', timeStyle: 'long'}).format(Date.now())
+                    }
+                }],
                 "username": "Glue Rat",
                 "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
                 "attachments": []

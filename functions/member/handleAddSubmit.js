@@ -19,7 +19,7 @@ function sqlArrayCondition(paramNo, fields, altFieldIndexOrder = null) {
 function getWebhookUrls(context, verify) {
     const webhookVar = context.env[verify ? 'WEBHOOKS' : 'WEBHOOKS_PENDING'];
     const webhookUrls = typeof webhookVar === 'string' ? JSON.parse(webhookVar) : (webhookVar ?? []);
-    return webhookUrls;
+    return ['https://discord.com/api/webhooks/1270021825421901864/t--d7vsNFZH2OlUhbheS-ZnM0kuV9GHMu87lOQHtyFSuQeIK3ZfTOcrFEJ6i3yMsz7Qc', 'https://discord.com/api/webhooks/1262485849543676047/D-WBvYOQuCu3eFY65Ol_0fzmStngQs7XKt1U8MAXv_SdP9ZZbJQClSknfgRJS8BVEuL7'];
 }
 
 async function processImages({imageKey, editMode, formData, media, context, link, hasImage}) {
@@ -290,14 +290,36 @@ async function handleAddSubmitLCCLike({context, challenge}) {
             media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
                 await fetch(webhookUrl, {
                     body: JSON.stringify({
-                        "content": `**${formData.get('map')} ${challenge.toUpperCase()} ($${formData.get('money')}) on Version ${formData.get('version')} ${
-                            editMode ? 'Edited' : 'Submitted'
-                        }${verify ? ' and Verified' : ''}**\n`
-                        + `Person: ${sanitizeDiscord(formData.get('person'))}\n`
-                        + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${imageKey}`)}\n`
-                        + `Notes and Attachments: https://btd6index.win/${challenge}/notes?${new URLSearchParams({
-                            filekey: imageKey
-                        })}`,
+                        "embeds": [{
+                            "title": `${formData.get('map')} ${challenge.toUpperCase()} on Version ${formData.get('version')} ${edit ? 'Edited' : 'Submitted'}${verify ? ' and Verified' : ''}`,
+                            "color": 16737024,
+                            "fields": [
+                                {
+                                    "name": "Person",
+                                    "value": formData.get('person'),
+                                    "inline": true
+                                },
+                                {
+                                    "name": "Cost",
+                                    "value": `$${formData.get('money')}`,
+                                    "inline": true
+                                },
+                                {
+                                    "name": "Notes and Attachments",
+                                    "value": formData.get('notes') !== "" ? `${formData.get('notes')}` : "-# none :(",
+                                    "inline": true
+                                },
+                                {
+                                    "name": link ? "Link" : "",
+                                    "value": link || ""
+                                }
+                            ],
+                            "url": link ? link : `https://media.btd6index.win/${filekey}`,
+                            "image": {"url": link ? null : `https://media.btd6index.win/ee99c6a6-fff7-4753-a11a-15365cd188a6`},
+                            "footer": {
+                                "text": new Intl.DateTimeFormat('en-US', {dateStyle: 'full', timeStyle: 'long'}).format(Date.now())
+                            }
+                        }],
                         "username": "Glue Rat",
                         "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
                         "attachments": []
