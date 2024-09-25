@@ -1,5 +1,4 @@
 import { handleAddSubmit } from "./handleAddSubmit";
-import sanitizeDiscord from "../sanitizeDiscord";
 
 export async function onRequestPost(context) {
     return handleAddSubmit({

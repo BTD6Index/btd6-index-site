@@ -1,4 +1,3 @@
-import sanitizeDiscord from "../sanitizeDiscord";
 import profanityFilter from 'leo-profanity';
 profanityFilter.remove('domination');
 
@@ -291,7 +290,7 @@ async function handleAddSubmitLCCLike({context, challenge}) {
                 await fetch(webhookUrl, {
                     body: JSON.stringify({
                         "embeds": [{
-                            "title": `${formData.get('map')} ${challenge.toUpperCase()} on Version ${formData.get('version')} ${edit ? 'Edited' : 'Submitted'}${verify ? ' and Verified' : ''}`,
+                            "title": `${formData.get('map')} ${challenge.toUpperCase()} on Version ${formData.get('version')} ${editMode ? 'Edited' : 'Submitted'}${verify ? ' and Verified' : ''}`,
                             "color": 16737024,
                             "fields": [
                                 {
@@ -314,8 +313,8 @@ async function handleAddSubmitLCCLike({context, challenge}) {
                                     "value": link || ""
                                 }
                             ],
-                            "url": link ? link : `https://media.btd6index.win/${filekey}`,
-                            "image": {"url": link ? null : `https://media.btd6index.win/${filekey}`},
+                            "url": link ? link : `https://media.btd6index.win/${imageKey}`,
+                            "image": {"url": link ? null : `https://media.btd6index.win/${imageKey}`},
                             "footer": {
                                 "text": new Intl.DateTimeFormat('en-US', {dateStyle: 'full', timeStyle: 'long'}).format(Date.now())
                             }
