@@ -51,6 +51,8 @@ CREATE INDEX twotc_completion_notes_tower2_nocase ON twotc_completion_notes(towe
 CREATE INDEX twotc_filekeys_tower1_nocase ON twotc_filekeys(tower1 COLLATE NOCASE);
 CREATE INDEX twotc_filekeys_tower2_nocase ON twotc_filekeys(tower2 COLLATE NOCASE);
 
+CREATE INDEX twotc_person_nocase ON twotc_completions(person COLLATE NOCASE);
+
 -- 2 Megapops CHIMPS
 CREATE TABLE "twomp_completions" (
     entity, map, person, link, og, pending, PRIMARY KEY (entity, map)
@@ -85,6 +87,8 @@ CREATE INDEX twomp_completions_entity_nocase ON twomp_completions(entity COLLATE
 CREATE INDEX twomp_extra_info_entity_nocase ON twomp_extra_info(entity COLLATE NOCASE);
 CREATE INDEX twomp_completion_notes_entity_nocase ON twomp_completion_notes(entity COLLATE NOCASE);
 CREATE INDEX twomp_filekeys_entity_nocase ON twomp_filekeys(entity COLLATE NOCASE);
+
+CREATE INDEX twomp_person_nocase ON twomp_completions(person COLLATE NOCASE);
 
 -- 2 Towers Co-op CHIMPS
 CREATE TABLE "twotcc_completions" (
@@ -140,6 +144,9 @@ CREATE INDEX twotcc_completion_notes_tower2_nocase ON twotcc_completion_notes(to
 CREATE INDEX twotcc_filekeys_tower1_nocase ON twotcc_filekeys(tower1 COLLATE NOCASE);
 CREATE INDEX twotcc_filekeys_tower2_nocase ON twotcc_filekeys(tower2 COLLATE NOCASE);
 
+CREATE INDEX twotcc_person1_nocase ON twotcc_completions(person1 COLLATE NOCASE);
+CREATE INDEX twotcc_person2_nocase ON twotcc_completions(person2 COLLATE NOCASE);
+
 -- Fewest Type of Towers CHIMPS
 CREATE TABLE "fttc_completions" (
     map, towerset, person, link, og, pending, PRIMARY KEY (map, towerset)
@@ -173,6 +180,8 @@ CREATE INDEX fttc_completions_towerset_nocase ON fttc_completions(towerset COLLA
 CREATE INDEX fttc_extra_info_towerset_nocase ON fttc_extra_info(towerset COLLATE NOCASE);
 CREATE INDEX fttc_completion_notes_towerset_nocase ON fttc_completion_notes(towerset COLLATE NOCASE);
 CREATE INDEX fttc_filekeys_towerset_nocase ON fttc_filekeys(towerset COLLATE NOCASE);
+
+CREATE INDEX fttc_person_nocase ON fttc_completions(person COLLATE NOCASE);
 
 -- Least Towers CHIMPS
 CREATE TABLE "ltc_completions" (
@@ -222,6 +231,8 @@ END;
 
 CREATE INDEX ltc_completions_towerset_nocase ON ltc_completions(towerset COLLATE NOCASE);
 
+CREATE INDEX ltc_person_nocase ON ltc_completions(person COLLATE NOCASE);
+
 -- Least Cost CHIMPS
 CREATE TABLE "lcc_completions" (
     map, money INTEGER, person, link, pending,
@@ -250,6 +261,8 @@ CREATE TRIGGER "lcc_completions_au" AFTER UPDATE ON "lcc_completions" BEGIN
     VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
 END;
 
+CREATE INDEX lcc_person_nocase ON lcc_completions(person COLLATE NOCASE);
+
 -- Least Cost Deflation
 CREATE TABLE "lcd_completions" (
     map, money INTEGER, person, link, pending,
@@ -277,6 +290,8 @@ CREATE TRIGGER "lcd_completions_au" AFTER UPDATE ON "lcd_completions" BEGIN
     INSERT INTO "lcd_completions_fts" (rowid, map, money, person, link, pending, version, date, notes, filekey)
     VALUES (new.rowid, new.map, new.money, new.person, new.link, new.pending, new.version, new.date, new.notes, new.filekey);
 END;
+
+CREATE INDEX lcd_person_nocase ON lcd_completions(person COLLATE NOCASE);
 
 CREATE TABLE map_information(
     map PRIMARY KEY,
