@@ -8,6 +8,7 @@ import PageTitle from "../../util/PageTitle";
 import { Helmet } from "react-helmet-async";
 import useTristateList from "../../util/useTristateList";
 import { useSearchParams } from "react-router-dom";
+import { DebounceInput } from "react-debounce-input";
 
 function SortByWidget({sortBy, toggleSortBy, sortByKey}) {
     let sortIcon = "/sort.svg";
@@ -145,7 +146,7 @@ export default function ChallengePage({
         }
         {
             AlternateFormat === null ? <><div className="searchUiGroup">
-                <input type="text" name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
+                <DebounceInput name="search" id="searchbar" placeholder="Search" onChange={onSearch} />
                 <input type="checkbox" id="filter-pending" onChange={e => setPendingFilter(e.target.checked)} />
                 <label htmlFor="filter-pending">Pending completions only</label>
                 { !disableOG && <>
@@ -154,7 +155,7 @@ export default function ChallengePage({
                 </> }
             </div>
             { hasVersion && <div className="searchUiGroup">
-                <input type="text" name="version" id="versionbar" placeholder="Version" onChange={onVersionSearch} />
+                <DebounceInput name="version" id="versionbar" placeholder="Version" onChange={onVersionSearch} />
             </div> }
             <div className="searchUiGroup">
                 <button type="button" onClick={onPrev} disabled={offset === 0}>Previous</button>
