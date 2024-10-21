@@ -1,6 +1,22 @@
 import profanityFilter from 'leo-profanity';
 profanityFilter.remove('domination');
 
+/**
+ * 
+ * @param {FormData} formData 
+ */
+function trimFormData(formData) {
+    const newFormData = new FormData()
+    for (const [key, value] of formData.entries()) {
+        let newValue = value;
+        if (typeof value === 'string' && !key.startsWith('edited-')) {
+            newValue = value.trim();
+        }
+        newFormData.append(key, newValue);
+    }
+    return newFormData;
+}
+
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
     for (let i = 0; i < arrayLen; ++i) {
@@ -75,7 +91,7 @@ async function handleAddSubmit({
         return Response.json({ error }, { status: 400 });
     };
 
-    let formData = await context.request.formData();
+    let formData = trimFormData(await context.request.formData());
 
     const verify = formData.has('verify') && isHelper;
     const webhookUrls = getWebhookUrls(context, verify);
@@ -221,7 +237,7 @@ async function handleAddSubmitLCCLike({context, challenge}) {
         return Response.json({ error }, { status: 400 });
     };
 
-    let formData = await context.request.formData();
+    let formData = trimFormData(await context.request.formData());
 
     const verify = formData.has('verify') && isHelper;
     const webhookUrls = getWebhookUrls(context, verify);
