@@ -42,7 +42,7 @@ export async function onRequestPost(context) {
         return Response.json({error: e.message}, {status: 400});
     }
 
-    if (formData.has('image')) {
+    if (formData.has('image') && formData.get('image') instanceof File) {
         await media.put(`maps/${formData.get('map')}`, formData.get('image').stream())
     }
 

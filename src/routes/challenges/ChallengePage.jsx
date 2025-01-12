@@ -185,7 +185,7 @@ export default function ChallengePage({
                                 <FieldHeaders headersList={personFieldHeaders} fieldList={personFields} toggleSortBy={toggleSortBy} sortBy={sortBy} fieldsToSort={[]} />
                                 <FieldHeaders
                                     headersList={auxFieldHeaders} fieldList={auxFields} toggleSortBy={toggleSortBy}
-                                    sortBy={sortBy} fieldsToSort={['2tc', '2mp'].includes(challenge) ? ['date'] : []} />
+                                    sortBy={sortBy} fieldsToSort={['2tc', '2mp'].includes(challenge) ? ['date'] : (challenge === 'lcc' ? ['money'] : [])} />
                                 <th>Info</th>
                                 {!disableOG && <th>OG?</th>}
                                 {!isLoading && isAuthenticated && <th>Edit</th>}
