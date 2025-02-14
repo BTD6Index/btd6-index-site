@@ -7,8 +7,8 @@ import { processQuery } from "./processQuery";
  */
 
 /**
- * @param {object} sortByIndex
- * @param {string?} sortBy 
+ * @param {object} sortByIndex mapping of fields to sort by to the SQL order by sub-clause
+ * @param {string?} sortBy fields to sort by, according to the query passed in by the client
  * @returns {string?}
  */
 function processSortBy(sortByIndex, sortBy) {

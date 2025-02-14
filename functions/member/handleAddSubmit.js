@@ -1,6 +1,21 @@
-import sanitizeDiscord from "../sanitizeDiscord";
 import profanityFilter from 'leo-profanity';
 profanityFilter.remove('domination');
+
+/**
+ * 
+ * @param {FormData} formData 
+ */
+function trimFormData(formData) {
+    const newFormData = new FormData()
+    for (const [key, value] of formData.entries()) {
+        let newValue = value;
+        if (typeof value === 'string' && !key.startsWith('edited-')) {
+            newValue = value.trim();
+        }
+        newFormData.append(key, newValue);
+    }
+    return newFormData;
+}
 
 function expandSQLArray(paramNo, arrayLen) {
     let buf = [];
@@ -76,7 +91,7 @@ async function handleAddSubmit({
         return Response.json({ error }, { status: 400 });
     };
 
-    let formData = await context.request.formData();
+    let formData = trimFormData(await context.request.formData());
 
     const verify = formData.has('verify') && isHelper;
     const webhookUrls = getWebhookUrls(context, verify);
@@ -222,7 +237,7 @@ async function handleAddSubmitLCCLike({context, challenge}) {
         return Response.json({ error }, { status: 400 });
     };
 
-    let formData = await context.request.formData();
+    let formData = trimFormData(await context.request.formData());
 
     const verify = formData.has('verify') && isHelper;
     const webhookUrls = getWebhookUrls(context, verify);
@@ -290,14 +305,36 @@ async function handleAddSubmitLCCLike({context, challenge}) {
             media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
                 await fetch(webhookUrl, {
                     body: JSON.stringify({
-                        "content": `**${formData.get('map')} ${challenge.toUpperCase()} ($${formData.get('money')}) on Version ${formData.get('version')} ${
-                            editMode ? 'Edited' : 'Submitted'
-                        }${verify ? ' and Verified' : ''}**\n`
-                        + `Person: ${sanitizeDiscord(formData.get('person'))}\n`
-                        + `Link: ${sanitizeDiscord(link || `https://media.btd6index.win/${imageKey}`)}\n`
-                        + `Notes and Attachments: https://btd6index.win/${challenge}/notes?${new URLSearchParams({
-                            filekey: imageKey
-                        })}`,
+                        "embeds": [{
+                            "title": `${formData.get('map')} ${challenge.toUpperCase()} on Version ${formData.get('version')} ${editMode ? 'Edited' : 'Submitted'}${verify ? ' and Verified' : ''}`,
+                            "color": 16737024,
+                            "fields": [
+                                {
+                                    "name": "Person",
+                                    "value": formData.get('person'),
+                                    "inline": true
+                                },
+                                {
+                                    "name": "Cost",
+                                    "value": `$${formData.get('money')}`,
+                                    "inline": true
+                                },
+                                {
+                                    "name": "Notes and Attachments",
+                                    "value": formData.get('notes') !== "" ? `${formData.get('notes')}` : "-# none :(",
+                                    "inline": true
+                                },
+                                {
+                                    "name": link ? "Link" : "",
+                                    "value": link || ""
+                                }
+                            ],
+                            "url": link ? link : `https://media.btd6index.win/${imageKey}`,
+                            "image": {"url": link ? null : `https://media.btd6index.win/${imageKey}`},
+                            "footer": {
+                                "text": new Intl.DateTimeFormat('en-US', {dateStyle: 'full', timeStyle: 'long'}).format(Date.now())
+                            }
+                        }],
                         "username": "Glue Rat",
                         "avatar_url": "https://btd6index.win/GlueGunnerPetRatIcon.png",
                         "attachments": []
