@@ -5,7 +5,7 @@ export default function TwoTCRules() {
         <p><a href="/2tc">Back to 2TCs</a></p>
         <PageTitle>Rules for 2TC</PageTitle>
         <h2>Tower Limitations</h2>
-        <p>Towers that have successfully soloed CHIMPS mode in the past or currently are <strong>not</strong> allowed. As of now, this includes <strong>Sauda</strong>, <strong>Geraldo</strong>, and <strong>Corvus</strong>.</p>
+        <p>Towers that have successfully soloed CHIMPS mode with $650 starting cash in the past or currently are <strong>not</strong> allowed. As of now, this includes <strong>Sauda</strong> and <strong>Geraldo</strong>.</p>
         <h2>Challenge Settings</h2>
         <p>
             The Challenge Editor should be set to the hard difficulty and CHIMPS mode.
