@@ -16,35 +16,27 @@ import TwoMPExtraInfo from './routes/challenges/info/TwoMPExtraInfo';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import TwoMPNotes from './routes/challenges/notes/TwoMPNotes';
 import TwoTCNotes from './routes/challenges/notes/TwoTCNotes';
-import TwoTCRules from './routes/challenges/rules/TwoTCRules';
-import TwoMPRules from './routes/challenges/rules/TwoMPRules';
 import TwoTCC from './routes/challenges/TwoTCC';
 import TwoTCCNotes from './routes/challenges/notes/TwoTCCNotes';
 import TwoTCCExtraInfo from './routes/challenges/info/TwoTCCExtraInfo';
 import { AddTwoTCC, EditTwoTCC } from './routes/challenges/manip/ManipTwoTCC';
-import TwoTCCRules from './routes/challenges/rules/TwoTCCRules';
 import FTTC from './routes/challenges/FTTC';
 import FTTCExtraInfo from './routes/challenges/info/FTTCExtraInfo';
 import FTTCNotes from './routes/challenges/notes/FTTCNotes';
 import { AddFTTC, EditFTTC } from './routes/challenges/manip/ManipFTTC';
-import FTTCRules from './routes/challenges/rules/FTTCRules';
 import LTC from './routes/challenges/LTC';
-import LTCRules from './routes/challenges/rules/LTCRules';
 import LTCNotes from './routes/challenges/notes/LTCNotes';
 import { AddLTC, EditLTC } from './routes/challenges/manip/ManipLTC';
 import LCC from './routes/challenges/LCC';
 import { AddLCC, EditLCC } from './routes/challenges/manip/ManipLCC';
 import LCCNotes from './routes/challenges/notes/LCCNotes';
-import LCCRules from './routes/challenges/rules/LCCRules';
 import LCD from './routes/challenges/LCD';
 import { AddLCD, EditLCD } from './routes/challenges/manip/ManipLCD';
 import LCDNotes from './routes/challenges/notes/LCDNotes';
-import LCDRules from './routes/challenges/rules/LCDRules';
 import LTO from './routes/challenges/LTO';
 import LTOExtraInfo from './routes/challenges/info/LTOExtraInfo';
 import LTONotes from './routes/challenges/notes/LTONotes';
 import { AddLTO, EditLTO } from './routes/challenges/manip/ManipLTO';
-import LTORules from './routes/challenges/rules/LTORules';
 import ChimpsStarts from './routes/guides/ChimpsStarts';
 import Maps from './routes/reference/Maps';
 import Odysseys from './routes/reference/Odysseys';
@@ -213,38 +205,6 @@ const router = createBrowserRouter([
       {
         path: "lto/notes",
         element: <LTONotes />
-      },
-      {
-        path: "2mp/rules",
-        element: <TwoMPRules />
-      },
-      {
-        path: "2tc/rules",
-        element: <TwoTCRules />
-      },
-      {
-        path: "fttc/rules",
-        element: <FTTCRules />
-      },
-      {
-        path: "2tcc/rules",
-        element: <TwoTCCRules />
-      },
-      {
-        path: "ltc/rules",
-        element: <LTCRules />
-      },
-      {
-        path: "lcc/rules",
-        element: <LCCRules />
-      },
-      {
-        path: "lcd/rules",
-        element: <LCDRules />
-      },
-      {
-        path: "lto/rules",
-        element: <LTORules />
       },
       {
         path: "maps",

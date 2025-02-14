@@ -9,7 +9,6 @@ export default function TwoTCC() {
     useEffect(() => {
         if(effectRan.current === true){
             setAllRules(a => [...addRule(a, {
-                id: 1, 
                 name: 'Tower Limitations', 
                 rule: <div>
                         <h2>Tower Limitations</h2>
@@ -19,7 +18,6 @@ export default function TwoTCC() {
             })]);
 
             setAllRules(a => [...editRule(a, 'Challenge Settings', {
-                id: 101,
                 name: 'Challenge Settings',
                 rule: <div>
                         <h2>Challenge Settings</h2>
@@ -33,7 +31,6 @@ export default function TwoTCC() {
             })])
 
             setAllRules(a => [...editRule(a, 'Submission Requirements', {
-                id: 101,
                 name: 'Submission Requirements',
                 rule: <div>
                         <h2>Submission Requirements</h2>

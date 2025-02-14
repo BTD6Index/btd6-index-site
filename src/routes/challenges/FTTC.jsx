@@ -27,7 +27,6 @@ export default function FTTC() {
     useEffect(() => {
         if(effectRan.current === true){
             setAllRules(a => [...addRule(a, {
-                id: 1, 
                 name: 'Tower Limitations', 
                 rule: <div>
                     <h2>Tower Limitations</h2>
@@ -37,7 +36,6 @@ export default function FTTC() {
             })]);
 
             setAllRules(a => [...addRule(a, {
-                id: 1, 
                 name: 'Tower Restrictions', 
                 rule: <div>
                         <h2>Tower and Hero Restrictions</h2>

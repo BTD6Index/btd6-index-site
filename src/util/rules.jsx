@@ -1,6 +1,5 @@
 export const defaultRules = [
     {
-        id: 101,
         name: 'Challenge Settings',
         rule: <div>
                 <h2>Challenge Settings</h2>
@@ -15,7 +14,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 102,
         name: 'Submission Requirements',
         rule: <div>
                 <h2>Submission Requirements</h2>
@@ -23,7 +21,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 103,
         name: 'Hard Rounds',
         rule: <div>
                 <h2>Hard Round Recordings</h2>
@@ -31,7 +28,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 104,
         name: 'Proof',
         rule: <div>
                 <h2>Proof</h2>
@@ -39,7 +35,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 105,
         name: 'Adora',
         rule: <div>
                 <h2>Adora</h2>
@@ -47,7 +42,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 106,
         name: 'Hard Maps',
                 rule: <div>
                 <h2>Hard Map Requirements</h2>
@@ -55,7 +49,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 107,
         name: 'Fair Play',
         rule: <div>
                 <h2>Fair Play and Game Integrity</h2>
@@ -63,7 +56,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 108,
         name: 'Past Versions',
         rule: <div>
                 <h2>Past Versions</h2>
@@ -71,7 +63,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 109,
         name: 'Discord Bans',
         rule: <div>
                 <h2>Discord Bans</h2>    
@@ -79,7 +70,6 @@ export const defaultRules = [
             </div>,
     },
     {
-        id: 110,
         name: 'Cheating',
         rule: <div>
                 <h2>Cheating</h2>

@@ -74,7 +74,6 @@ export default function TwoMPC() {
     useEffect(() => {
         if(effectRan.current === true){
             setAllRules(a => [...editRule(a, 'Submission Requirements', {
-                id: 101,
                 name: 'Submission Requirements',
                 rule: <div>
                         <h2>Submission Requirements</h2>

@@ -10,7 +10,6 @@ export default function LCC() {
     useEffect(() => {
         if(effectRan.current === true){
             setAllRules(a => [...addRule(a, {
-                id: 1, 
                 name: 'Version Requirements', 
                 rule: <div>
                         <h2>Version-Related Requirements</h2>
@@ -19,7 +18,6 @@ export default function LCC() {
             })]);
 
             setAllRules(a => [...editRule(a, 'Challenge Settings', {
-                id: 101,
                 name: 'Challenge Settings',
                 rule: <div>
                         <h2>Challenge Settings</h2>

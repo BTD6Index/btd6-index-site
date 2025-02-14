@@ -26,8 +26,7 @@ export default function LTC() {
     
     useEffect(() => {
         if(effectRan.current === true){
-            setAllRules(a => [...addRule(a, {
-                id: 1, 
+            setAllRules(a => [...addRule(a, { 
                 name: 'Tower Restrictions', 
                 rule: <div>
                         <h2>Tower and Hero Restrictions</h2>
@@ -37,7 +36,6 @@ export default function LTC() {
             })]);
 
             setAllRules(a => [...addRule(a, {
-                id: 2, 
                 name: 'Alternate Completions', 
                 rule: <div>
                         <h2>Alternate Combos</h2>
