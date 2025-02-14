@@ -6,45 +6,58 @@ import {
   RouterProvider,
   useNavigate
 } from "react-router-dom";
-import TwoTC from './routes/challenges/TwoTC';
-import TwoMPC from './routes/challenges/TwoMPC';
-import { AddTwoTC, EditTwoTC } from './routes/challenges/manip/ManipTwoTC';
-import NotFound from './routes/NotFound';
-import { AddTwoMP, EditTwoMP } from './routes/challenges/manip/ManipTwoMP';
-import TwoTCExtraInfo from './routes/challenges/info/TwoTCExtraInfo';
-import TwoMPExtraInfo from './routes/challenges/info/TwoMPExtraInfo';
+
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
-import TwoMPNotes from './routes/challenges/notes/TwoMPNotes';
+import NotFound from './routes/NotFound';
+import LoginRedirect from './routes/LoginRedirect';
+import { HelmetProvider } from 'react-helmet-async';
+
+import TwoTC from './routes/challenges/TwoTC';
+import { AddTwoTC, EditTwoTC } from './routes/challenges/manip/ManipTwoTC';
+import TwoTCExtraInfo from './routes/challenges/info/TwoTCExtraInfo';
 import TwoTCNotes from './routes/challenges/notes/TwoTCNotes';
+
+import TwoMPC from './routes/challenges/TwoMPC';
+import { AddTwoMP, EditTwoMP } from './routes/challenges/manip/ManipTwoMP';
+import TwoMPExtraInfo from './routes/challenges/info/TwoMPExtraInfo';
+import TwoMPNotes from './routes/challenges/notes/TwoMPNotes';
+
 import TwoTCC from './routes/challenges/TwoTCC';
-import TwoTCCNotes from './routes/challenges/notes/TwoTCCNotes';
-import TwoTCCExtraInfo from './routes/challenges/info/TwoTCCExtraInfo';
 import { AddTwoTCC, EditTwoTCC } from './routes/challenges/manip/ManipTwoTCC';
+import TwoTCCExtraInfo from './routes/challenges/info/TwoTCCExtraInfo';
+import TwoTCCNotes from './routes/challenges/notes/TwoTCCNotes';
+
 import FTTC from './routes/challenges/FTTC';
+import { AddFTTC, EditFTTC } from './routes/challenges/manip/ManipFTTC';
 import FTTCExtraInfo from './routes/challenges/info/FTTCExtraInfo';
 import FTTCNotes from './routes/challenges/notes/FTTCNotes';
-import { AddFTTC, EditFTTC } from './routes/challenges/manip/ManipFTTC';
+
 import LTC from './routes/challenges/LTC';
-import LTCNotes from './routes/challenges/notes/LTCNotes';
 import { AddLTC, EditLTC } from './routes/challenges/manip/ManipLTC';
+import LTCNotes from './routes/challenges/notes/LTCNotes';
+
 import LCC from './routes/challenges/LCC';
 import { AddLCC, EditLCC } from './routes/challenges/manip/ManipLCC';
 import LCCNotes from './routes/challenges/notes/LCCNotes';
+
 import LCD from './routes/challenges/LCD';
 import { AddLCD, EditLCD } from './routes/challenges/manip/ManipLCD';
 import LCDNotes from './routes/challenges/notes/LCDNotes';
+
 import LTO from './routes/challenges/LTO';
+import { AddLTO, EditLTO } from './routes/challenges/manip/ManipLTO';
 import LTOExtraInfo from './routes/challenges/info/LTOExtraInfo';
 import LTONotes from './routes/challenges/notes/LTONotes';
-import { AddLTO, EditLTO } from './routes/challenges/manip/ManipLTO';
+
 import ChimpsStarts from './routes/guides/ChimpsStarts';
+
 import Maps from './routes/reference/Maps';
-import Odysseys from './routes/reference/Odysseys';
 import { AddMap } from './routes/reference/manip/ManipMap';
+
+import Odysseys from './routes/reference/Odysseys';
 import { AddOdyssey } from './routes/reference/manip/ManipOdyssey';
+
 import AddChimpsStart from './routes/guides/manip/AddChimpsStart';
-import LoginRedirect from './routes/LoginRedirect';
-import { HelmetProvider } from 'react-helmet-async';
 import ExtractingGameAssets from './routes/guides/ExtractingGameAssets';
 import BalanceChanges from './routes/reference/BalanceChanges';
 import ManipBalanceChanges from './routes/reference/manip/ManipBalanceChanges';

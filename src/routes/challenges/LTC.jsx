@@ -43,6 +43,7 @@ export default function LTC() {
                         <ul>
                             <li><strong>The OG</strong>: The least amount of towers completed on the map, tiebroken by the earliest of those combos.</li>
                             <li><strong>The Cheapest</strong>: The cheapest combo using only the number of towers from the OG.</li>
+                            <li><strong>Heroless</strong>: The least number of towers completed on the map without using a hero.</li>
                         </ul>
                     </div>,
             })]);

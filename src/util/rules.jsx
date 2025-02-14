@@ -9,7 +9,8 @@ export const defaultRules = [
                     <li>The end round must strictly be set to Round 100.</li>
                     <li>The "Least Cash" condition should be set to "No Score Set" (or 99999999 through clicking the auto button twice which does the same thing without needing a reset); this is mainly to prevent exploiting of extreme cash bugs. You can reset the score after completing a run by clicking the auto button twice.</li>
                     <li>All sliders must be set to 100%.</li>
-                    <li>All check boxes at the bottom must remain unchecked.</li>
+                    <li>The modifiers included must be No Monkey Knowledge, No Powers, No Continues, No Selling, No Double Cash, and No Fast Track.</li>
+                    <li>The modifiers All Camo and All Regrow must be disabled.</li>
                 </ul>
             </div>,
     },
