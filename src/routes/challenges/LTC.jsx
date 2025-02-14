@@ -64,5 +64,6 @@ export default function LTC() {
         auxFields={['upgradeset', 'version', 'date']}
         fieldDisplayFunc={fieldDisplayFunc}
         disableOG
+        rules={allRules}
     />
 }

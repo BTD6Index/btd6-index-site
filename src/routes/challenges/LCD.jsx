@@ -50,5 +50,6 @@ export default function LCD() {
         auxFields={['map', 'money', 'version', 'date']}
         auxFieldHeaders={['Map', 'Cost', 'Version', 'Date']}
         disableOG
+        rules={allRules}
     />;
 }

@@ -49,5 +49,6 @@ export default function LCC() {
         auxFields={['map', 'money', 'version', 'date']}
         auxFieldHeaders={['Map', 'Cost', 'Version', 'Date']}
         disableOG
+        rules={allRules}
     />;
 }
