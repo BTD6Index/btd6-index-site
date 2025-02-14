@@ -1,6 +1,6 @@
+import { useEffect, useState, useRef } from "react";
 import ChallengePage from "./ChallengePage";
 import { defaultRules, addRule } from "../../util/rules";
-import { useEffect, useState, useRef } from "react";
 
 export default function TwoTC() {
     const effectRan = useRef(false);

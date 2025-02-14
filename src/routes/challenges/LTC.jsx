@@ -1,5 +1,5 @@
-import ChallengePage from "./ChallengePage";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ChallengePage from "./ChallengePage";
 import { defaultRules, addRule } from "../../util/rules";
 
 export default function LTC() {
