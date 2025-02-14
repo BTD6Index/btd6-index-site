@@ -1,0 +1,64 @@
+.MuiButton-root.modal-open-btn{
+    font-family: inherit;
+    font-size: calc(1.3rem);
+    padding: 1px 1px;
+    text-transform: none;
+    letter-spacing: 0.025rem;
+}
+
+.modal-box{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400;
+    box-shadow: 24;
+    background-color: black;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0 100%), url("rulesBackground.webp");
+    background-size: cover;
+    color: #ddd;
+    height: calc(100% - 4rem * 2);
+    border: 2px solid #c36b6b;
+    border-radius: 20px;
+    overflow: scroll;
+    scrollbar-width: none;
+    padding: 1.5em 1em;
+}
+
+.modal-break {
+	border: none;
+	color: black;
+	overflow: visible;
+	text-align: center;
+    height: 10px;
+}
+
+.modal-break::after {
+    color: #ddd;
+	content: "⚶ ⚶ ⚶";
+	padding: 0 4px;
+	position: relative;
+	top: -13px;
+}
+
+.modal-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    padding: 1rem;
+}
+.modal-header .btn-close {
+    margin-left: auto;
+}
+
+.modal-body{
+    padding-bottom: 3px;
+}
+
+.modal-footer {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1rem;
+}

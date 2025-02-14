@@ -19,6 +19,7 @@ export default function FTTC() {
         }
         return fieldValue;
     }, []);
+
     return <ChallengePage
         challenge="fttc"
         header="Fewest Types of Towers CHIMPS"
