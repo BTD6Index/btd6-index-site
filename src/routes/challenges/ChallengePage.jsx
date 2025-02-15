@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet-async";
 import useTristateList from "../../util/useTristateList";
 import { useSearchParams } from "react-router-dom";
 import { DebounceInput } from "react-debounce-input";
+import RulesModal from "../../util/modal"
 
 function SortByWidget({sortBy, toggleSortBy, sortByKey}) {
     let sortIcon = "/sort.svg";
@@ -51,7 +52,8 @@ export default function ChallengePage({
     disableOG = false,
     fieldsInvisible = false,
     alternateFormats = {},
-    hasVersion = false
+    hasVersion = false,
+    rules,
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -81,6 +83,7 @@ export default function ChallengePage({
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
 
     const deleteForm = useRef(null);
+    const modal = useRef(null);
 
     const { isAuthenticated, isLoading, user } = useAuth0();
     const getToken = useAccessToken();
@@ -128,8 +131,10 @@ export default function ChallengePage({
             <meta name="description" content={description} />
         </Helmet>
         <p>{description}</p>
-        <p><a href={`/${challenge}/rules`}><strong>Rules (IMPORTANT)</strong></a></p>
-        {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
+        <div>
+            <RulesModal challenge={challenge} rules={rules}></RulesModal>
+            {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}
+        </div>
         {
             Object.keys(alternateFormats).length > 0 && <>
                 <input type="radio" id="alternate-format-List" name="format" value="List"

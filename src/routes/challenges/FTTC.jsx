@@ -1,5 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useRef, useEffect, useState } from "react";
 import ChallengePage from "./ChallengePage"
+import { defaultRules, addRule, deleteRule } from "../../util/rules";
 
 export default function FTTC() {
     const fieldDisplayFunc = useCallback(({fieldName, fieldValue}) => {
@@ -19,6 +20,34 @@ export default function FTTC() {
         }
         return fieldValue;
     }, []);
+
+    const effectRan = useRef(false);
+    const [allRules, setAllRules] = useState(defaultRules);
+        
+    useEffect(() => {
+        if(effectRan.current === true){
+            setAllRules(a => [...addRule(a, {
+                name: 'Tower Limitations', 
+                rule: <div>
+                    <h2>Tower Limitations</h2>
+                    <p>Heroes are <strong>not</strong> allowed!</p>
+                    <p>All other towers are fair game.</p>
+                </div>,
+            })]);
+
+            setAllRules(a => [...addRule(a, {
+                name: 'Tower Restrictions', 
+                rule: <div>
+                        <h2>Tower and Hero Restrictions</h2>
+                        <p>Exclude all unused tower types (including all heroes) from your selection.</p>
+                    </div>,
+            })]);
+
+            setAllRules(a => [...deleteRule(a, 'Adora')]);
+        }
+        return () => {effectRan.current = true}
+    }, [])
+
     return <ChallengePage
         challenge="fttc"
         header="Fewest Types of Towers CHIMPS"
@@ -28,5 +57,6 @@ export default function FTTC() {
         altFieldHeaders={[]}
         altFields={[]}
         fieldDisplayFunc={fieldDisplayFunc}
+        rules={allRules}
     />
 };
