@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import ChallengePage from "./ChallengePage";
 import BitSet from "bitset";
 import { defaultRules, editRule } from "../../util/rules";
@@ -68,21 +68,17 @@ function TwoMPPersonStats() {
 }
 
 export default function TwoMPC() {
-    const effectRan = useRef(false);
     const [allRules, setAllRules] = useState(defaultRules);
     
     useEffect(() => {
-        if(effectRan.current === true){
-            setAllRules(a => [...editRule(a, 'Submission Requirements', {
-                name: 'Submission Requirements',
-                rule: <div>
-                        <h2>Submission Requirements</h2>
-                        <p>Victory screen screenshots alone are insufficient for inclusion in The Index. You must also provide a screenshot of the final tower setup with the 2MP'ed tower selected.</p> 
-                        <p>The exception is if something like the Covered Garden roof prevents clicking on the tower, in which case a victory screen is acceptable.</p>
-                    </div>,
-            })])
-        }
-        return () => {effectRan.current = true}
+        setAllRules(a => [...editRule(a, 'Submission Requirements', {
+            name: 'Submission Requirements',
+            rule: <div>
+                    <h2>Submission Requirements</h2>
+                    <p>Victory screen screenshots alone are insufficient for inclusion in The Index. You must also provide a screenshot of the final tower setup with the 2MP'ed tower selected.</p> 
+                    <p>The exception is if something like the Covered Garden roof prevents clicking on the tower, in which case a victory screen is acceptable.</p>
+                </div>,
+        })])
     }, [])
 
     return <ChallengePage
