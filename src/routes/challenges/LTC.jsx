@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ChallengePage from "./ChallengePage";
 import { defaultRules, addRule } from "../../util/rules";
 
@@ -21,34 +21,30 @@ export default function LTC() {
         return fieldValue ?? 'N/A';
     }, []);
 
-    const effectRan = useRef(false);
     const [allRules, setAllRules] = useState(defaultRules);
     
     useEffect(() => {
-        if(effectRan.current === true){
-            setAllRules(a => [...addRule(a, { 
-                name: 'Tower Restrictions', 
-                rule: <div>
-                        <h2>Tower and Hero Restrictions</h2>
-                        <p>Exclude all unused towers from your selection. The towers' path and crosspath need to be restricted.</p>
-                        <p>When using heroes, you must not select the "selected hero" option.</p>
-                    </div>,
-            })]);
+        setAllRules(a => [...addRule(a, { 
+            name: 'Tower Restrictions', 
+            rule: <div>
+                    <h2>Tower and Hero Restrictions</h2>
+                    <p>Exclude all unused towers from your selection. The towers' path and crosspath need to be restricted.</p>
+                    <p>When using heroes, you must not select the "selected hero" option.</p>
+                </div>,
+        })]);
 
-            setAllRules(a => [...addRule(a, {
-                name: 'Alternate Completions', 
-                rule: <div>
-                        <h2>Alternate Combos</h2>
-                        <p>For each map the only combos counted are: </p>
-                        <ul>
-                            <li><strong>The OG</strong>: The least amount of towers completed on the map, tiebroken by the earliest of those combos.</li>
-                            <li><strong>The Cheapest</strong>: The cheapest combo using only the number of towers from the OG.</li>
-                            <li><strong>Heroless</strong>: The least number of towers completed on the map without using a hero.</li>
-                        </ul>
-                    </div>,
-            })]);
-        }
-        return () => {effectRan.current = true}
+        setAllRules(a => [...addRule(a, {
+            name: 'Alternate Completions', 
+            rule: <div>
+                    <h2>Alternate Combos</h2>
+                    <p>For each map the only combos counted are: </p>
+                    <ul>
+                        <li><strong>The OG</strong>: The least amount of towers completed on the map, tiebroken by the earliest of those combos.</li>
+                        <li><strong>The Cheapest</strong>: The cheapest combo using only the number of towers from the OG.</li>
+                        <li><strong>Heroless</strong>: The least number of towers completed on the map without using a hero.</li>
+                    </ul>
+                </div>,
+        })]);
     }, [])
 
     return <ChallengePage
