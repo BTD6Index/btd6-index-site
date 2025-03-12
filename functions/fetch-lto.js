@@ -21,6 +21,7 @@ export async function onRequest(context) {
             }
             return null;
         },
-        informationField: 'odyssey'
+        informationField: 'odysseyName',
+        informationTable: 'odyssey_information'
     });
 }

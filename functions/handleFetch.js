@@ -36,6 +36,7 @@ function processSortBy(sortByIndex, sortBy) {
  * @param {string[]} args.extraKeys
  * @param {string} args.challenge
  * @param {customFieldQuery?} args.customFieldQuery
+ * @param {string} args.informationTable
  * @param {string} args.informationField
  * @param {object} args.sortByIndex
  * @returns 
@@ -49,6 +50,7 @@ async function handleFetch({
     challenge,
     customFieldQuery = null,
     sortByIndex = {},
+    informationTable = 'map_information',
     informationField = 'map'
 }) {
     const db = context.env.BTD6_INDEX_DB;
@@ -93,7 +95,7 @@ async function handleFetch({
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
                     SELECT ${select} FROM "${challenge}_completions_fts"
-                    INNER JOIN ${informationField}_information USING (${informationField})
+                    INNER JOIN ${informationTable} USING (${informationField})
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
                     WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ${orderStmtClause} LIMIT ?2 OFFSET ?3
@@ -103,7 +105,7 @@ async function handleFetch({
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
                     SELECT ${select} FROM "${challenge}_completions_fts"
-                    INNER JOIN ${informationField}_information USING (${informationField})
+                    INNER JOIN ${informationTable} USING (${informationField})
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
                     WHERE ${specific_field_conds(3)} ${orderStmtClause} LIMIT ?1 OFFSET ?2
