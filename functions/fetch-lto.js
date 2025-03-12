@@ -20,6 +20,7 @@ export async function onRequest(context) {
                 return `json_array_length(towerset) = CAST(json_extract(?${paramPos}, '$[${idx}]') AS INTEGER)`;
             }
             return null;
-        }
+        },
+        informationField: 'odyssey'
     });
 }

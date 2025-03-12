@@ -36,6 +36,7 @@ function processSortBy(sortByIndex, sortBy) {
  * @param {string[]} args.extraKeys
  * @param {string} args.challenge
  * @param {customFieldQuery?} args.customFieldQuery
+ * @param {string} args.informationField
  * @param {object} args.sortByIndex
  * @returns 
  */
