@@ -47,7 +47,8 @@ async function handleFetch({
     extraKeys = [],
     challenge,
     customFieldQuery = null,
-    sortByIndex = {}
+    sortByIndex = {},
+    informationField = 'map'
 }) {
     const db = context.env.BTD6_INDEX_DB;
 
@@ -91,27 +92,17 @@ async function handleFetch({
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
                     SELECT ${select} FROM "${challenge}_completions_fts"
-                    INNER JOIN map_information USING (map)
+                    INNER JOIN ${informationField}_information USING (${informationField})
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
                     WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ${orderStmtClause} LIMIT ?2 OFFSET ?3
                 `).bind(processQuery(query, fieldKeys), limit, offset, JSON.stringify(fieldValues));
             };
-        } else if (challenge === 'lto') {
-            query_stmt_fn = (select, limit, offset) => {
-                return db.prepare(`
-                    SELECT ${select} FROM "${challenge}_completions_fts"
-                    INNER JOIN odyssey_information USING (odysseyName)
-                    INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
-                    LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
-                    WHERE ${specific_field_conds(3)} ${orderStmtClause} LIMIT ?1 OFFSET ?2
-                `).bind(limit, offset, JSON.stringify(fieldValues));
-            };
         } else {
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
                     SELECT ${select} FROM "${challenge}_completions_fts"
-                    INNER JOIN map_information USING (map)
+                    INNER JOIN ${informationField}_information USING (${informationField})
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
                     WHERE ${specific_field_conds(3)} ${orderStmtClause} LIMIT ?1 OFFSET ?2
