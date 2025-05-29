@@ -311,16 +311,3 @@ dd {
 .balance-miscellaneous {
   list-style-type: "🟦";
 }
-
-.tripleToggleContainer .MuiButtonBase-root{
-    background-color: bisque !important;
-    padding: 5px !important;
-}
-
-.tripleToggleContainer .MuiInputBase-root{
-    background: bisque !important;
-    width: 80px !important;
-    padding: 5px !important;
-    margin: 2px !important;
-    height: 30px !important;
-}
