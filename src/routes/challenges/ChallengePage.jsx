@@ -83,7 +83,6 @@ export default function ChallengePage({
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
 
     const deleteForm = useRef(null);
-    const modal = useRef(null);
 
     const { isAuthenticated, isLoading, user } = useAuth0();
     const getToken = useAccessToken();

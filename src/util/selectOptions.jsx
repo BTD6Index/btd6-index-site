@@ -46,19 +46,4 @@ function useMapToOptions(reloadVar = false) {
     return mapToOptions;
 }
 
-function useOdysseyToOptions(reloadVar = false) {
-    const [odysseyToOptions, setOdysseyToOptions] = useState(new Map());
-
-    useEffect(() => {
-        fetch('/list-odysseys')
-            .then(async (res) => {
-                let odysseysList = await res.json();
-                setOdysseyToOptions(
-                    new Map(odysseysList.results.map(odysseyName => [odysseyName, { value: odysseyName, label: odysseyName }]))
-                );
-            });
-    }, [reloadVar]);
-    return odysseyToOptions;
-}
-
-export { towerToOptions, startingTowerToOptions, useMapToOptions, towerTypeToOptions, useOdysseyToOptions, towerTypeAndHeroToOptions, heroToOptions };
+export { towerToOptions, startingTowerToOptions, useMapToOptions, towerTypeToOptions, towerTypeAndHeroToOptions, heroToOptions };

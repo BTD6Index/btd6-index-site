@@ -221,19 +221,6 @@ table.twowayTable td, table.twowayTable th {
   text-align: center;
 }
 
-table.odysseyTowersTable{
-  text-align:center;
-  & th, td{
-    border:2px solid #444444;
-  }
-}
-table.odysseyMapsTable {
-  & th, td{
-    border-left: 2px solid #999999;
-    border-right: 2px solid #999999;
-  }
-}
-
 .pendingCompletion {
   color: #bbb;
   font-weight: 200;
@@ -323,17 +310,4 @@ dd {
 
 .balance-miscellaneous {
   list-style-type: "🟦";
-}
-
-.tripleToggleContainer .MuiButtonBase-root{
-    background-color: bisque !important;
-    padding: 5px !important;
-}
-
-.tripleToggleContainer .MuiInputBase-root{
-    background: bisque !important;
-    width: 80px !important;
-    padding: 5px !important;
-    margin: 2px !important;
-    height: 30px !important;
 }
