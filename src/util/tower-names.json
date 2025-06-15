@@ -287,4 +287,16 @@
         "050": "Giganotosaurus",
         "005": "Pou\u0101kai"
     }
+    "Desperado":{
+        "xyz": "Base Desperado",
+        "300": "Big Iron",
+        "030": "Deadeye",
+        "003": "Enforcer",
+        "400": "Twin Sixes",
+        "040": "Bounty Hunter",
+        "004": "Avenger",
+        "500": "The Blazing Sun",
+        "050": "Golden Justice",
+        "005": "The Desert Phantom"
+    }
 }
