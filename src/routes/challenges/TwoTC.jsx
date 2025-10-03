@@ -14,11 +14,11 @@ function TwoTCPersonStats() {
         });
     }, [isOG]);
 
-    return apiResult === null ? <></> : <>
+    return <>
         <h2>Top 10 Leaderboard</h2>
         <input type="checkbox" id="og" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
         <label htmlFor="og">OG only?</label>
-        <div className="tableContainer">
+        {apiResult !== null && <div className="tableContainer">
             <table>
                 <thead>
                     <tr>
@@ -41,7 +41,7 @@ function TwoTCPersonStats() {
                     </tr>)}
                 </tbody>
             </table>
-        </div>
+        </div> }
     </>;
 }
 
