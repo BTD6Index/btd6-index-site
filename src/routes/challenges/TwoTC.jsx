@@ -2,6 +2,48 @@ import { useEffect, useState } from "react";
 import ChallengePage from "./ChallengePage";
 import { defaultRules, addRule } from "../../util/rules";
 
+function TwoTCPersonStats() {
+    const [apiResult, setApiResult] = useState(null);
+
+    const [isOG, setOG] = useState(false);
+
+    useEffect(() => {
+        fetch(`/fetch-2tc-person-counts?limit=10&og=${isOG ? 1 : 0}`).then(async (res) => {
+            setApiResult(await res.json());
+        });
+    }, [isOG]);
+
+    return apiResult === null ? <></> : <>
+        <h2>Top 10 Leaderboard</h2>
+        <input type="checkbox" id="og" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
+        <label htmlFor="og">OG only?</label>
+        <div className="tableContainer">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Person</th>
+                        <th># of Completions</th>
+                        {!isOG && <>
+                            <th># of Maps Completed</th>
+                            <th>Most Completed Map</th>
+                        </>}
+                    </tr>
+                </thead>
+                <tbody>
+                    {apiResult.personData.map(data => <tr key={data.person}>
+                        <td>{data.person}</td>
+                        <td>{data.count}</td>
+                        {!isOG && <>
+                            <td>{data.uniquecount}</td>
+                            <td>{data.favoritemap}</td>
+                        </>}
+                    </tr>)}
+                </tbody>
+            </table>
+        </div>
+    </>;
+}
+
 export default function TwoTC() {
     const [allRules, setAllRules] = useState(defaultRules);
     
@@ -39,5 +81,6 @@ export default function TwoTC() {
     }}
     hasVersion
     rules={allRules}
+    alternateFormats={{"Person Stats": TwoTCPersonStats}}
     />
 };
