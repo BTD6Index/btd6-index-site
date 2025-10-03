@@ -71,6 +71,18 @@
         "050": "Glue Storm",
         "005": "Super Glue"
     },
+     "Desperado": {
+        "xyz": "Base Desperado",
+        "300": "Big Iron",
+        "030": "Deadeye",
+        "003": "Enforcer",
+        "400": "Twin Sixes",
+        "040": "Bounty Hunter",
+        "004": "Avenger",
+        "500": "The Blazing Sun",
+        "050": "Golden Justice",
+        "005": "The Desert Phantom"
+    },
     "Sniper Monkey": {
         "xyz": "Base Sniper",
         "300": "Deadly Precision",
@@ -211,7 +223,7 @@
         "400": "Ball Lightning",
         "040": "Jungle's Bounty",
         "004": "Poplust",
-        "500": "Superstorm",
+        "500": "Monarch Of Storms",
         "050": "Spirit Of The Forest",
         "005": "Avatar Of Wrath"
     },
