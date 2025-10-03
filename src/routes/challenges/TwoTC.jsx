@@ -8,6 +8,7 @@ function TwoTCPersonStats() {
     const [isOG, setOG] = useState(false);
 
     useEffect(() => {
+        setApiResult(null);
         fetch(`/fetch-2tc-person-counts?limit=10&og=${isOG ? 1 : 0}`).then(async (res) => {
             setApiResult(await res.json());
         });
