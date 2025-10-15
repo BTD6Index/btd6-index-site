@@ -9,7 +9,8 @@
         "004": "Sharp Shooter",
         "500": "Ultra-Juggernaut",
         "050": "Plasma Monkey Fan Club",
-        "005": "Crossbow Master"
+        "005": "Crossbow Master",
+        "555": "Apex Plasma Master"
     },
     "Boomerang Monkey": {
         "xyz": "Base Boomer",
@@ -21,7 +22,8 @@
         "004": "Moab Press",
         "500": "Glaive Lord",
         "050": "Perma Charge",
-        "005": "Moab Domination"
+        "005": "Moab Domination",
+        "555": "Glaive Dominus"
     },
     "Bomb Shooter": {
         "xyz": "Base Bomb",
@@ -33,7 +35,8 @@
         "004": "Recursive Cluster",
         "500": "Bloon Crush",
         "050": "Moab Eliminator",
-        "005": "Bomb Blitz"
+        "005": "Bomb Blitz",
+        "555": "Ballistic Obliteration Missile Bunker"
     },
     "Tack Shooter": {
         "xyz": "Base Tack",
@@ -45,7 +48,8 @@
         "004": "Overdrive",
         "500": "Inferno Ring",
         "050": "Super Maelstrom",
-        "005": "The Tack Zone"
+        "005": "The Tack Zone",
+        "555": "Crucible Of Steel And Flame"
     },
     "Ice Monkey": {
         "xyz": "Base Ice",
@@ -105,7 +109,8 @@
         "004": "Armor Piercing Darts",
         "500": "Energizer",
         "050": "Pre-Emptive Strike",
-        "005": "Sub Commander"
+        "005": "Sub Commander",
+        "555": "Nautic Siege Core"
     },
     "Monkey Buccaneer": {
         "xyz": "Base Bucc",
@@ -117,7 +122,8 @@
         "004": "Favored Trades",
         "500": "Carrier Flagship",
         "050": "Pirate Lord",
-        "005": "Trade Empire"
+        "005": "Trade Empire",
+        "555": "Navarch of the Seas"
     },
     "Monkey Ace": {
         "xyz": "Base Ace",
@@ -129,7 +135,8 @@
         "004": "Spectre",
         "500": "Sky Shredder",
         "050": "Tsar Bomba",
-        "005": "Flying Fortress"
+        "005": "Flying Fortress",
+        "555": "Goliath Doomship"
     },
     "Heli Pilot": {
         "xyz": "Base Heli",
@@ -177,7 +184,8 @@
         "004": "Necromancer",
         "500": "Archmage",
         "050": "Wizard Lord Phoenix",
-        "005": "Prince Of Darkness"
+        "005": "Prince Of Darkness",
+        "555": "Magus Perfectus"
     },
     "Super Monkey": {
         "xyz": "Base Super",
@@ -201,7 +209,8 @@
         "004": "Sticky Bomb",
         "500": "Grandmaster Ninja",
         "050": "Grand Saboteur",
-        "005": "Master Bomber"
+        "005": "Master Bomber",
+        "555": "Ascended Shadow"
     },
     "Alchemist": {
         "xyz": "Base Alch",
@@ -261,7 +270,8 @@
         "004": "Deadly Spikes",
         "500": "Super Mines",
         "050": "Carpet Of Spikes",
-        "005": "Perma-Spike"
+        "005": "Perma-Spike",
+        "555": "Mega Massive Munitions Factory"
     },
     "Monkey Village": {
         "xyz": "Base Village",
@@ -285,7 +295,8 @@
         "004": "Bloon Trap",
         "500": "Sentry Champion",
         "050": "Ultraboost",
-        "005": "Xxxl Trap"
+        "005": "Xxxl Trap",
+        "555": "Master Builder"
     },
     "Beast Handler": {
         "xyz": "Base Beast",
