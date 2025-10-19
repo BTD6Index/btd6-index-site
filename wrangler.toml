@@ -11,10 +11,5 @@ binding = 'BTD6_INDEX_MEDIA'
 bucket_name = 'btd6index'
 preview_bucket_name = 'btd6indexpreview'
 
-[[ratelimits]]
-name = "DATA_DUMP_DOWNLOAD_RL"
-namespace_id = "1001"
-simple = { limit = 100, period = 60 }
-
 [observability]
 enabled = true
