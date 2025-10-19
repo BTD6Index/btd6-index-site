@@ -1,3 +1,6 @@
+name = "btd6-index-site"
+pages_build_output_dir = "./dist"
+
 [[d1_databases]]
 binding = "BTD6_INDEX_DB"
 database_name = "btd6index"
