@@ -54,6 +54,7 @@ export default function ChallengePage({
     alternateFormats = {},
     hasVersion = false,
     rules,
+    canDownloadCSV = false
 }) {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -130,6 +131,7 @@ export default function ChallengePage({
             <meta name="description" content={description} />
         </Helmet>
         <p>{description}</p>
+        {canDownloadCSV && <a href={`/download-${challenge}-csv`}>Download CSV Data</a>}
         <div>
             <RulesModal challenge={challenge} rules={rules}></RulesModal>
             {!isLoading && isAuthenticated && <p><a href={`/add-${challenge}-form`}>Add {challenge}</a></p>}

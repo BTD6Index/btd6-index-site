@@ -1,4 +1,5 @@
 import { processQuery } from "./processQuery";
+import { json2csv } from 'json-2-csv';
 
 /**
  * @callback customFieldQuery
@@ -25,6 +26,25 @@ function processSortBy(sortByIndex, sortBy) {
     } else {
         return null;
     }
+}
+
+async function handleDownloadCSV({
+    context,
+    primaryFieldKeys,
+    altFieldKeys = [],
+    challenge
+}) {
+    const db = context.env.BTD6_INDEX_DB;
+
+    let identifierFieldKeys = [...primaryFieldKeys, ...altFieldKeys];
+
+    let res = await db.prepare(`
+        SELECT * FROM "${challenge}_completions_fts"
+        INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
+        LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
+    `).run();
+
+    return json2csv(res.results);
 }
 
 /**
@@ -208,4 +228,4 @@ async function handleFetchOgInfo({context, challenge, joinFields, altJoinFields}
     return Response.json({result: res});
 }
 
-export {handleFetch, handleFetchFlat, handleFetchOgInfo};
+export {handleFetch, handleFetchFlat, handleFetchOgInfo, handleDownloadCSV};

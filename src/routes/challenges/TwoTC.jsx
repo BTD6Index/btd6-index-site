@@ -83,5 +83,6 @@ export default function TwoTC() {
     hasVersion
     rules={allRules}
     alternateFormats={{"Person Stats": TwoTCPersonStats}}
+    canDownloadCSV
     />
 };

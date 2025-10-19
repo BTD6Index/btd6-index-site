@@ -10,6 +10,7 @@
     "@mui/material": "^5.16.5",
     "bitset": "^5.1.1",
     "jose": "^4.14.4",
+    "json-2-csv": "^5.5.9",
     "leo-profanity": "^1.7.0",
     "react": "^18.2.0",
     "react-children-utilities": "^2.9.0",
@@ -22,7 +23,7 @@
     "remark-gfm": "^3.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4",
-    "wrangler": "^3.7.0"
+    "wrangler": "^4.43.0"
   },
   "scripts": {
     "start": "wrangler pages dev -- vite dev",
