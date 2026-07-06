@@ -38,7 +38,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
     });
 
     const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Geraldo'].includes(value));
-    const filteredStartingTowerOptions = [...startingTowerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo'].includes(value));
+    const filteredStartingTowerOptions = [...startingTowerToOptions.values()].filter(({value}) => !['Geraldo'].includes(value));
 
 
     const [map, setMap] = useState(null);
