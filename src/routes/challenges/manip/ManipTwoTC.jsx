@@ -37,7 +37,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
         setSubmissionInProgress
     });
 
-    const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo'].includes(value));
+    const filteredTowerOptions = [...towerToOptions.values()].filter(({value}) => !['Geraldo'].includes(value));
     const filteredStartingTowerOptions = [...startingTowerToOptions.values()].filter(({value}) => !['Sauda', 'Geraldo'].includes(value));
 
 
