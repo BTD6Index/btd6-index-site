@@ -53,7 +53,7 @@ export default function TwoTC() {
             name: 'Tower Limitations', 
             rule: <div>
                     <h2>Tower Limitations</h2>
-                    <p>Towers that have successfully soloed CHIMPS mode with $650 starting cash in the past or currently are <strong>not</strong> allowed. As of now, this includes <strong>Sauda</strong> and <strong>Geraldo</strong>.</p>
+                    <p><strong>Geraldo</strong> is the only currently banned tower.</p>
                 </div>,
         })]);
 
