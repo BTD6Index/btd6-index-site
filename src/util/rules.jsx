@@ -18,7 +18,7 @@ export const defaultRules = [
         name: 'Submission Requirements',
         rule: <div>
                 <h2>Submission Requirements</h2>
-                <p>Victory Screen screenshots alone are insufficient for inclusion in The Index. You must also provide a screenshot of the final tower setup. You must provide a challenge code that reflects the limitations and specifications outlined in the rule of this challenge.</p>
+                <p>Victory Screen screenshots alone are insufficient for inclusion in The Index. You must also provide a screenshot of the final tower setup. You must provide a challenge code that reflects the limitations and specifications outlined in the rule of this challenge. If a challenge code is not available, (like if the run was done in a real game, or offline), you must provide a recording from the victory screen of your run to the rules screen of the challenge where you would have gotten the code, or proof that you did the run in the real game.</p>
             </div>,
     },
     {
