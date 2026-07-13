@@ -24,7 +24,7 @@ export async function onRequestPost(context) {
     let formData = await context.request.formData();
 
     const verify = formData.has('verify') && isHelper;
-    const webhookUrls = getWebhookUrls(context, verify);
+    const webhookUrls = getWebhookUrls(context, verify, 'ltc');
 
     const editMode = ['true', '1'].includes(formData.get('edit'));
 

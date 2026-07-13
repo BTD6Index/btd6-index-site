@@ -31,8 +31,18 @@ function sqlArrayCondition(paramNo, fields, altFieldIndexOrder = null) {
     ).join(' AND ');
 }
 
-function getWebhookUrls(context, verify) {
-    const webhookVar = context.env[verify ? 'WEBHOOKS' : 'WEBHOOKS_PENDING'];
+function getWebhookUrls(context, verify, challenge) {
+    let envVar;
+
+    if (challenge === "twotc") {
+        envVar = verify ? "WEBHOOKS" : "WEBHOOKS_2TC_PENDING";
+    } else if (challenge === "twomp") {
+        envVar = verify ? "WEBHOOKS" : "WEBHOOKS_2MPC_PENDING";
+    } else {
+        envVar = verify ? "WEBHOOKS" : "WEBHOOKS_PENDING";
+    }
+
+    const webhookVar = context.env[envVar];
     const webhookUrls = typeof webhookVar === 'string' ? JSON.parse(webhookVar) : (webhookVar ?? []);
     return webhookUrls;
 }
@@ -94,7 +104,7 @@ async function handleAddSubmit({
     let formData = trimFormData(await context.request.formData());
 
     const verify = formData.has('verify') && isHelper;
-    const webhookUrls = getWebhookUrls(context, verify);
+    const webhookUrls = getWebhookUrls(context, verify, challenge);
 
     const editMode = ['true', '1'].includes(formData.get('edit'));
 
@@ -240,7 +250,7 @@ async function handleAddSubmitLCCLike({context, challenge}) {
     let formData = trimFormData(await context.request.formData());
 
     const verify = formData.has('verify') && isHelper;
-    const webhookUrls = getWebhookUrls(context, verify);
+    const webhookUrls = getWebhookUrls(context, verify, challenge);
 
     const editMode = ['true', '1'].includes(formData.get('edit'));
 
