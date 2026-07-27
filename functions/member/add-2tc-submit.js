@@ -9,13 +9,25 @@ export async function onRequestPost(context) {
         genEmbedFunction: async ({ link, formData, edit, filekey, verify }) => {
             let challengeInfo = null;
 
-            const code = formData.get("challenge_code").trim();
+            const rawCode = formData.get("challenge_code");
+            const code = (rawCode || "").trim();
 
-            if (code) {
+            if (code && (code.length > 64 || /[\/\\\s]/.test(code))) {
+                challengeInfo = {
+                    verified: false,
+                    errors: ["Invalid challenge code format"]
+                };
+            } else if (code) {
                 try {
                     const challenge = await getChallenge(code);
                     challengeInfo = verify2TCSettings(challenge);
                 } catch (e) {
+                    challengeInfo = {
+                        verified: false,
+                        errors: ["Failed to fetch or parse challenge (Ninja Kiwi API down or invalid code)"]
+                    };
+                }
+            }
                     challengeInfo = {
                         verified: false,
                         errors: [`Failed to fetch challenge (Ninja Kiwi API down or invalid code)`]
