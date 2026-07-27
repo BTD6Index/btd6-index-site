@@ -81,8 +81,17 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
                 <input name="person" type="text" placeholder="Person" style={{width: '20ch'}} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
+            <span className="formLine">
+                <label htmlFor="challenge_code">Challenge Editor Code (only the raw code)</label>
                 <input
-                    id="challenge_code" name="challenge_code" type="text" placeholder="Challenge Editor Code" style={{width: '20ch'}} defaultValue={noteInfo?.challengeCode ?? existingInfo?.[0]?.challengeCode} />
+                    id="challenge_code"
+                    name="challenge_code"
+                    type="text"
+                    placeholder="Challenge Editor Code"
+                    style={{width: '20ch'}}
+                    defaultValue={noteInfo?.challengeCode ?? existingInfo?.[0]?.challengeCode}
+                />
+            </span>
             <br />
             <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
