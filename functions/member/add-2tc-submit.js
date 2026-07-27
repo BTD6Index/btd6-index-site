@@ -28,12 +28,6 @@ export async function onRequestPost(context) {
                     };
                 }
             }
-                    challengeInfo = {
-                        verified: false,
-                        errors: [`Failed to fetch challenge (Ninja Kiwi API down or invalid code)`]
-                    };
-                }
-            }
 
             let challengeCheckValue;
 
