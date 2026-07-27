@@ -136,6 +136,7 @@ async function handleAddSubmit({
         + `AND ${isHelper ? `?2 = ?2` : `pending = ?2`} RETURNING *`;
     const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${sqlArrayCondition(1, shared_fields)}`;
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${sqlArrayCondition(1, fields)}`;
+    const delete_challenge_code_stmt = `DELETE FROM "${challenge}_challenge_codes" WHERE ${sqlArrayCondition(1, fields)}`;
     const update_filekeys_stmt = `UPDATE "${challenge}_filekeys" SET (${fields.join(',')}) = (${expandSQLArray(1, fields.length)}) `
     + `WHERE ${sqlArrayCondition(2, fields)} RETURNING filekey`;
     const insert_filekeys_stmt = `INSERT INTO "${challenge}_filekeys" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
@@ -143,6 +144,7 @@ async function handleAddSubmit({
     + `(${expandSQLArray(1, fields.length)}, ${expandSQLArray(2, auxFields.length)}, ?3, ?4, ?5)`;
     const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${expandSQLArray(1, extraInfoFields.length)})`;
     const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
+    const add_challenge_code_stmt = `INSERT INTO "${challenge}_challenge_codes" VALUES (${expandSQLArray(1, 3)}, ?2)`;
 
     let update_filekeys_idx = -1;
     let batched_stmts = [];
@@ -158,6 +160,11 @@ async function handleAddSubmit({
         }
         if (formData.has('notes')) {
             batched_stmts.push(db.prepare(delete_notes_stmt).bind(
+                JSON.stringify(fields.map(field => formData.get(`edited-${field}`)))
+            ));
+        }
+        if (formData.get('challenge_code')) {
+            batched_stmts.push(db.prepare(delete_challenge_code_stmt).bind(
                 JSON.stringify(fields.map(field => formData.get(`edited-${field}`)))
             ));
         }
@@ -199,6 +206,14 @@ async function handleAddSubmit({
                 )
         );
     }
+    if (formData.get('challenge_code')) {
+        batched_stmts.push(
+            db.prepare(add_challenge_code_stmt).bind(
+                JSON.stringify(fields.map(field => formData.get(field))),
+                formData.get('challenge_code')
+            )
+        );
+    }
 
     let batch_result;
     try {
@@ -217,7 +232,7 @@ async function handleAddSubmit({
         context.waitUntil(
             media.list({prefix: `${imageKey}/attach`}).then(async (listRes) => {
                 await fetch(webhookUrl, {
-                    body: JSON.stringify(genEmbedFunction({
+                    body: JSON.stringify(await genEmbedFunction({
                         link,
                         formData: formData,
                         edit: editMode,

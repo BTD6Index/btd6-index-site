@@ -11,7 +11,17 @@ export async function onRequest(context) {
     .bind(tower1, tower2, map)
     .first();
     if (res === null) {
-        return Response.json({notes: ''});
+        // still try to fetch challenge_code if present in separate table
+        let codeRes = await context.env.BTD6_INDEX_DB
+            .prepare('SELECT challenge_code FROM "twotc_challenge_codes" WHERE tower1 = ?1 AND tower2 = ?2 AND map = ?3')
+            .bind(tower1, tower2, map)
+            .first();
+        return Response.json({notes: '', challengeCode: codeRes ? codeRes['challenge_code'] : null});
     }
-    return Response.json({notes: res['notes']});
+    // also fetch challenge code from the separate table if present
+    let codeRes = await context.env.BTD6_INDEX_DB
+        .prepare('SELECT challenge_code FROM "twotc_challenge_codes" WHERE tower1 = ?1 AND tower2 = ?2 AND map = ?3')
+        .bind(tower1, tower2, map)
+        .first();
+    return Response.json({notes: res['notes'], challengeCode: codeRes ? codeRes['challenge_code'] : null});
 }
