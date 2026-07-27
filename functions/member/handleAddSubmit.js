@@ -163,7 +163,7 @@ async function handleAddSubmit({
                 JSON.stringify(fields.map(field => formData.get(`edited-${field}`)))
             ));
         }
-        if (formData.get('challenge_code')) {
+        if (formData.has('challenge_code')) {
             batched_stmts.push(db.prepare(delete_challenge_code_stmt).bind(
                 JSON.stringify(fields.map(field => formData.get(`edited-${field}`)))
             ));
