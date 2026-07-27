@@ -42,17 +42,17 @@ export function verify2TCSettings(challenge) {
     // no fast track isn't an option on API rn
 
     // All sliders must be set to 100%
-    check(challenge._bloonModifiers.speedMultiplier, 1, "Bloon Speed");
-    check(challenge._bloonModifiers.moabSpeedMultiplier, 1, "MOAB Speed");
-    check(challenge._bloonModifiers.healthMultipliers.bloons, 1, "Bloon Health");
-    check(challenge._bloonModifiers.healthMultipliers.moabs, 1, "MOAB Health");
-    check(challenge._bloonModifiers.regrowRateMultiplier, 1, "Regrow Rate");
+    check(challenge._bloonModifiers?.speedMultiplier, 1, "Bloon Speed");
+    check(challenge._bloonModifiers?.moabSpeedMultiplier, 1, "MOAB Speed");
+    check(challenge._bloonModifiers?.healthMultipliers?.bloons, 1, "Bloon Health");
+    check(challenge._bloonModifiers?.healthMultipliers?.moabs, 1, "MOAB Health");
+    check(challenge._bloonModifiers?.regrowRateMultiplier, 1, "Regrow Rate");
     check(challenge.abilityCooldownReductionMultiplier, 1, "Ability Cooldown");
     check(challenge.removeableCostMultiplier, 1, "Removeable Cost");
 
     // The modifiers All Camo and All Regrow must be disabled.
-    check(challenge._bloonModifiers.allCamo, false, "All Camo");
-    check(challenge._bloonModifiers.allRegen, false, "All Regrow");
+    check(challenge._bloonModifiers?.allCamo, false, "All Camo");
+    check(challenge._bloonModifiers?.allRegen, false, "All Regrow");
 
     // check if the api map matches the site map
 
