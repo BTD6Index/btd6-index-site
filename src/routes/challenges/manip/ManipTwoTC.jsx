@@ -37,8 +37,8 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
         setSubmissionInProgress
     });
 
-    const filteredTowerOptions = [...towerToOptions.values()]
-    const filteredStartingTowerOptions = [...startingTowerToOptions.values()]
+    const filteredTowerOptions = [...towerToOptions.values()];
+    const filteredStartingTowerOptions = [...startingTowerToOptions.values()];
 
 
     const [map, setMap] = useState(null);
