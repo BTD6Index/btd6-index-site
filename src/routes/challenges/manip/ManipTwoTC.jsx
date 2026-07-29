@@ -37,8 +37,8 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
         setSubmissionInProgress
     });
 
-    const filteredTowerOptions = [...towerToOptions.values()];
-    const filteredStartingTowerOptions = [...startingTowerToOptions.values()];
+    const filteredTowerOptions = [...towerToOptions.values()]
+    const filteredStartingTowerOptions = [...startingTowerToOptions.values()]
 
 
     const [map, setMap] = useState(null);
@@ -81,22 +81,10 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
                 <input name="person" type="text" placeholder="Person" style={{width: '20ch'}} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
-            <span className="formLine">
-                <label htmlFor="challenge_code">Challenge Editor Code (only the raw code)</label>
-                <input
-                    id="challenge_code"
-                    name="challenge_code"
-                    type="text"
-                    placeholder="Challenge Editor Code"
-                    style={{width: '20ch'}}
-                    defaultValue={noteInfo?.challengeCode ?? existingInfo?.[0]?.challengeCode}
-                />
-            </span>
-            <br />
             <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
-                <label htmlFor="notes">Completion Notes/Proof</label>
+                <label htmlFor="notes">Completion Notes/Proof (Please specify challenge code here)</label>
                 <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
             <br />
