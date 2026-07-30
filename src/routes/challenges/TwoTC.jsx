@@ -50,14 +50,6 @@ export default function TwoTC() {
     
     useEffect(() => {
         setAllRules(a => [...addRule(a, {
-            name: 'Tower Limitations', 
-            rule: <div>
-                    <h2>Tower Limitations</h2>
-                    <p><strong>Geraldo</strong> is the only currently banned tower.</p>
-                </div>,
-        })]);
-
-        setAllRules(a => [...addRule(a, {
             name: 'Tower Restrictions', 
             rule: <div>
                 <h2>Tower and Hero Restrictions</h2>
