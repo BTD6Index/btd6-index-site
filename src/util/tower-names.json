@@ -250,6 +250,18 @@
         "050": "Popseidon",
         "005": "The Final Harmonic"
     },
+    "Skywarden": {
+        "xyz": "Base Skywarden",
+        "300": "Wind Weaver",
+        "030": "Galvanic Conduit",
+        "003": "Coldchain",
+        "400": "Galesage",
+        "040": "Thunder's Decree",
+        "004": "Frozen Verdict",
+        "500": "Farwind Seer",
+        "050": "Stormwrath Archon",
+        "005": "Winter's Mercy"
+    },
     "Banana Farm": {
         "xyz": "Base Farm",
         "300": "Banana Plantation",
