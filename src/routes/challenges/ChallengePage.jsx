@@ -10,6 +10,7 @@ import useTristateList from "../../util/useTristateList";
 import { useSearchParams } from "react-router-dom";
 import { DebounceInput } from "react-debounce-input";
 import RulesModal from "../../util/modal"
+import useCheckIfVerifier from "../../util/useCheckIfVerifier";
 
 function SortByWidget({sortBy, toggleSortBy, sortByKey}) {
     let sortIcon = "/sort.svg";
@@ -89,6 +90,7 @@ export default function ChallengePage({
     const getToken = useAccessToken();
 
     const isAdmin = useCheckIfAdmin();
+    const isVerifier = useCheckIfVerifier();
 
     const onDelete = useCallback(async () => {
         if (window.confirm(`Are you sure you want to delete ${selectedCompletions.length} completion(s)?`)) {
@@ -202,11 +204,12 @@ export default function ChallengePage({
                                 completions.map(
                                     completion => {
                                         const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
-                                        const hasWritePerms = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
+                                        const canEditOrVerify = !isLoading && isAuthenticated && (isAdmin || isVerifier || (user?.sub ?? '') === completion.pending);
+                                        const canDelete = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
                                         const link = completion.link || `https://media.btd6index.win/${completion.filekey}`;
                                         return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
                                             {!isLoading && isAuthenticated && <td>
-                                                {hasWritePerms && <input
+                                                {canDelete && <input
                                                     type="checkbox"
                                                     style={{ verticalAlign: "middle" }}
                                                     checked={selectedCompletions.includes(key)}
@@ -240,7 +243,7 @@ export default function ChallengePage({
                                             )}>Yes</a> : 'No'}</td>}
                                             {!isLoading && isAuthenticated &&
                                                 <td>
-                                                    {hasWritePerms && <a href={`/edit-${challenge}-form?` + new URLSearchParams(
+                                                    {canEditOrVerify && <a href={`/edit-${challenge}-form?` + new URLSearchParams(
                                                         fields.concat(altFields).map(field => [field, completion[field]])
                                                     )}>Edit{!!completion.pending && " or Verify"}</a>}
                                                 </td>

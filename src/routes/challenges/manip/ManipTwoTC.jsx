@@ -4,10 +4,10 @@ import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { startingTowerToOptions, towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { useFetchExistingInfo, useSubmitCallback, AttachmentsWidget, FormLinkImageEntry} from "./manipCommon";
 import MapSelect from "../../../util/MapSelect";
 import PageTitle from "../../../util/PageTitle";
+import useCheckIfVerifier from "../../../util/useCheckIfVerifier";
 
 const FIELDS = ['tower1', 'tower2']; // needs to be outside so react doesn't treat value as changed every re-render
 
@@ -22,7 +22,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
 
     const theForm = useRef();
 
-    const isAdmin = useCheckIfAdmin();
+    const isVerifier = useCheckIfVerifier();
 
     const doEdit = editParams !== null;
 
@@ -53,7 +53,7 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
         ? `Edit ${editParams.get('tower1')} and ${editParams.get('tower2')} 2TC on ${editParams.get('map')}`
         : "Add a 2TC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-2tc-submit" onSubmit={submitCallback} ref={theForm}>
-            {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
+            {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}

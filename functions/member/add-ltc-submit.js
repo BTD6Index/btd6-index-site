@@ -15,7 +15,7 @@ export async function onRequestPost(context) {
     const db = context.env.BTD6_INDEX_DB;
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
-    const isHelper = jwtResult.payload.permissions.includes('write:admin');
+    const isHelper = jwtResult.payload.permissions.includes('write:verify');
 
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });

@@ -4,11 +4,11 @@ import { useEffect, useRef, useState, useCallback, Fragment } from "react";
 import { useSearchParams } from "react-router-dom";
 import { towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useSubmitCallback } from "./manipCommon";
 import useForceReload from "../../../util/useForceReload";
 import MapSelect from "../../../util/MapSelect";
 import PageTitle from "../../../util/PageTitle";
+import useCheckIfVerifier from "../../../util/useCheckIfVerifier";
 
 function CompletionTypeWidget({existingInfo}) {
     const [completionType, setCompletionType] = useState();
@@ -68,7 +68,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
 
     const theForm = useRef();
 
-    const isAdmin = useCheckIfAdmin();
+    const isVerifier = useCheckIfVerifier();
 
     const [submissionInProgress, setSubmissionInProgress] = useState(false);
 
@@ -125,7 +125,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
         <p><a href="/ltc">Back to LTCs</a></p>
         <PageTitle>{doEdit ? `Edit (${initialTowersetList.join(', ')}) LTC on ${editParams.get('map')}` : "Add an LTC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-ltc-submit" onSubmit={submitCallback} ref={theForm}>
-            {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
+            {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}

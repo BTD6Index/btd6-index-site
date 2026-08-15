@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { towerToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
+import useCheckIfVerifier from "../../../util/useCheckIfVerifier";
 import { useFetchExistingInfo, useSubmitCallback, FormLinkImageEntry, AttachmentsWidget} from "./manipCommon";
 import MapSelect from "../../../util/MapSelect";
 import PageTitle from "../../../util/PageTitle";
@@ -22,7 +22,7 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
 
     const theForm = useRef();
 
-    const isAdmin = useCheckIfAdmin();
+    const isVerifier = useCheckIfVerifier();
 
     const doEdit = editParams !== null;
 
@@ -50,7 +50,7 @@ function ManipTwoTCC({editParams = null, setEditParams = null}) {
         ? `Edit ${editParams.get('tower1')} and ${editParams.get('tower2')} 2TCC on ${editParams.get('map')}`
         : "Add a 2TCC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-2tcc-submit" onSubmit={submitCallback} ref={theForm}>
-            {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
+            {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
