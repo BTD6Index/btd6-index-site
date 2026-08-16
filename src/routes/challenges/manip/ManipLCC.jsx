@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useSubmitCallback } from "./manipCommon";
 import useForceReload from "../../../util/useForceReload";
 import MapSelect from "../../../util/MapSelect";
 import PageTitle from "../../../util/PageTitle";
+import useCheckIfVerifier from "../../../util/useCheckIfVerifier";
 
 function ManipLCC({ editParams = null, setEditParams = null }) {
     const [existingInfo, setExistingInfo] = useState(null);
@@ -30,7 +30,7 @@ function ManipLCC({ editParams = null, setEditParams = null }) {
 
     const theForm = useRef();
 
-    const isAdmin = useCheckIfAdmin();
+    const isVerifier = useCheckIfVerifier();
 
     const [submissionInProgress, setSubmissionInProgress] = useState(false);
 
@@ -47,7 +47,7 @@ function ManipLCC({ editParams = null, setEditParams = null }) {
         <p><a href="/lcc">Back to LCCs</a></p>
         <PageTitle>{doEdit ? `Edit LCC` : "Add an LCC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-lcc-submit" onSubmit={submitCallback} ref={theForm}>
-            {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
+            {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}

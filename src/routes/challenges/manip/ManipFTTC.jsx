@@ -4,10 +4,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { towerTypeToOptions } from "../../../util/selectOptions";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import useCheckIfAdmin from "../../../util/useCheckIfAdmin";
 import { AttachmentsWidget, FormLinkImageEntry, useFetchExistingInfo, useSubmitCallback } from "./manipCommon";
 import MapSelect from "../../../util/MapSelect";
 import PageTitle from "../../../util/PageTitle";
+import useCheckIfVerifier from "../../../util/useCheckIfVerifier";
 
 const FIELDS = ['map']; // needs to be outside so react doesn't treat value as changed every re-render
 const ALT_FIELDS = ['towerset'];
@@ -28,7 +28,7 @@ function ManipFTTC({ editParams = null, setEditParams = null }) {
 
     const theForm = useRef();
 
-    const isAdmin = useCheckIfAdmin();
+    const isVerifier = useCheckIfVerifier();
 
     const doEdit = editParams !== null;
 
@@ -51,7 +51,7 @@ function ManipFTTC({ editParams = null, setEditParams = null }) {
         <p><a href="/fttc">Back to FTTCs</a></p>
         <PageTitle>{doEdit ? `Edit (${towersetList.join(', ')}) FTTC on ${editParams.get('map')}` : "Add an FTTC Completion"}</PageTitle>
         <form method="post" encType="multipart/form-data" action="/member/add-fttc-submit" onSubmit={submitCallback} ref={theForm}>
-            {(!doEdit || existingInfo?.[0]?.pending) && isAdmin ? <><span className="formLine">
+            {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
                 <input type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
