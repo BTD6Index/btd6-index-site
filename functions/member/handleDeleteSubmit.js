@@ -21,6 +21,8 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
     + `WHERE ${delete_completion_condition} AND ${isHelper ? '?2 = ?2' : 'pending = ?2'})`;
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" AS cmp WHERE EXISTS (SELECT 1 FROM json_each(?1) `
     + `WHERE ${delete_completion_condition})`;
+    const delete_challenge_codes_stmt = `DELETE FROM "${challenge}_challenge_codes" AS cmp WHERE EXISTS (SELECT 1 FROM json_each(?1) `
+    + `WHERE ${delete_completion_condition})`;
     const delete_filekey_stmt = `DELETE FROM "${challenge}_filekeys" AS cmp WHERE EXISTS (SELECT 1 FROM json_each(?1) `
     + `WHERE ${delete_completion_condition}) RETURNING filekey`;
     
@@ -32,6 +34,9 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
             formData.get('entries'),
             jwtResult.payload.sub
             ),
+        db.prepare(delete_challenge_codes_stmt).bind(
+            formData.get('entries')
+            ),
         db.prepare(delete_notes_stmt).bind(
             formData.get('entries')
             ),
@@ -40,7 +45,7 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields}) {
             )
     ]);
 
-    for (let row of res[3].results) {
+    for (let row of res[4].results) {
         context.waitUntil(
             media.list({prefix: row.filekey})
             .then(async (listRes) => {

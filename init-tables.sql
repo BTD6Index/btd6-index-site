@@ -41,7 +41,13 @@ CREATE TABLE "twotc_completion_notes" (
 CREATE TABLE "twotc_filekeys" (
     tower1, tower2, map, filekey UNIQUE, PRIMARY KEY (tower1, tower2, map)
 );
-
+CREATE TABLE "twotc_challenge_codes" (
+    tower1,
+    tower2,
+    map,
+    challenge_code,
+    PRIMARY KEY (tower1, tower2, map)
+);
 CREATE INDEX twotc_completions_tower1_nocase ON twotc_completions(tower1 COLLATE NOCASE);
 CREATE INDEX twotc_completions_tower2_nocase ON twotc_completions(tower2 COLLATE NOCASE);
 CREATE INDEX twotc_extra_info_tower1_nocase ON twotc_extra_info(tower1 COLLATE NOCASE);
