@@ -1,4 +1,5 @@
 compatibility_date = "2026-08-04"
+compatibility_flags = ["nodejs_compat"]
 
 [[hyperdrive]]
 binding = "BTD6_INDEX_DB"
