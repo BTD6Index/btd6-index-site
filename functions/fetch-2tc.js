@@ -7,7 +7,7 @@ function convTowerSubquery(query, queryIdx, paramPos, idx) {
         const searchList = Object.values(towerNames[subquery]).map(v => `'${v.replace(/'/g, "''")}'`).join(',');
         return `IN (${searchList})`;
     } else {
-        return `= json_extract(json_extract(?${paramPos}, '$[${idx}]'), '$[${queryIdx}]')`;
+        return `= json_extract(json_extract($${paramPos}, '$[${idx}]'), '$[${queryIdx}]')`;
     }
 }
 
@@ -45,8 +45,10 @@ export async function onRequest(context) {
                     throw Error("towerquery array length should be 2 or fewer");
                 }
             } else if (field === 'version') {
-                return `(og AND (twotc_extra_info.version = json_extract(?${paramPos}, '$[${idx}]')
-                OR SUBSTR(twotc_extra_info.version, 1, INSTR(twotc_extra_info.version, '.') - 1) = json_extract(?${paramPos}, '$[${idx}]')))`
+                return `
+                    (og AND (twotc_extra_info.version = $${paramPos}::jsonb ->> ${idx}
+                    OR substring(twotc_extra_info.version from '^[0-9]+') = $${paramPos}::jsonb ->> ${idx}))
+                `;
             }
             return null;
         }

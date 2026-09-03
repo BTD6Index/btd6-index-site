@@ -82,10 +82,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
         [editParams]
     );
     const getInitialUpgradesetList = useCallback(
-        () => {
-            const upgradeset = existingInfo?.[0]?.upgradeset;
-            return upgradeset ? JSON.parse(upgradeset) : null;
-        },
+        () => existingInfo?.[0]?.upgradeset ?? null,
         [existingInfo]
     );
     const initialTowersetList = getInitialTowersetList();
@@ -131,7 +128,9 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="num_towers">Number of Towers</label>
-                <input id="num_towers" type="number" min={0} value={numTowers} onChange={e => setNumTowers(e.target.valueAsNumber)} />
+                <input id="num_towers" type="number" min={0} value={numTowers} onChange={
+                    e => setNumTowers(isNaN(e.target.valueAsNumber) ? 0 : e.target.valueAsNumber)
+                } />
                 {
                     Array.from({length: numTowers}, (_dummy, idx) => {
                         const onTowerChange = (newVal) => {

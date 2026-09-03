@@ -3,7 +3,7 @@ import { handleFetchFlat } from "./handleFetch";
 export async function onRequest(context) {
     return handleFetchFlat({
         context,
-        databaseTable: "ltc_completions_fts",
+        databaseTable: "ltc_completions",
         fields: ['map', 'towerset', 'link', 'completiontype', 'pending', 'upgradeset', 'version', 'date', 'filekey'],
         personFields: ['person'],
         sortByIndex: {
@@ -14,5 +14,11 @@ export async function onRequest(context) {
             'completiontype': 'completiontype',
             'completiontype DESC': 'completiontype DESC'
         },
+        customFieldQuery: (field, idx, paramPos, searchParams) => {
+            if (field === 'towerset') {
+                return `towerset = ($${paramPos}::jsonb->>${idx})::jsonb`;
+            }
+            return null;
+        }
     });
 }

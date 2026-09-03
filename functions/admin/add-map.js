@@ -1,5 +1,7 @@
+import { createDbClient } from "../db";
+
 export async function onRequestPost(context) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
     const media = context.env.BTD6_INDEX_MEDIA;
     const formData = await context.request.formData();
 
@@ -29,13 +31,13 @@ export async function onRequestPost(context) {
         if (formData.has(OLD_MAP_KEY)) {
             await db.prepare(`
                 UPDATE map_information SET (${fieldKeys.join(',')})
-                = (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)
-                WHERE map = ?15
+                = ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+                WHERE map = $15
             `).bind(...paramsToAdd, formData.get(OLD_MAP_KEY)).run();
         } else {
             await db.prepare(`
                 INSERT INTO map_information
-                VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
             `).bind(...paramsToAdd).run();
         }
     } catch (e) {

@@ -28,7 +28,7 @@ export async function onRequest(context) {
                             Object.values(towerNames[query[0]]).map(v => `'${v.replace(/'/g, "''")}'`).join(',')
                         })`;
                     } else {
-                        return `entity = json_extract(json_extract(?${paramPos}, '$[${idx}]'), '$[0]')`;
+                        return `entity = $${paramPos}::jsonb -> ${idx} ->> 0`;
                     }
                 } else {
                     throw Error("towerquery array length should be 1 or fewer");

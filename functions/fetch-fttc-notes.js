@@ -1,3 +1,5 @@
+import { createDbClient } from "./db";
+
 export async function onRequest(context) {
     let searchParams = new URL(context.request.url).searchParams;
     let towerset = searchParams.get('towerset');
@@ -5,8 +7,8 @@ export async function onRequest(context) {
     if (towerset === null || map == null) {
         return Response.json({error: `need map and towerset specified`}, {status: 400});
     }
-    let res = await context.env.BTD6_INDEX_DB
-    .prepare('SELECT * FROM "fttc_completion_notes" WHERE towerset = ?1 AND map = ?2')
+    const db = createDbClient(context);
+    let res = await db.prepare('SELECT * FROM "fttc_completion_notes" WHERE towerset = $1::jsonb AND map = $2')
     .bind(towerset, map)
     .first();
     if (res === null) {

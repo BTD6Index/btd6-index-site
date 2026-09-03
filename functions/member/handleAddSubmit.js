@@ -1,4 +1,5 @@
 import profanityFilter from 'leo-profanity';
+import { createDbClient } from "../db";
 profanityFilter.remove('domination');
 
 /**
@@ -17,17 +18,17 @@ function trimFormData(formData) {
     return newFormData;
 }
 
-function expandSQLArray(paramNo, arrayLen) {
+function expandSQLArray(paramNo, fields, jsonFields = ['towerset']) {
     let buf = [];
-    for (let i = 0; i < arrayLen; ++i) {
-        buf.push(`json_extract(?${paramNo}, '$[${i}]')`);
+    for (let i = 0; i < fields.length; ++i) {
+        buf.push(`($${paramNo}::jsonb->>${i})${jsonFields.includes(fields[i]) ? '::jsonb' : ''}`);
     }
     return buf.join(',');
 }
 
-function sqlArrayCondition(paramNo, fields, altFieldIndexOrder = null) {
+function sqlArrayCondition(paramNo, fields, altFieldIndexOrder = null, jsonFields = ['towerset']) {
     return fields.map(
-        (field, i) => `${field} = json_extract(?${paramNo}, '$[${altFieldIndexOrder ? altFieldIndexOrder[i] : i}]')`
+        (field, i) => `${field} = ($${paramNo}::jsonb->>${altFieldIndexOrder ? altFieldIndexOrder[i] : i})${jsonFields.includes(field) ? '::jsonb' : ''}`
     ).join(' AND ');
 }
 
@@ -92,7 +93,7 @@ async function handleAddSubmit({
     genEmbedFunction,
     auxFields = ['person']
 }) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
     const isHelper = jwtResult.payload.permissions.includes('write:verify');
@@ -133,16 +134,16 @@ async function handleAddSubmit({
     const shared_fields = fields.filter(field => extraInfoFields.includes(field));
 
     const delete_completion_statement = `DELETE FROM "${challenge}_completions" WHERE ${sqlArrayCondition(1, fields)} `
-        + `AND ${isHelper ? `?2 = ?2` : `pending = ?2`} RETURNING *`;
+        + `AND ${isHelper ? `$2 = $2` : `pending = $2`} RETURNING *`;
     const delete_info_stmt = `DELETE FROM "${challenge}_extra_info" WHERE ${sqlArrayCondition(1, shared_fields)}`;
     const delete_notes_stmt = `DELETE FROM "${challenge}_completion_notes" WHERE ${sqlArrayCondition(1, fields)}`;
-    const update_filekeys_stmt = `UPDATE "${challenge}_filekeys" SET (${fields.join(',')}) = (${expandSQLArray(1, fields.length)}) `
+    const update_filekeys_stmt = `UPDATE "${challenge}_filekeys" SET (${fields.join(',')}) = (${expandSQLArray(1, fields)}) `
     + `WHERE ${sqlArrayCondition(2, fields)} RETURNING filekey`;
-    const insert_filekeys_stmt = `INSERT INTO "${challenge}_filekeys" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
+    const insert_filekeys_stmt = `INSERT INTO "${challenge}_filekeys" VALUES (${expandSQLArray(1, fields)}, $2)`;
     const add_completion_stmt = `INSERT INTO "${challenge}_completions" VALUES `
-    + `(${expandSQLArray(1, fields.length)}, ${expandSQLArray(2, auxFields.length)}, ?3, ?4, ?5)`;
-    const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${expandSQLArray(1, extraInfoFields.length)})`;
-    const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${expandSQLArray(1, fields.length)}, ?2)`;
+    + `(${expandSQLArray(1, fields)}, ${expandSQLArray(2, auxFields)}, $3, $4, $5)`;
+    const add_info_stmt = `INSERT INTO "${challenge}_extra_info" VALUES (${expandSQLArray(1, extraInfoFields)})`;
+    const add_notes_stmt = `INSERT INTO "${challenge}_completion_notes" VALUES (${expandSQLArray(1, fields)}, $2)`;
 
     let update_filekeys_idx = -1;
     let batched_stmts = [];
@@ -238,7 +239,7 @@ async function handleAddSubmit({
 }
 
 async function handleAddSubmitLCCLike({context, challenge}) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
     const isHelper = jwtResult.payload.permissions.includes('write:verify');
@@ -282,8 +283,8 @@ async function handleAddSubmitLCCLike({context, challenge}) {
     let query;
     if (editMode) {
         query = db.prepare(`
-            UPDATE "${challenge}_completions" SET (${fieldKeys.join(',')}, link, pending) = (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3)
-            WHERE filekey = ?4 AND ${isHelper ? 'TRUE' : 'pending = ?3'} RETURNING filekey
+            UPDATE "${challenge}_completions" SET (${fieldKeys.join(',')}, link, pending) = (${expandSQLArray(1, fieldKeys)}, $2, $3)
+            WHERE filekey = $4 AND ${isHelper ? 'TRUE' : 'pending = $3'} RETURNING filekey
         `).bind(
             JSON.stringify(fieldValues),
             link,
@@ -293,7 +294,7 @@ async function handleAddSubmitLCCLike({context, challenge}) {
     } else {
         query = db.prepare(`
             INSERT INTO "${challenge}_completions" (${fieldKeys.join(',')}, link, pending, filekey)
-            VALUES (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3, ?4) RETURNING filekey
+            VALUES (${expandSQLArray(1, fieldKeys)}, $2, $3, $4) RETURNING filekey
         `).bind(
             JSON.stringify(fieldValues),
             link,

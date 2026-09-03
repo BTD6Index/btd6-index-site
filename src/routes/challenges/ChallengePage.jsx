@@ -236,15 +236,21 @@ export default function ChallengePage({
                                                     })}</td>)
                                             }
                                             <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
-                                                fields.concat(altFields).map(field => [field, completion[field]])
+                                                fields.concat(altFields).map(field => [
+                                                    field, Array.isArray(completion[field]) ? JSON.stringify(completion[field]) : completion[field]
+                                                ])
                                             )}>Notes</a></td>
                                             {!disableOG && <td>{completion.og ? <a href={`/${challenge}/extra-info?` + new URLSearchParams(
-                                                fields.map(field => [field, completion[field]])
+                                                fields.map(field =>  [
+                                                    field, Array.isArray(completion[field]) ? JSON.stringify(completion[field]) : completion[field]
+                                                ])
                                             )}>Yes</a> : 'No'}</td>}
                                             {!isLoading && isAuthenticated &&
                                                 <td>
                                                     {canEditOrVerify && <a href={`/edit-${challenge}-form?` + new URLSearchParams(
-                                                        fields.concat(altFields).map(field => [field, completion[field]])
+                                                        fields.concat(altFields).map(field => [
+                                                            field, Array.isArray(completion[field]) ? JSON.stringify(completion[field]) : completion[field]
+                                                        ])
                                                     )}>Edit{!!completion.pending && " or Verify"}</a>}
                                                 </td>
                                             }

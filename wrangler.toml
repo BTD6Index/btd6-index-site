@@ -1,7 +1,8 @@
-[[d1_databases]]
+[[hyperdrive]]
 binding = "BTD6_INDEX_DB"
-database_name = "btd6index"
-database_id = "dedaa678-21d1-4d64-8f1c-a98d4936734c"
+id = "btd6-index-hyperdrive"
+# You need to configure your Hyperdrive connection separately
+# This will be configured via: wrangler hyperdrive create <name> --connection-string=<postgres-connection-string>
 
 [[r2_buckets]]
 binding = 'BTD6_INDEX_MEDIA'

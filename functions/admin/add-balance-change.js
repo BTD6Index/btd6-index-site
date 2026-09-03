@@ -1,5 +1,7 @@
+import { createDbClient } from "../db";
+
 export async function onRequestPost(context) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
     const formData = await context.request.formData();
 
     const fieldKeys = [
@@ -17,7 +19,7 @@ export async function onRequestPost(context) {
     try {
         let res = await db.prepare(`
             INSERT INTO balance_changes
-            VALUES (?1, ?2, ?3, ?4, ?5)
+            VALUES ($1, $2, $3, $4, $5)
             RETURNING *
         `).bind(
             ...fieldKeys.map(field => {
