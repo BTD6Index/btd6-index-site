@@ -5,7 +5,6 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
     "@babel/core": "^7.29.7",
-    "@cloudflare/vite-plugin": "^1.54.3",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.5",
@@ -59,6 +58,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {}
+  }
 }
