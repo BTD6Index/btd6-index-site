@@ -1,3 +1,5 @@
+compatibility_date = "2026-08-04"
+
 [[hyperdrive]]
 binding = "BTD6_INDEX_DB"
 id = "btd6-index-hyperdrive"
