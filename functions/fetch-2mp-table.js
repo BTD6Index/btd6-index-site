@@ -1,11 +1,11 @@
 import BitSet from "bitset";
+import { createDbClient } from "./db";
 
 export async function onRequest(context) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
     const res = await db.batch([
         db.prepare("SELECT entity, map FROM twomp_completions"),
-        db.prepare("SELECT map, difficulty FROM map_information ORDER BY json_extract(?1, '$.' || difficulty), length DESC")
-        .bind(JSON.stringify({beginner: 0, intermediate: 1, advanced: 2, expert: 3}))
+        db.prepare("SELECT map, difficulty FROM map_information ORDER BY CASE difficulty WHEN 'beginner' THEN 0 WHEN 'intermediate' THEN 1 WHEN 'advanced' THEN 2 WHEN 'expert' THEN 3 ELSE 4 END, length DESC")
     ]);
     const mapList = res[1].results;
     const mapToIndex = new Map(mapList.map((val, idx) => [val.map, idx]));

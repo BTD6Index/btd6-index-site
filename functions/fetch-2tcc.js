@@ -7,7 +7,7 @@ function convTowerSubquery(query, queryIdx, paramPos, idx) {
         const searchList = Object.values(towerNames[subquery]).map(v => `'${v.replace(/'/g, "''")}'`).join(',');
         return `IN (${searchList})`;
     } else {
-        return `= json_extract(json_extract(?${paramPos}, '$[${idx}]'), '$[${queryIdx}]')`;
+        return `= ($${paramPos}::jsonb ->> ${idx})::jsonb ->> ${queryIdx}`;
     }
 }
 

@@ -107,27 +107,27 @@ export default function Maps() {
                         </>
                     }
                     <dt>Number of Entrances / Exits</dt>
-                    <dd>{mapInfo.numEntrances} entrance(s), {mapInfo.numExits} exit(s)</dd>
+                    <dd>{mapInfo.numentrances} entrance(s), {mapInfo.numexits} exit(s)</dd>
                     <dt>Has significat Line of Sight obstacles? / Has Water?</dt>
-                    <dd>{mapInfo.hasLOS ? 'Yes' : 'No'}, {mapInfo.hasWater ? 'Yes' : 'No'}</dd>
+                    <dd>{mapInfo.haslos ? 'Yes' : 'No'}, {mapInfo.haswater ? 'Yes' : 'No'}</dd>
                     <dt>Number of Interactable Objects</dt>
-                    <dd>{mapInfo.numObjects}</dd>
+                    <dd>{mapInfo.numobjects}</dd>
                     {
-                        mapInfo.removalCost && <>
+                        mapInfo.removalcost && <>
                             <dt>Cost to Remove/Activate All Objects</dt>
-                            <dd>{mapInfo.removalCost}</dd>
+                            <dd>{mapInfo.removalcost}</dd>
                         </>
                     }
                     {
-                        mapInfo.removalCostNotes && <>
+                        mapInfo.removalcostnotes && <>
                             <dt>Object Removal/Activation Notes</dt>
-                            <dd className="multiline">{mapInfo.removalCostNotes}</dd>
+                            <dd className="multiline">{mapInfo.removalcostnotes}</dd>
                         </>
                     }
                     {
-                        mapInfo.miscNotes && <>
+                        mapInfo.miscnotes && <>
                             <dt>Miscellaneous Notes</dt>
-                            <dd className="multiline">{mapInfo.miscNotes}</dd>
+                            <dd className="multiline">{mapInfo.miscnotes}</dd>
                         </>
                     }
                 </dl>

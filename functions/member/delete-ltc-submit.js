@@ -1,5 +1,7 @@
+import { createDbClient } from "../db";
+
 export async function onRequestPost(context) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
     const isHelper = jwtResult.payload.permissions.includes('write:admin');
@@ -14,11 +16,11 @@ export async function onRequestPost(context) {
     }
 
     let filekeys = await db.prepare(`DELETE FROM ltc_completions AS cmp WHERE EXISTS `
-    + `(SELECT 1 FROM json_each(?1) `
-    + `WHERE cmp.map = json_extract(value, '$[0]') `
-    + `AND cmp.towerset = json_extract(value, '$[1]') `
-    + `AND cmp.completiontype = json_extract(value, '$[2]') `
-    + `AND ${isHelper ? '?2 = ?2' : 'cmp.pending = ?2'}) RETURNING filekey`)
+    + `(SELECT 1 FROM jsonb_array_elements($1::jsonb) AS value `
+    + `WHERE cmp.map = value->>0 `
+    + `AND cmp.towerset = value->1 `
+    + `AND cmp.completiontype = value->>2 `
+    + `AND ${isHelper ? '$2 = $2' : 'cmp.pending = $2'}) RETURNING filekey`)
     .bind(formData.get('entries'), jwtResult.payload.sub /* user id */)
     .all();
 

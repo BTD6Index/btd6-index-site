@@ -1,5 +1,6 @@
 import { processQuery } from "./processQuery";
 import { json2csv } from 'json-2-csv';
+import { createDbClient } from "./db";
 
 /**
  * @callback customFieldQuery
@@ -34,17 +35,20 @@ async function handleDownloadCSV({
     altFieldKeys = [],
     challenge
 }) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
 
     let identifierFieldKeys = [...primaryFieldKeys, ...altFieldKeys];
 
     let res = await db.prepare(`
-        SELECT * FROM "${challenge}_completions_fts"
+        SELECT * FROM "${challenge}_completions"
         INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
         LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
     `).run();
 
-    return json2csv(res.results);
+    return json2csv(res.results.map(row => {
+        let {tsv, ...rest} = row;
+        return rest;
+    }));
 }
 
 /**
@@ -73,7 +77,7 @@ async function handleFetch({
     informationTable = 'map_information',
     informationField = 'map'
 }) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
 
     let searchParams = new URL(context.request.url).searchParams;
     let query = searchParams.get('query') ?? '';
@@ -88,15 +92,15 @@ async function handleFetch({
         return sqlFieldKeys
         .flatMap((field, idx) => {
             if (field === 'pending') {
-                return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`]
+                return [`(${field} IS NULL) != ($${paramPos}::jsonb->>${idx})::boolean`]
             } else if (field === 'og') {
-                return [`(${field} = 0) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
+                return [`${field} = ($${paramPos}::jsonb->>${idx})::boolean`];
             }
             return [
                 customFieldQuery?.({field, idx, paramPos, searchParams})
-                ?? `${field} = json_extract(?${paramPos}, '$[${idx}]') ${personKeys.includes(field) ? 'COLLATE NOCASE' : ''}`
+                ?? `${field} = ($${paramPos}::jsonb->>${idx}) COLLATE ignore_accent_case`
             ];
-        }).concat(`?${paramPos} = ?${paramPos}`).join(' AND ');
+        }).concat(`$${paramPos} = $${paramPos}`).join(' AND ');
     };
     let fieldValues = sqlFieldKeys.map(field => searchParams.get(field) ?? '');
 
@@ -110,43 +114,63 @@ async function handleFetch({
     let orderStmtClause = processSortBy(sortByIndex, sortBy) ?? `ORDER BY ${identifierFieldKeys.join(',')}`;
 
     let query_stmt_fn;
+    let count_stmt_fn;
     try {
         if (query) {
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
-                    SELECT ${select} FROM "${challenge}_completions_fts"
+                    SELECT ${select} FROM "${challenge}_completions"
                     INNER JOIN ${informationTable} USING (${informationField})
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
-                    WHERE "${challenge}_completions_fts" = ?1 AND ${specific_field_conds(4)} ${orderStmtClause} LIMIT ?2 OFFSET ?3
+                    WHERE "${challenge}_completions".tsv @@ to_tsquery('english', $1) AND ${specific_field_conds(4)} ${orderStmtClause} LIMIT $2 OFFSET $3
                 `).bind(processQuery(query, fieldKeys), limit, offset, JSON.stringify(fieldValues));
+            };
+            count_stmt_fn = () => {
+                return db.prepare(`
+                    SELECT COUNT(*) as count FROM "${challenge}_completions"
+                    INNER JOIN ${informationTable} USING (${informationField})
+                    INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
+                    LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
+                    WHERE "${challenge}_completions".tsv @@ to_tsquery('english', $1) AND ${specific_field_conds(2)}
+                `).bind(processQuery(query, fieldKeys), JSON.stringify(fieldValues));
             };
         } else {
             query_stmt_fn = (select, limit, offset) => {
                 return db.prepare(`
-                    SELECT ${select} FROM "${challenge}_completions_fts"
+                    SELECT ${select} FROM "${challenge}_completions"
                     INNER JOIN ${informationTable} USING (${informationField})
                     INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
                     LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
-                    WHERE ${specific_field_conds(3)} ${orderStmtClause} LIMIT ?1 OFFSET ?2
+                    WHERE ${specific_field_conds(3)} ${orderStmtClause} LIMIT $1 OFFSET $2
                 `)
                 .bind(limit, offset, JSON.stringify(fieldValues));
             };
+            count_stmt_fn = () => {
+                return db.prepare(`
+                    SELECT COUNT(*) as count FROM "${challenge}_completions"
+                    INNER JOIN ${informationTable} USING (${informationField})
+                    INNER JOIN "${challenge}_filekeys" USING (${identifierFieldKeys.join(',')})
+                    LEFT JOIN "${challenge}_extra_info" USING (${primaryFieldKeys.join(',')})
+                    WHERE ${specific_field_conds(1)}
+                `)
+                .bind(JSON.stringify(fieldValues));
+            };
         }
 
-        let query_result = await db.batch([query_stmt_fn('*', count+1, offset), query_stmt_fn('COUNT(*)', (1 << 31) - 1, 0)]);
+        let query_result = await db.batch([query_stmt_fn('*', count+1, offset), count_stmt_fn()]);
         return Response.json({
             results: query_result[0]['results'].slice(0, count),
             more: query_result[0]['results'].length > count,
-            count: query_result[1]['results'][0]['COUNT(*)']
+            count: query_result[1]['results'][0]['count']
         });
     } catch (e) {
         return Response.json({error: e.message}, {status: 400});
     }
 }
 
-async function handleFetchFlat({context, databaseTable, fields, personFields, customOrder = null, sortByIndex = {}}) {
-    const db = context.env.BTD6_INDEX_DB;
+async function handleFetchFlat({context, databaseTable, fields, personFields, customOrder = null, sortByIndex = {}, customFieldQuery = null}) {
+    const db = createDbClient(context);
 
     let searchParams = new URL(context.request.url).searchParams;
     let offset = parseInt(searchParams.get('offset') ?? '0');
@@ -161,13 +185,16 @@ async function handleFetchFlat({context, databaseTable, fields, personFields, cu
             if (!searchParams.has(field)) {
                 return [];
             } else if (field === 'query') {
-                return searchParams.get(field) ? [`"${databaseTable}" MATCH json_extract(?${paramPos}, '$[${idx}]')`] : [];
+                return searchParams.get(field) ? [`"${databaseTable}".tsv @@ to_tsquery('english', $${paramPos})`] : [];
             } else if (field === 'pending') {
-                return [`(${field} IS NULL) != (json_extract(?${paramPos}, '$[${idx}]') IN (1, '1', 'true', 'True'))`];
+                return [`(${field} IS NULL) != (($${paramPos}::jsonb->>${idx})::boolean)`];
             } else {
-                return [`${field} = json_extract(?${paramPos}, '$[${idx}]') ${personFields.includes(field) ? 'COLLATE NOCASE' : ''}`];
+                return [
+                    customFieldQuery?.(field, idx, paramPos, searchParams)
+                    ?? `${field} = ($${paramPos}::jsonb->>${idx}) COLLATE ignore_accent_case`
+                ];
             }
-        }).join(' AND ') || `?${paramPos} = ?${paramPos}`;
+        }).join(' AND ') || `$${paramPos} = $${paramPos}`;
     }
     let fieldValues = fieldKeys.map(field => {
         if (!searchParams.has(field)) {
@@ -189,36 +216,36 @@ async function handleFetchFlat({context, databaseTable, fields, personFields, cu
 
     try {
         const res = await db.batch([
-            db.prepare(`SELECT * FROM "${databaseTable}" WHERE ${sql_condition(1)} ${orderStmtClause} LIMIT ?2 OFFSET ?3`)
+            db.prepare(`SELECT * FROM "${databaseTable}" WHERE ${sql_condition(1)} ${orderStmtClause} LIMIT $2 OFFSET $3`)
             .bind(JSON.stringify(fieldValues), count+1, offset),
-            db.prepare(`SELECT COUNT(*) FROM "${databaseTable}" WHERE ${sql_condition(1)} ${orderStmtClause}`)
+            db.prepare(`SELECT COUNT(*) FROM "${databaseTable}" WHERE ${sql_condition(1)}`)
             .bind(JSON.stringify(fieldValues))
         ]);
 
         return Response.json({
             results: res[0]['results'].slice(0, count),
             more: res[0]['results'].length > count,
-            count: res[1]['results'][0]['COUNT(*)']
+            count: res[1]['results'][0]['count']
         });
     } catch (e) {
         return Response.json({error: e.message}, {status: 400});
     }
 }
 
-async function handleFetchOgInfo({context, challenge, joinFields, altJoinFields}) {
+async function handleFetchOgInfo({context, challenge, joinFields, altJoinFields, customCheck = null}) {
     let searchParams = new URL(context.request.url).searchParams;
     let joinFieldVals = joinFields.map(field => searchParams.get(field));
     if (joinFieldVals.some(val => val === null)) {
         return Response.json({error: `need ${joinFieldVals.join(', ')} specified`}, {status: 400});
     }
-    let res = await context.env.BTD6_INDEX_DB
-    .prepare(`
+    const db = createDbClient(context);
+    let res = await db.prepare(`
         SELECT * FROM "${challenge}_extra_info" AS a
         INNER JOIN "${challenge}_completions" AS b
-        ON ${joinFields.map(field => `a.${field} = b.${field}`).join(' AND ')} AND b.og = 1
+        ON ${joinFields.map(field => `a.${field} = b.${field}`).join(' AND ')} AND b.og = TRUE
         INNER JOIN "${challenge}_filekeys" AS c
         ON ${joinFields.concat(altJoinFields).map(field => `b.${field} = c.${field}`).join(' AND ')}
-        WHERE ${joinFields.map((field, idx) => `b.${field} = json_extract(?1, '$[${idx}]')`).join(' AND ')}
+        WHERE ${joinFields.map((field, idx) => (customCheck?.(field, idx) ?? `b.${field} = $1::jsonb->>${idx}`)).join(' AND ')}
     `)
     .bind(JSON.stringify(joinFieldVals))
     .first();

@@ -10,14 +10,16 @@ export async function onRequest(context) {
         sortByIndex: {
             'map': 'map',
             'map DESC': 'map DESC',
-            'towerset': 'json_array_length(towerset), towerset',
-            'towerset DESC': 'json_array_length(towerset) DESC, towerset DESC'
+            'towerset': 'jsonb_array_length(towerset), towerset::text',
+            'towerset DESC': 'jsonb_array_length(towerset) DESC, towerset::text DESC'
         },
         customFieldQuery: ({field, idx, paramPos}) => {
             if (field === 'towerincludes') {
-                return `"fttc_completions_fts" = (SELECT 'towerset:"' || group_concat(REPLACE(towers.value, '"', '""'), ' ') || '"' FROM json_each(json_extract(?${paramPos}, '$[${idx}]')) AS towers)`;
+                return `(lower(towerset::text)::jsonb @> lower($${paramPos}::jsonb ->> ${idx})::jsonb)`;
             } else if (field === 'towercount') {
-                return `json_array_length(towerset) = CAST(json_extract(?${paramPos}, '$[${idx}]') AS INTEGER)`;
+                return `jsonb_array_length(towerset::jsonb) = CAST($${paramPos}::jsonb ->> ${idx} AS INTEGER)`;
+            } else if (field == 'towerset') {
+                return `(towerset = ($${paramPos}::jsonb ->> ${idx})::jsonb)`;
             }
             return null;
         }

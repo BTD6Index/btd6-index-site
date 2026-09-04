@@ -1,7 +1,13 @@
-[[d1_databases]]
+name = "btd6-index-site"
+compatibility_date = "2026-08-04"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
+
+[[hyperdrive]]
 binding = "BTD6_INDEX_DB"
-database_name = "btd6index"
-database_id = "dedaa678-21d1-4d64-8f1c-a98d4936734c"
+id = "c8312296d04b483ea37c8edd34a32ce6"
+# You need to configure your Hyperdrive connection separately
+# This will be configured via: wrangler hyperdrive create <name> --connection-string=<postgres-connection-string>
 
 [[r2_buckets]]
 binding = 'BTD6_INDEX_MEDIA'

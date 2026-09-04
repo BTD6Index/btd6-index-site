@@ -1,21 +1,22 @@
 import { processImages, getWebhookUrls } from "./handleAddSubmit";
 import profanityFilter from 'leo-profanity';
+import { createDbClient } from "../db";
 profanityFilter.remove('domination');
 
-function expandSQLArray(paramNo, arrayLen) {
+function expandSQLArray(paramNo, fields) {
     let buf = [];
-    for (let i = 0; i < arrayLen; ++i) {
-        buf.push(`json_extract(?${paramNo}, '$[${i}]')`);
+    for (let i = 0; i < fields.length; ++i) {
+        buf.push(`($${paramNo}::jsonb->>${i})${['towerset', 'upgradeset'].includes(fields[i]) ? '::jsonb' : ''}`);
     }
     return buf.join(',');
 }
 
 
 export async function onRequestPost(context) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
     const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
-    const isHelper = jwtResult.payload.permissions.includes('write:admin');
+    const isHelper = jwtResult.payload.permissions.includes('write:verify');
 
     const respondError = (error) => {
         return Response.json({ error }, { status: 400 });
@@ -56,8 +57,8 @@ export async function onRequestPost(context) {
     let query;
     if (editMode) {
         query = db.prepare(
-            `UPDATE "ltc_completions" SET (${fieldKeys.join(',')}, link, pending) = (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3) `
-            + `WHERE (map, towerset, completiontype) = (?4, ?5, ?6) AND ${isHelper ? 'TRUE' : 'pending = ?3'} RETURNING filekey`
+            `UPDATE "ltc_completions" SET (${fieldKeys.join(',')}, link, pending) = (${expandSQLArray(1, fieldKeys)}, $2, $3) `
+            + `WHERE (map, towerset, completiontype) = ($4, $5::jsonb, $6) AND ${isHelper ? 'TRUE' : 'pending = $3'} RETURNING filekey`
         ).bind(
             JSON.stringify(fieldValues),
             link,
@@ -69,7 +70,7 @@ export async function onRequestPost(context) {
     } else {
         query = db.prepare(
             `INSERT INTO "ltc_completions" (${fieldKeys.join(',')}, link, pending, filekey) `
-            + `VALUES (${expandSQLArray(1, fieldKeys.length)}, ?2, ?3, ?4) RETURNING filekey`
+            + `VALUES (${expandSQLArray(1, fieldKeys)}, $2, $3, $4) RETURNING filekey`
         ).bind(
             JSON.stringify(fieldValues),
             link,

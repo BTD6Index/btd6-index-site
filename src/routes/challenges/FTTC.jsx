@@ -6,7 +6,7 @@ export default function FTTC() {
     const fieldDisplayFunc = useCallback(({fieldName, fieldValue}) => {
         try {
             if (fieldName === 'towerset') {
-                return JSON.parse(fieldValue).join(', ')
+                return fieldValue.join(', ')
             }
         } catch (e) {
             if (e instanceof SyntaxError) {

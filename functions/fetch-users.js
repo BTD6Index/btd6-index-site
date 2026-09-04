@@ -1,18 +1,19 @@
 import {uniqWith} from 'lodash';
+import { createDbClient } from "./db";
 
 const CHALLENGE_QUERIES = [
-    "SELECT DISTINCT person FROM twotc_completions WHERE person LIKE ?1 ESCAPE '\\'",
-    "SELECT DISTINCT person FROM twomp_completions WHERE person LIKE ?1 ESCAPE '\\'",
-    "SELECT DISTINCT person1 AS person FROM twotcc_completions WHERE person1 LIKE ?1 ESCAPE '\\'",
-    "SELECT DISTINCT person2 AS person FROM twotcc_completions WHERE person2 LIKE ?1 ESCAPE '\\'",
-    "SELECT DISTINCT person FROM ltc_completions WHERE person LIKE ?1 ESCAPE '\\'",
-    "SELECT DISTINCT person FROM lcc_completions WHERE person LIKE ?1 ESCAPE '\\'",
-    "SELECT DISTINCT person FROM fttc_completions WHERE person LIKE ?1 ESCAPE '\\'",
-    "SELECT DISTINCT person FROM lcd_completions WHERE person LIKE ?1 ESCAPE '\\'"
+    "SELECT DISTINCT person FROM twotc_completions WHERE person LIKE $1",
+    "SELECT DISTINCT person FROM twomp_completions WHERE person LIKE $1",
+    "SELECT DISTINCT person1 AS person FROM twotcc_completions WHERE person1 LIKE $1",
+    "SELECT DISTINCT person2 AS person FROM twotcc_completions WHERE person2 LIKE $1",
+    "SELECT DISTINCT person FROM ltc_completions WHERE person LIKE $1",
+    "SELECT DISTINCT person FROM lcc_completions WHERE person LIKE $1",
+    "SELECT DISTINCT person FROM fttc_completions WHERE person LIKE $1",
+    "SELECT DISTINCT person FROM lcd_completions WHERE person LIKE $1"
 ]
 
 export async function onRequest(context) {
-    const db = context.env.BTD6_INDEX_DB;
+    const db = createDbClient(context);
 
     let searchParams = new URL(context.request.url).searchParams;
 
@@ -23,7 +24,7 @@ export async function onRequest(context) {
     let userPrefix = searchParams.get('query') ?? '';
 
     let results = await db.batch(
-        CHALLENGE_QUERIES.map(query => db.prepare(query).bind(user ?? (userPrefix.replace(/([%_\\\\])/, '\\$1') + '%')))
+        CHALLENGE_QUERIES.map(query => db.prepare(query).bind(user ?? (userPrefix.replace(/([%_\\])/, '\\$1') + '%')))
     );
     let list = results.flatMap(subResult => subResult.results.map(result => result.person));
     list.sort((a,b) => a.localeCompare(b));

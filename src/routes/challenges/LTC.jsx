@@ -6,7 +6,7 @@ export default function LTC() {
     const fieldDisplayFunc = useCallback(({fieldName, fieldValue}) => {
         try {
             if (['towerset', 'upgradeset'].includes(fieldName)) {
-                return JSON.parse(fieldValue)?.map(v => v ?? 'N/A')?.join(', ') ?? 'N/A';
+                return fieldValue?.map(v => v ?? 'N/A')?.join(', ') ?? 'N/A';
             }
         } catch (e) {
             if (e instanceof SyntaxError) {
