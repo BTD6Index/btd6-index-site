@@ -1,8 +1,6 @@
 import { processImages, getWebhookUrls } from "./handleAddSubmit";
 import profanityFilter from 'leo-profanity';
 import { createDbClient } from "../db";
-import { cache } from "cloudflare:workers";
-
 profanityFilter.remove('domination');
 
 function expandSQLArray(paramNo, fields) {
@@ -83,8 +81,8 @@ export async function onRequestPost(context) {
 
     try {
         imageKey = (await query.first()).filekey;
-
-        context.waitUntil(cache.purge({purgeEverything: true}));
+        
+        context.waitUntil(context.cache.purge({purgeEverything: true}));
 
         await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
     } catch (e) {

@@ -1,7 +1,5 @@
 import profanityFilter from 'leo-profanity';
 import { createDbClient } from "../db";
-import { cache } from "cloudflare:workers";
-
 profanityFilter.remove('domination');
 
 /**
@@ -207,7 +205,7 @@ async function handleAddSubmit({
     try {
         batch_result = await db.batch(batched_stmts);
 
-        context.waitUntil(cache.purge({purgeEverything: true}));
+        context.waitUntil(context.cache.purge({purgeEverything: true}));
 
         if (editMode) {
             imageKey = batch_result[update_filekeys_idx].results[0].filekey;
@@ -310,7 +308,7 @@ async function handleAddSubmitLCCLike({context, challenge}) {
     try {
         imageKey = (await query.first()).filekey;
 
-        context.waitUntil(cache.purge({purgeEverything: true}));
+        context.waitUntil(context.cache.purge({purgeEverything: true}));
 
         await processImages({imageKey, context, editMode, formData, media, link, hasImage});
     } catch (e) {

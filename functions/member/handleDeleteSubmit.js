@@ -1,5 +1,4 @@
 import { createDbClient } from "../db";
-import { cache } from "cloudflare:workers";
 
 async function handleDeleteSubmit({context, challenge, fields, joinFields, jsonFields = ['towerset']}) {
     const db = createDbClient(context);
@@ -52,7 +51,7 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields, jsonF
         );
     }
 
-    context.waitUntil(cache.purge({purgeEverything: true}));
+    context.waitUntil(context.cache.purge({purgeEverything: true}));
 
     return Response.json({});
 }
@@ -88,7 +87,7 @@ async function handleDeleteSubmitLCCLike({context, challenge}) {
         );
     }
 
-    context.waitUntil(cache.purge({purgeEverything: true}));
+    context.waitUntil(context.cache.purge({purgeEverything: true}));
 
     return Response.json({});
 }
