@@ -32,6 +32,8 @@ export async function onRequestPost(context) {
             })
         );
     }
+    
+    context.waitUntil(context.cache.purge({purgeEverything: true}));
 
     return Response.json({});
 }

@@ -51,6 +51,8 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields, jsonF
         );
     }
 
+    context.waitUntil(context.cache.purge({purgeEverything: true}));
+
     return Response.json({});
 }
 
@@ -84,6 +86,8 @@ async function handleDeleteSubmitLCCLike({context, challenge}) {
             })
         );
     }
+
+    context.waitUntil(context.cache.purge({purgeEverything: true}));
 
     return Response.json({});
 }
