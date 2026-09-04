@@ -1,4 +1,5 @@
 import { createDbClient } from "../db";
+import { cache } from "cloudflare:workers";
 
 export async function onRequestPost(context) {
     const db = createDbClient(context);
@@ -33,7 +34,7 @@ export async function onRequestPost(context) {
         );
     }
     
-    context.waitUntil(context.cache.purge({purgeEverything: true}));
+    context.waitUntil(cache.purge({purgeEverything: true}));
 
     return Response.json({});
 }
