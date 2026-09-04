@@ -81,8 +81,6 @@ export async function onRequestPost(context) {
 
     try {
         imageKey = (await query.first()).filekey;
-        
-        context.waitUntil(context.cache.purge({purgeEverything: true}));
 
         await processImages({imageKey, context, editMode: editMode, formData: formData, media, link, hasImage});
     } catch (e) {
