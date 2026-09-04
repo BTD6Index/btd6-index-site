@@ -18,10 +18,16 @@ function trimFormData(formData) {
     return newFormData;
 }
 
-function expandSQLArray(paramNo, fields, jsonFields = ['towerset']) {
+function expandSQLArray(paramNo, fields, jsonFields = ['towerset'], integerFields = ['money']) {
     let buf = [];
     for (let i = 0; i < fields.length; ++i) {
-        buf.push(`($${paramNo}::jsonb->>${i})${jsonFields.includes(fields[i]) ? '::jsonb' : ''}`);
+        let expression = `($${paramNo}::jsonb->>${i})`;
+        if (jsonFields.includes(fields[i])) {
+            expression += '::jsonb';
+        } else if (integerFields.includes(fields[i])) {
+            expression += '::integer';
+        }
+        buf.push(expression);
     }
     return buf.join(',');
 }
@@ -265,10 +271,7 @@ async function handleAddSubmitLCCLike({context, challenge}) {
             return respondError(`Profanity detected in field ${key}`);
         }
     }
-    const fieldValues = fieldKeys.map(field => {
-        const value = formData.get(field);
-        return field === 'money' ? Number(value) : value;
-    });
+    const fieldValues = fieldKeys.map(field => formData.get(field));
 
     if (!formData.has('link') && !formData.has('image')) {
         return respondError('Need one of link or image keys');
