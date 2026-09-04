@@ -5,7 +5,7 @@ pages_build_output_dir = "./dist"
 
 [[hyperdrive]]
 binding = "BTD6_INDEX_DB"
-id = "btd6-index-hyperdrive"
+id = "c8312296d04b483ea37c8edd34a32ce6"
 # You need to configure your Hyperdrive connection separately
 # This will be configured via: wrangler hyperdrive create <name> --connection-string=<postgres-connection-string>
 
