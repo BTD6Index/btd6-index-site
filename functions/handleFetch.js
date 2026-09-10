@@ -95,6 +95,8 @@ async function handleFetch({
                 return [`(${field} IS NULL) != ($${paramPos}::jsonb->>${idx})::boolean`]
             } else if (field === 'og') {
                 return [`${field} = ($${paramPos}::jsonb->>${idx})::boolean`];
+            } else if (field === 'filekey') {
+                return `filekey::text = ($${paramPos}::jsonb ->> ${idx})`;
             }
             return [
                 customFieldQuery?.({field, idx, paramPos, searchParams})
@@ -188,6 +190,8 @@ async function handleFetchFlat({context, databaseTable, fields, personFields, cu
                 return searchParams.get(field) ? [`"${databaseTable}".tsv @@ to_tsquery('english', $${paramPos})`] : [];
             } else if (field === 'pending') {
                 return [`(${field} IS NULL) != (($${paramPos}::jsonb->>${idx})::boolean)`];
+            } else if (field === 'filekey') {
+                return `filekey::text = ($${paramPos}::jsonb ->> ${idx})`;
             } else {
                 return [
                     customFieldQuery?.(field, idx, paramPos, searchParams)
