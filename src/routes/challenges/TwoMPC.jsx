@@ -51,6 +51,7 @@ function TwoMPPersonStats() {
                         <th># of Maps Completed</th>
                         <th>Most Completed Map</th>
                         <th>Most Completed Difficulty</th>
+                        <th>Most Completed Tower</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,6 +61,7 @@ function TwoMPPersonStats() {
                         <td>{data.uniquecount}</td>
                         <td>{data.favoritemap}</td>
                         <td>{data.favoritedifficulty}</td>
+                        <td>{data.favoritetower}</td>
                     </tr>)}
                 </tbody>
             </table>
