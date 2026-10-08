@@ -1,5 +1,12 @@
 export const defaultRules = [
     {
+        name: 'Cash Spent Counter',
+        rule: <div>
+                <h2>Cash Spent Counter</h2>
+                <p>All runs submitted after v57+ must have the cash spent counter in advanced options enabled.</p>
+            </div>,
+    },
+    {
         name: 'Challenge Settings',
         rule: <div>
                 <h2>Challenge Settings</h2>
