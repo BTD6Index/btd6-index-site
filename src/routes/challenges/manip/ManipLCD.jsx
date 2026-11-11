@@ -49,7 +49,7 @@ function ManipLCD({ editParams = null, setEditParams = null }) {
         <form method="post" encType="multipart/form-data" action="/member/add-lcd-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
-                <input type="checkbox" name="verify" />
+                <input id="verify" type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="map">Map</label>
@@ -58,31 +58,31 @@ function ManipLCD({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="money">Cash Spent</label>
-                <input name="money" type="number" style={{ width: '20ch' }} min={0} max={20200} defaultValue={existingInfo?.[0]?.money} required />
+                <input id="money" name="money" type="number" style={{ width: '20ch' }} min={0} max={20200} defaultValue={existingInfo?.[0]?.money} required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="person">Person</label>
-                <input name="person" type="text" placeholder="Person" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.person} required />
+                <input id="person" name="person" type="text" placeholder="Person" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
             <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
                 <label htmlFor="notes">Completion Notes/Proof (include challenge code here)</label>
-                <textarea name="notes" rows="5" cols="40" defaultValue={existingInfo?.[0]?.notes}></textarea>
+                <textarea id="notes" name="notes" rows="5" cols="40" defaultValue={existingInfo?.[0]?.notes}></textarea>
             </span>
             <br />
             <AttachmentsWidget existingAttachments={existingAttachments} attachmentsLabel="Upload Attachments (victory screen image, etc.)" />
             <br />
             <span className="formLine">
                 <label htmlFor="version">Update</label>
-                <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} required />
+                <input id="version" name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="date">Completion Date</label>
-                <input name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} required />
+                <input id="date" name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} required />
             </span>
             <br />
             {editParams && <input type="hidden" name='edited-filekey' value={editParams.get('filekey') ?? undefined} />}

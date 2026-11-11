@@ -135,7 +135,7 @@ function FormLinkImageEntry({existingInfo}) {
 
     return <>
         <span className="formLine">
-            <label htmlFor="linktype">Submission Type</label>
+            <span>Submission Type</span>
             <span className="formSubLine"><input type="radio" id="linktype-image" value="image"
             onChange={optionChange} checked={linkType === 'image'} />
             <label htmlFor="linktype-image">Image/Video</label></span>
@@ -161,8 +161,8 @@ function AttachmentsWidget({existingAttachments, attachmentsLabel = null}) {
                 return <Fragment key={attachmentKey}>
                     <br />
                     <span className="formLine">
-                        <label htmlFor="delete-attachments">Delete attachment <a href={link}>{link}</a>?</label>
-                        <input type="checkbox" name="delete-attachments" value={attachmentKey} />
+                        <label htmlFor={`delete-attachment-${attachmentKey}`}>Delete attachment <a href={link}>{link}</a>?</label>
+                        <input id={`delete-attachment-${attachmentKey}`} type="checkbox" name="delete-attachments" value={attachmentKey} />
                     </span>
                 </Fragment>;
             })

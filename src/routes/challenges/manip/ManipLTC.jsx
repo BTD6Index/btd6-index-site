@@ -18,7 +18,7 @@ function CompletionTypeWidget({existingInfo}) {
     const changeHandler = useCallback(e => setCompletionType(e.target.value), []);
 
     return <span className="formLine">
-        <label htmlFor="completiontype">Completion Type</label>
+        <span>Completion Type</span>
         <span className="formSubLine">
             <input type="radio" value="og" name="completiontype" id="completiontype-og"
             checked={completionType === 'og'} onChange={changeHandler} />
@@ -124,7 +124,7 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
         <form method="post" encType="multipart/form-data" action="/member/add-ltc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
-                <input type="checkbox" name="verify" />
+                <input id="verify" type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="num_towers">Number of Towers</label>
@@ -174,14 +174,14 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="person">Person</label>
-                <input name="person" type="text" placeholder="Person" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.person} required />
+                <input id="person" name="person" type="text" placeholder="Person" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
             <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
                 <label htmlFor="notes">Completion Notes/Proof (include challenge code here)</label>
-                <textarea name="notes" rows="5" cols="40" defaultValue={existingInfo?.[0]?.notes}></textarea>
+                <textarea id="notes" name="notes" rows="5" cols="40" defaultValue={existingInfo?.[0]?.notes}></textarea>
             </span>
             <br />
             <AttachmentsWidget existingAttachments={existingAttachments} attachmentsLabel="Upload Attachments (victory screen image, etc.)" />
@@ -190,12 +190,12 @@ function ManipLTC({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="version">Update</label>
-                <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} />
+                <input id="version" name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.version} />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="date">Completion Date</label>
-                <input name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} />
+                <input id="date" name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.date} />
             </span>
             <br />
             {editParams && ['map', 'towerset', 'completiontype'].map(
