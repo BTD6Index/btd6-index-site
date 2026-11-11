@@ -1,8 +1,8 @@
 import { createDbClient } from "../db";
+import { backupAndDeletePrefix } from "../mediaBackup";
 
 export async function onRequestPost(context) {
     const db = createDbClient(context);
-    const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
     const isHelper = jwtResult.payload.permissions.includes('write:admin');
 
@@ -26,10 +26,7 @@ export async function onRequestPost(context) {
 
     for (let row of filekeys.results) {
         context.waitUntil(
-            media.list({prefix: row.filekey})
-            .then(async (listRes) => {
-                await media.delete(listRes.objects.map(obj => obj.key));
-            })
+            backupAndDeletePrefix(context.env, row.filekey)
         );
     }
 

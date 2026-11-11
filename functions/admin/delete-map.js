@@ -1,8 +1,8 @@
 import { createDbClient } from "../db";
+import { backupAndDelete } from "../mediaBackup";
 
 export async function onRequestPost(context) {
     const db = createDbClient(context);
-    const media = context.env.BTD6_INDEX_MEDIA;
     const formData = await context.request.formData();
 
     if (!formData.has('map')) {
@@ -13,7 +13,7 @@ export async function onRequestPost(context) {
     .bind(formData.get('map'))
     .first();
 
-    context.waitUntil(media.delete(`maps/${formData.get('map')}`))
+    context.waitUntil(backupAndDelete(context.env, `maps/${formData.get('map')}`));
 
     return Response.json({deleted: res !== null});
 }
