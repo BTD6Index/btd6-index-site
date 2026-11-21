@@ -1,4 +1,5 @@
 import { createDbClient } from "../db";
+import { backupForReplace } from "../mediaBackup";
 
 export async function onRequestPost(context) {
     const db = createDbClient(context);
@@ -45,7 +46,11 @@ export async function onRequestPost(context) {
     }
 
     if (formData.has('image') && formData.get('image') instanceof File) {
-        await media.put(`maps/${formData.get('map')}`, formData.get('image').stream())
+        const key = `maps/${formData.get('map')}`;
+        const image = formData.get('image');
+        if (await backupForReplace(context.env, key, image)) {
+            await media.put(key, image.stream());
+        }
     }
 
     return Response.json({});

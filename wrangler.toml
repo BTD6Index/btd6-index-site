@@ -12,4 +12,7 @@ id = "c8312296d04b483ea37c8edd34a32ce6"
 [[r2_buckets]]
 binding = 'BTD6_INDEX_MEDIA'
 bucket_name = 'btd6index'
-preview_bucket_name = 'btd6indexpreview'
+
+[[r2_buckets]]
+binding = 'BTD6_INDEX_MEDIA_BACKUP'
+bucket_name = 'btd6indexbackup'

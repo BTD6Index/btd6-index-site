@@ -1,8 +1,8 @@
 import { createDbClient } from "../db";
+import { backupAndDeletePrefix } from "../mediaBackup";
 
 async function handleDeleteSubmit({context, challenge, fields, joinFields, jsonFields = ['towerset']}) {
     const db = createDbClient(context);
-    const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
     const isHelper = jwtResult.payload.permissions.includes('write:admin');
 
@@ -44,10 +44,7 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields, jsonF
 
     for (let row of res[3].results) {
         context.waitUntil(
-            media.list({prefix: row.filekey})
-            .then(async (listRes) => {
-                await media.delete(listRes.objects.map(obj => obj.key));
-            })
+            backupAndDeletePrefix(context.env, row.filekey)
         );
     }
 
@@ -56,7 +53,6 @@ async function handleDeleteSubmit({context, challenge, fields, joinFields, jsonF
 
 async function handleDeleteSubmitLCCLike({context, challenge}) {
     const db = createDbClient(context);
-    const media = context.env.BTD6_INDEX_MEDIA;
     const jwtResult = context.data.jwtResult;
     const isHelper = jwtResult.payload.permissions.includes('write:admin');
 
@@ -78,10 +74,7 @@ async function handleDeleteSubmitLCCLike({context, challenge}) {
 
     for (let row of filekeys.results) {
         context.waitUntil(
-            media.list({prefix: row.filekey})
-            .then(async (listRes) => {
-                await media.delete(listRes.objects.map(obj => obj.key));
-            })
+            backupAndDeletePrefix(context.env, row.filekey)
         );
     }
 

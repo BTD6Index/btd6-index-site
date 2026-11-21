@@ -55,18 +55,18 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
         <form method="post" encType="multipart/form-data" action="/member/add-2tc-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
-                <input type="checkbox" name="verify" />
+                <input id="verify" type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="tower1">Tower 1 (the first of the 2 towers obtained)</label>
-                <Select name="tower1" options={filteredStartingTowerOptions} styles={selectStyle} defaultValue={
+                <Select name="tower1" inputId="tower1" options={filteredStartingTowerOptions} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('tower1')) ?? undefined
                     } required />
             </span>
             <br />
             <span className="formLine">
                 <label htmlFor="tower2">Tower 2 (the second of the 2 towers obtained)</label>
-                <Select name="tower2" options={filteredTowerOptions} styles={selectStyle} defaultValue={
+                <Select name="tower2" inputId="tower2" options={filteredTowerOptions} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('tower2')) ?? undefined
                     } required />
             </span>
@@ -78,43 +78,43 @@ function ManipTwoTC({editParams = null, setEditParams = null}) {
             <br />
             <span className="formLine">
                 <label htmlFor="person">Person</label>
-                <input name="person" type="text" placeholder="Person" style={{width: '20ch'}} defaultValue={existingInfo?.[0]?.person} required />
+                <input id="person" name="person" type="text" placeholder="Person" style={{width: '20ch'}} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
             <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
                 <label htmlFor="notes">Completion Notes/Proof (Please specify challenge code here)</label>
-                <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
+                <textarea id="notes" name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
             <br />
             <AttachmentsWidget existingAttachments={existingAttachments} />
             <br />
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
-                <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
+                <input id="og" type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
             </span>
             <br />
             {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade1">Tower 1 Upgrade</label>
-                        <input name="upgrade1" type="text" placeholder="Upgrade 1" style={{width: '20ch'}} defaultValue={ogInfo?.upgrade1} required />
+                        <input id="upgrade1" name="upgrade1" type="text" placeholder="Upgrade 1" style={{width: '20ch'}} defaultValue={ogInfo?.upgrade1} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="upgrade2">Tower 2 Upgrade</label>
-                        <input name="upgrade2" type="text" placeholder="Upgrade 2" style={{width: '20ch'}} defaultValue={ogInfo?.upgrade2} required />
+                        <input id="upgrade2" name="upgrade2" type="text" placeholder="Upgrade 2" style={{width: '20ch'}} defaultValue={ogInfo?.upgrade2} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="version">Update</label>
-                        <input name="version" type="text" placeholder="Update" style={{width: '20ch'}} defaultValue={ogInfo?.version} required />
+                        <input id="version" name="version" type="text" placeholder="Update" style={{width: '20ch'}} defaultValue={ogInfo?.version} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{width: '20ch'}} defaultValue={ogInfo?.date} required />
+                        <input id="date" name="date" type="date" placeholder="Completion Date" style={{width: '20ch'}} defaultValue={ogInfo?.date} required />
                     </span>
                     <br />
                 </>

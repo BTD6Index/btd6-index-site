@@ -48,11 +48,11 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
         <form method="post" encType="multipart/form-data" action="/member/add-2mp-submit" onSubmit={submitCallback} ref={theForm}>
             {(!doEdit || existingInfo?.[0]?.pending) && isVerifier ? <><span className="formLine">
                 <label htmlFor="verify">Mark as verified?</label>
-                <input type="checkbox" name="verify" />
+                <input id="verify" type="checkbox" name="verify" />
             </span><br /></> : <input type="hidden" name="verify" value="on" />}
             <span className="formLine">
                 <label htmlFor="entity">Tower</label>
-                <Select name="entity" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
+                <Select name="entity" inputId="entity" options={[...towerToOptions.values()]} styles={selectStyle} defaultValue={
                     towerToOptions.get(editParams?.get('entity')) ?? undefined
                 } required />
             </span>
@@ -64,38 +64,38 @@ function ManipTwoMP({ editParams = null, setEditParams = null }) {
             <br />
             <span className="formLine">
                 <label htmlFor="person">Person</label>
-                <input name="person" type="text" placeholder="Person" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.person} required />
+                <input id="person" name="person" type="text" placeholder="Person" style={{ width: '20ch' }} defaultValue={existingInfo?.[0]?.person} required />
             </span>
             <br />
             <FormLinkImageEntry existingInfo={existingInfo} />
             <br />
             <span className="formLine">
                 <label htmlFor="notes">Completion Notes/Proof</label>
-                <textarea name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
+                <textarea id="notes" name="notes" rows="5" cols="40" defaultValue={noteInfo?.notes}></textarea>
             </span>
             <br />
             <AttachmentsWidget existingAttachments={existingAttachments} attachmentsLabel="Upload Attachments (victory screen image, etc.)" />
             <br />
             <span className="formLine">
                 <label htmlFor="og">OG Completion?</label>
-                <input type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
+                <input id="og" type="checkbox" name="og" onChange={e => setOG(e.target.checked)} checked={isOG} />
             </span>
             <br />
             {
                 isOG && <>
                     <span className="formLine">
                         <label htmlFor="upgrade">Upgrade</label>
-                        <input name="upgrade" type="text" placeholder="Upgrade" style={{ width: '20ch' }} defaultValue={ogInfo?.upgrade} required />
+                        <input id="upgrade" name="upgrade" type="text" placeholder="Upgrade" style={{ width: '20ch' }} defaultValue={ogInfo?.upgrade} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="version">Update</label>
-                        <input name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={ogInfo?.version} required />
+                        <input id="version" name="version" type="text" placeholder="Update" style={{ width: '20ch' }} defaultValue={ogInfo?.version} required />
                     </span>
                     <br />
                     <span className="formLine">
                         <label htmlFor="date">Completion Date</label>
-                        <input name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={ogInfo?.date} required />
+                        <input id="date" name="date" type="date" placeholder="Completion Date" style={{ width: '20ch' }} defaultValue={ogInfo?.date} required />
                     </span>
                     <br />
                 </>

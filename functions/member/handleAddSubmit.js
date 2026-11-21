@@ -1,5 +1,6 @@
 import profanityFilter from 'leo-profanity';
 import { createDbClient } from "../db";
+import { backupForReplace, backupAndDelete } from "../mediaBackup";
 profanityFilter.remove('domination');
 
 /**
@@ -58,17 +59,24 @@ async function processImages({imageKey, editMode, formData, media, context, link
     if (editMode) {
         if (link) {
             // delete image if replaced with link
-            context.waitUntil(media.delete(imageKey));
+            context.waitUntil(backupAndDelete(context.env, imageKey));
         }
     }
 
     if (hasImage) {
-        // in add mode, upload only when uuid doesn't exist
-        let r2Obj = await media.put(
-            imageKey, formData.get('image').stream(), editMode ? {} : { onlyIf: { etagDoesNotMatch: '*' } }
-        );
-        if (r2Obj === null) {
-            throw new Error('Failed to upload image object');
+        let changed = true;
+        if (editMode) {
+            // back up the image being replaced (skipped, along with the upload, if it's identical)
+            changed = await backupForReplace(context.env, imageKey, formData.get('image'));
+        }
+        if (changed) {
+            // in add mode, upload only when uuid doesn't exist
+            let r2Obj = await media.put(
+                imageKey, formData.get('image').stream(), editMode ? {} : { onlyIf: { etagDoesNotMatch: '*' } }
+            );
+            if (r2Obj === null) {
+                throw new Error('Failed to upload image object');
+            }
         }
     }
 
@@ -84,7 +92,8 @@ async function processImages({imageKey, editMode, formData, media, context, link
         }
     }
 
-    context.waitUntil(media.delete(
+    context.waitUntil(backupAndDelete(
+        context.env,
         formData
         .getAll('delete-attachments')
         .filter(key => key.startsWith(`${imageKey}/attach`)) // for security reasons
