@@ -290,7 +290,7 @@ export default function ChallengePage({
                                                         fieldName: field, fieldValue: completion[field], completion
                                                     })}</td>)
                                             }
-                                            <td><a href={link}>Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
+                                            <td><a href={link} target="_blank" rel="noopener noreferrer">Link</a> | <a href={`/${challenge}/notes?` + new URLSearchParams(
                                                 fields.concat(altFields).map(field => [
                                                     field, Array.isArray(completion[field]) ? JSON.stringify(completion[field]) : completion[field]
                                                 ])

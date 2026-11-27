@@ -156,7 +156,7 @@ export default function Maps() {
                                             <td>{lcc.money}</td>
                                             <td>{lcc.person}</td>
                                             <td>{lcc.date}</td>
-                                            <td><a href={link}>Link</a> | <a href={'/lcc/notes?' + new URLSearchParams({filekey: lcc.filekey})}>Notes</a></td>
+                                            <td><a href={link} target="_blank" rel="noopener noreferrer">Link</a> | <a href={'/lcc/notes?' + new URLSearchParams({filekey: lcc.filekey})}>Notes</a></td>
                                         </tr>;
                                     })
                                 }

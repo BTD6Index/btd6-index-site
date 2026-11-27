@@ -161,7 +161,7 @@ function AttachmentsWidget({existingAttachments, attachmentsLabel = null}) {
                 return <Fragment key={attachmentKey}>
                     <br />
                     <span className="formLine">
-                        <label htmlFor={`delete-attachment-${attachmentKey}`}>Delete attachment <a href={link}>{link}</a>?</label>
+                        <label htmlFor={`delete-attachment-${attachmentKey}`}>Delete attachment <a href={link} target="_blank" rel="noopener noreferrer">{link}</a>?</label>
                         <input id={`delete-attachment-${attachmentKey}`} type="checkbox" name="delete-attachments" value={attachmentKey} />
                     </span>
                 </Fragment>;
