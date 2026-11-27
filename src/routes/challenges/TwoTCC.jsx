@@ -11,7 +11,6 @@ export default function TwoTCC() {
             rule: <div>
                     <h2>Tower Limitations</h2>
                     <p>Pairs of towers that already beat single-player 2TC do <strong>not</strong> count as 2TCC.</p>
-                    <p>Unlike single-player 2TC, Towers that have successfully soloed CHIMPS mode in the past or currently <strong>are</strong> allowed.</p>
                 </div>,
         })]);
 
