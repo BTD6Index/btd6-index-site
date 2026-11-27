@@ -85,6 +85,12 @@ export default function ChallengePage({
     const { list: selectedCompletions, toggleElement: toggleSelectedCompletions, setList: setSelectedCompletions } = useToggleList();
 
     const deleteForm = useRef(null);
+    const verifyForm = useRef(null);
+
+    const completionKey = useCallback(
+        completion => JSON.stringify(fields.concat(altFields).map(field => completion[field])),
+        [fields, altFields]
+    );
 
     const { isAuthenticated, isLoading, user } = useAuth0();
     const getToken = useAccessToken();
@@ -121,6 +127,43 @@ export default function ChallengePage({
             }
         }
     }, [selectedCompletions, deleteForm, getToken, forceReload, challenge, setSelectedCompletions]);
+
+    const onVerify = useCallback(async () => {
+        if (window.confirm(`Are you sure you want to verify ${selectedCompletions.length} completion(s)?`)) {
+            try {
+                const token = await getToken({
+                    authorizationParams: {
+                        audience: 'https://btd6index.win/',
+                        scope: 'openid email profile offline_access'
+                    }
+                });
+                let result = await fetch(verifyForm.current.action, {
+                    method: 'post',
+                    body: new FormData(verifyForm.current),
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                result = await result.json();
+                if ('error' in result) {
+                    throw new Error(result.error);
+                } else {
+                    window.alert(`Verified ${result.verified} ${challenge} completion(s).`);
+                    setSelectedCompletions([]);
+                    forceReload();
+                }
+            } catch (error) {
+                window.alert(`Error verifying ${challenge}: ${error.message}`);
+            }
+        }
+    }, [selectedCompletions, verifyForm, getToken, forceReload, challenge, setSelectedCompletions]);
+
+    const onSelectAllPending = useCallback(() => {
+        const pendingKeys = completions.filter(completion => completion.pending).map(completionKey);
+        setSelectedCompletions(selected => [...new Set([...selected, ...pendingKeys])]);
+    }, [completions, completionKey, setSelectedCompletions]);
+
+    const canMassVerify = !isLoading && isAuthenticated && (isAdmin || isVerifier);
 
     const changeAlternateFormat = useCallback(e => {
         setSearchParams({view: e.target.value ?? "List"});
@@ -177,6 +220,17 @@ export default function ChallengePage({
                     </>
                 }
                 {
+                    canMassVerify && <>
+                        <button type="button" onClick={onSelectAllPending}
+                            disabled={!completions.some(completion => completion.pending)}>
+                            Select All Pending
+                        </button>
+                        <button type="button" disabled={selectedCompletions.length === 0} onClick={onVerify}>
+                            Verify Selected
+                        </button>
+                    </>
+                }
+                {
                     !!(!searchError && totalCompletions) && <span>Results {offset+1} to {offset+completions.length} of {totalCompletions}</span>
                 }
             </div>
@@ -203,13 +257,14 @@ export default function ChallengePage({
                             {
                                 completions.map(
                                     completion => {
-                                        const key = JSON.stringify(fields.concat(altFields).map(field => completion[field]));
+                                        const key = completionKey(completion);
                                         const canEditOrVerify = !isLoading && isAuthenticated && (isAdmin || isVerifier || (user?.sub ?? '') === completion.pending);
                                         const canDelete = !isLoading && isAuthenticated && (isAdmin || (user?.sub ?? '') === completion.pending);
+                                        const canSelect = canDelete || (canMassVerify && !!completion.pending);
                                         const link = completion.link || `https://media.btd6index.win/${completion.filekey}`;
                                         return <tr key={key} className={completion.pending ? 'pendingCompletion' : ''}>
                                             {!isLoading && isAuthenticated && <td>
-                                                {canDelete && <input
+                                                {canSelect && <input
                                                     type="checkbox"
                                                     style={{ verticalAlign: "middle" }}
                                                     checked={selectedCompletions.includes(key)}
@@ -263,6 +318,11 @@ export default function ChallengePage({
                 </div>
             }
             <form ref={deleteForm} style={{ display: 'none' }} action={`/member/delete-${challenge}-submit`} method="post">
+                <input type="hidden" name="entries" value={
+                    JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
+                } />
+            </form>
+            <form ref={verifyForm} style={{ display: 'none' }} action={`/member/verify-${challenge}-submit`} method="post">
                 <input type="hidden" name="entries" value={
                     JSON.stringify(selectedCompletions.map(selected => JSON.parse(selected)))
                 } />
