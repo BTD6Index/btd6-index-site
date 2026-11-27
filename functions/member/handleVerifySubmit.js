@@ -28,7 +28,7 @@ function describeRow(row, fields) {
     return `- ${keyParts.join(' | ')} — ${person} ([Link](${link}))`;
 }
 
-async function handleVerifySubmit({context, challenge, fields, jsonFields = ['towerset'], castFields = {}}) {
+async function handleVerifySubmit({context, challenge, fields, jsonFields = ['towerset'], castFields = {}, separateFilekeys = false}) {
     const db = createDbClient(context);
     const jwtResult = context.data.jwtResult;
 
@@ -53,9 +53,15 @@ async function handleVerifySubmit({context, challenge, fields, jsonFields = ['to
 
     let rows;
     try {
-        rows = (await db.prepare(`UPDATE "${challenge}_completions" AS cmp SET pending = NULL `
+        const updateStmt = `UPDATE "${challenge}_completions" AS cmp SET pending = NULL `
             + `WHERE cmp.pending IS NOT NULL AND EXISTS `
-            + `(SELECT 1 FROM jsonb_array_elements($1::jsonb) AS value WHERE ${condition}) RETURNING *`)
+            + `(SELECT 1 FROM jsonb_array_elements($1::jsonb) AS value WHERE ${condition}) RETURNING cmp.*`;
+        // some challenges keep filekeys in a separate table keyed by the completion's identifier fields
+        const stmt = separateFilekeys
+            ? `WITH verified AS (${updateStmt}) SELECT verified.*, fk.filekey FROM verified `
+                + `LEFT JOIN "${challenge}_filekeys" AS fk USING (${fields.join(',')})`
+            : updateStmt;
+        rows = (await db.prepare(stmt)
             .bind(formData.get('entries'))
             .all()).results;
     } catch (e) {
